@@ -13,5 +13,5 @@ def get_openai_recommendation(query):
     )
     
     if response and 'choices' in response:
-        return response.choices[0].message['content'].strip()
+        return response['choices'][0]['message']['content']
     return None
