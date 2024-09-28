@@ -55,6 +55,7 @@ class Recommend(db.Model):
     product_price = db.Column(db.Integer)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     recommended_at = db.Column(db.DateTime, default=datetime.now)
+    comment = db.Column(db.String(255)) 
 
 class Store(db.Model):
     __tablename__ = 'store'
