@@ -15,7 +15,9 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # データベースとマイグレーションの初期化
+    # SQLAlchemyとアプリを連携する
     db.init_app(app)
+    # Migrateとアプリを連携する
     migrate.init_app(app, db)
     
     # ルートの設定

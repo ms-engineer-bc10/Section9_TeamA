@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+# SQLAlchemyをインスタンス化する
 db = SQLAlchemy()
 
 class ApiRequest(db.Model):
@@ -8,7 +9,7 @@ class ApiRequest(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.String(255), db.ForeignKey('user.uid'))
-    requested_at = db.Column(db.DateTime, default=datetime.utcnow)
+    requested_at = db.Column(db.DateTime, default=datetime.now)
     api_name = db.Column(db.String(255))
     result = db.Column(db.String(255))
     error_message = db.Column(db.String(255))
