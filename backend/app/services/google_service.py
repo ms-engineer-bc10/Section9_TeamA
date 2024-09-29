@@ -3,7 +3,7 @@ import requests
 
 GOOGLE_PLACES_API_KEY = os.getenv("GOOGLE_PLACES_API_KEY")
 
-def search_google_places():
+def search_google_places(location, radius):
 
     url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={location}&radius={radius}&key={GOOGLE_PLACES_API_KEY}"
     
