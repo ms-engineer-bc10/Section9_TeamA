@@ -1,10 +1,12 @@
 import os
 from flask import Flask
+from app.routes.user_routes import user_routes
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.models import db
 
 migrate = Migrate()
+
 
 # アプリケーションファクトリ関数を定義
 def create_app():
@@ -20,10 +22,7 @@ def create_app():
     # Migrateとアプリを連携する
     migrate.init_app(app, db)
     
-    # ルートの設定
-    @app.route('/')
-    def hello_world():
-        return 'Hello, World!'
+    app.register_blueprint(user_routes, url_prefix='/api/user')
     
     return app
 
