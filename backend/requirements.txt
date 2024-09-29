@@ -62,7 +62,6 @@ msgpack==1.0.8
 multidict==6.0.5
 mypy-extensions==1.0.0
 numpy==2.0.1
-openai==1.42.0
 packaging==24.1
 pathspec==0.12.1
 pillow==10.4.0
@@ -94,3 +93,6 @@ Werkzeug==2.3.7
 wrapt==1.16.0
 yarl==1.9.4
 zipp==3.20.0
+openai==0.28
+googlemaps
+requests
