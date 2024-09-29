@@ -7,21 +7,20 @@ from app.models import db
 
 migrate = Migrate()
 
-
 # アプリケーションファクトリ関数を定義
 def create_app():
     app = Flask(__name__)
     
     # データベース設定
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'DATABASE_URL'
+    database_url = os.getenv('DATABASE_URL', 'sqlite:///default.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # データベースとマイグレーションの初期化
-    # SQLAlchemyとアプリを連携する
     db.init_app(app)
-    # Migrateとアプリを連携する
     migrate.init_app(app, db)
     
+    # ルートを登録
     app.register_blueprint(user_routes, url_prefix='/api/user')
     
     return app
