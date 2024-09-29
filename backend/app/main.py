@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__)
     
     # データベース設定
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:password@db/souvenir_app'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'DATABASE_URL'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # データベースとマイグレーションの初期化
