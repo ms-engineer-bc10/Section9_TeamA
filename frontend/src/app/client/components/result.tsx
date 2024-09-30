@@ -1,16 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FavoriteIconAnim } from '@/app/client/components//ui/heart'; // パスを確認してください
+import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
 
 interface ResultProps {
-  answers: {
-    q1: string;
-    q2: string;
-    q3: string;
-    q4: string;
-  };
   onResetSearch: () => void;
   onEditSearch: () => void;
 }
@@ -21,42 +15,55 @@ interface SearchResult {
   llmComment: string;
 }
 
-const Result: React.FC<ResultProps> = ({
-  answers,
-  onResetSearch,
-  onEditSearch,
-}) => {
-  const [isLoading, setIsLoading] = useState(true); // 初期値を true に設定
+const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchCount, setSearchCount] = useState(0);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const performSearch = useCallback(async () => {
+    if (searchCount >= 5) {
+      setError('検索条件を変更してください');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
+
     try {
-      // API呼び出しをシミュレート
+      // バックエンド処理のシミュレーション
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // モックデータ（実際のAPIレスポンスに置き換えてください）
       const mockResult: SearchResult = {
         imageUrl: '/placeholder-image.jpg',
-        name: '551蓬莱 豚まん',
-        llmComment:
-          '大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。',
+        name: `551蓬莱 豚まん (検索回数: ${searchCount + 1})`,
+        llmComment: `大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。(検索回数: ${
+          searchCount + 1
+        })`,
       };
+
       setCurrentResult(mockResult);
+      setSearchCount((prevCount) => prevCount + 1);
+      setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
     } catch (error) {
       console.error('検索エラー:', error);
       setError('検索中にエラーが発生しました。もう一度お試しください。');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [searchCount]);
 
   useEffect(() => {
     performSearch();
-  }, [performSearch]);
+  }, []);
+
+  const handleSearchClick = () => {
+    if (searchCount < 5) {
+      performSearch();
+    }
+  };
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
@@ -77,29 +84,6 @@ const Result: React.FC<ResultProps> = ({
           <p className='mt-4 text-xl font-semibold text-gray-700'>
             おみやげを探しています...
           </p>
-        </motion.div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='w-full max-w-lg mx-auto'>
-        <motion.div
-          key='error'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className='bg-white shadow-lg rounded-lg p-8 text-center'
-          style={{ minHeight: '400px' }}
-        >
-          <p className='text-red-500 text-lg mb-4'>{error}</p>
-          <button
-            onClick={performSearch}
-            className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300'
-          >
-            再試行
-          </button>
         </motion.div>
       </div>
     );
@@ -153,9 +137,10 @@ const Result: React.FC<ResultProps> = ({
 
       <div className='mt-8 text-center'>
         <button
-          onClick={performSearch}
+          onClick={handleSearchClick}
           className='bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4'
           aria-label='他のOMIYAGEを探す'
+          disabled={searchCount >= 5}
         >
           他のOMIYAGEも探してみよう
         </button>
@@ -167,6 +152,12 @@ const Result: React.FC<ResultProps> = ({
           条件を変更する
         </button>
       </div>
+
+      {searchCount >= 5 && (
+        <p className='mt-4 text-red-500 text-center'>
+          検索条件を変更してください
+        </p>
+      )}
     </div>
   );
 };
