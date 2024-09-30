@@ -12,14 +12,19 @@ def get_recommendations():
     price = data.get('price')
     quantity = data.get('quantity')
     location = data.get('location')
-    
     price_from, price_to = parse_price(price)
-
     shopping_results = search_yahoo_shopping(price_from, price_to)
-    ai_recommend = get_openai_recommendation(
-        f"{recipient}に渡す、{price}の予算内で、個数が{quantity}入りのおみやげ",
-        shopping_results
-        )
+
+    ai_input_data = {
+        'recipient': recipient,
+        'category': data.get('category'),
+        'price': price,
+        'quantity': quantity,
+        'location': location
+    }
+
+    ai_recommend = get_openai_recommendation(ai_input_data, shopping_results)
+
     places_results = search_google_places(location, radius=1000)
 
     return jsonify({

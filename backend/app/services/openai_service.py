@@ -3,11 +3,18 @@ import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def get_openai_recommendation(shopping_results, get_recommendations):
+def get_openai_recommendation(get_recommendations, shopping_results):
+    recipient = get_recommendations.get('recipient', '不明')
+    category = get_recommendations.get('category', '不明')
+    price = get_recommendations.get('price', '不明')
+    quantity = get_recommendations.get('quantity', '不明')
+    location = get_recommendations.get('location', '不明')
+
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "user", "content": f"次の条件に基づいて最適なおみやげを選んでください:\n{get_recommendations}\n\n商品リスト:\n{shopping_results}"}
+            {"role": "system", "content": f"{shopping_results}からユーザーが選択した条件に最も合致する商品をおすすめのおみやげとして提案してください"},
+            {"role": "user", "content": f"受取人: {recipient}, カテゴリ: {category}, 価格: {price}, 個数: {quantity}, 位置情報: {location}"}
         ],
         max_tokens=100
     )
