@@ -1,8 +1,8 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\result.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FavoriteIconAnim } from '@/app/client/components//ui/heart'; // パスを確認してください
 
 interface ResultProps {
   answers: {
@@ -26,9 +26,10 @@ const Result: React.FC<ResultProps> = ({
   onResetSearch,
   onEditSearch,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // 初期値を true に設定
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const performSearch = useCallback(async () => {
     setIsLoading(true);
@@ -39,7 +40,7 @@ const Result: React.FC<ResultProps> = ({
 
       // モックデータ（実際のAPIレスポンスに置き換えてください）
       const mockResult: SearchResult = {
-        imageUrl: '/placeholder-image.jpg', // publicフォルダ内の実際の画像ファイルへのパスに変更してください
+        imageUrl: '/placeholder-image.jpg',
         name: '551蓬莱 豚まん',
         llmComment:
           '大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。',
@@ -57,41 +58,57 @@ const Result: React.FC<ResultProps> = ({
     performSearch();
   }, [performSearch]);
 
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+  };
+
+  if (isLoading) {
+    return (
+      <div className='w-full max-w-lg mx-auto'>
+        <motion.div
+          key='loading'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className='bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center'
+          style={{ minHeight: '400px' }}
+        >
+          <div className='animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-500'></div>
+          <p className='mt-4 text-xl font-semibold text-gray-700'>
+            おみやげを探しています...
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='w-full max-w-lg mx-auto'>
+        <motion.div
+          key='error'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className='bg-white shadow-lg rounded-lg p-8 text-center'
+          style={{ minHeight: '400px' }}
+        >
+          <p className='text-red-500 text-lg mb-4'>{error}</p>
+          <button
+            onClick={performSearch}
+            className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300'
+          >
+            再試行
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className='w-full max-w-lg mx-auto'>
       <AnimatePresence mode='wait'>
-        {isLoading ? (
-          <motion.div
-            key='loading'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className='bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center'
-            style={{ minHeight: '400px' }}
-          >
-            <div className='animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-500'></div>
-            <p className='mt-4 text-xl font-semibold text-gray-700'>
-              おみやげを探しています...
-            </p>
-          </motion.div>
-        ) : error ? (
-          <motion.div
-            key='error'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className='bg-white shadow-lg rounded-lg p-8 text-center'
-            style={{ minHeight: '400px' }}
-          >
-            <p className='text-red-500 text-lg mb-4'>{error}</p>
-            <button
-              onClick={performSearch}
-              className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300'
-            >
-              再試行
-            </button>
-          </motion.div>
-        ) : currentResult ? (
+        {currentResult && (
           <motion.div
             key='result'
             initial={{ opacity: 0 }}
@@ -112,9 +129,13 @@ const Result: React.FC<ResultProps> = ({
                   className='rounded-lg'
                 />
               </div>
-              <h3 className='text-xl font-semibold mb-4'>
-                {currentResult.name}
-              </h3>
+              <div className='flex justify-between items-center mb-4'>
+                <h3 className='text-xl font-semibold'>{currentResult.name}</h3>
+                <FavoriteIconAnim
+                  isFavorite={isFavorite}
+                  onClick={handleFavoriteClick}
+                />
+              </div>
               <div className='flex space-x-4 mb-6'>
                 <div className='flex-1 bg-gray-100 p-4 rounded-lg flex items-center justify-center'>
                   <MapPin className='w-8 h-8 text-blue-500 mr-2' />
@@ -127,7 +148,7 @@ const Result: React.FC<ResultProps> = ({
               </div>
             </div>
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
 
       <div className='mt-8 text-center'>
