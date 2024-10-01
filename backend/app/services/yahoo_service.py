@@ -11,9 +11,9 @@ def search_yahoo_shopping(price_from=None, price_to=None):
     params = {
         'appid': 'API_KEY',
         'sort': '+price',
-        'results': '30',
+        'results': '10',
         # "location"で入力された場所情報をqueryに含める必要あり
-        'query': 'おみやげ'
+        'query': 'おみやげ 大阪'
     }
 
     if price_from is not None:
