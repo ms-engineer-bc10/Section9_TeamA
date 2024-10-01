@@ -17,13 +17,13 @@ interface SearchResult {
 
 const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [searchCount, setSearchCount] = useState(0);
+  const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const performSearch = useCallback(async () => {
-    if (searchCount >= 5) {
+    if (searchCount >= 7) {
       setError('検索条件を変更してください');
       return;
     }
@@ -60,7 +60,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
   }, []);
 
   const handleSearchClick = () => {
-    if (searchCount < 5) {
+    if (searchCount < 7) {
       performSearch();
     }
   };
@@ -140,7 +140,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
           onClick={handleSearchClick}
           className='bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4'
           aria-label='他のOMIYAGEを探す'
-          disabled={searchCount >= 5}
+          disabled={searchCount >= 7}
         >
           他のOMIYAGEも探してみよう
         </button>
@@ -153,7 +153,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
         </button>
       </div>
 
-      {searchCount >= 5 && (
+      {searchCount >= 7 && (
         <p className='mt-4 text-red-500 text-center'>
           検索条件を変更してください
         </p>

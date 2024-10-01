@@ -2,7 +2,7 @@
 'use client';
 import React from 'react';
 
-const Q3 = ({ onNext, selectedOption, setSelectedOption }) => {
+const Q3 = ({ selectedOption, setSelectedOption }) => {
   const options = [
     '¥0〜1,999',
     '¥2,000〜3,999',

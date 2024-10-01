@@ -2,7 +2,7 @@
 'use client';
 import React from 'react';
 
-const Q1 = ({ onNext, selectedOption, setSelectedOption }) => {
+const Q1 = ({ selectedOption, setSelectedOption }) => {
   const options = ['家族', '友人', '恋人', '職場', '自分'];
 
   const handleOptionClick = (option: string) => {

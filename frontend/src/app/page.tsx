@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function HomePage() {
   return (
@@ -8,24 +10,36 @@ export default function HomePage() {
           <div className='text-2xl font-bold text-blue-600'>Your Logo</div>
           <ul className='flex space-x-6'>
             <li>
-              <a href='#' className='text-gray-600 hover:text-blue-600 text-lg'>
+              <Link
+                href='/'
+                className='text-gray-600 hover:text-blue-600 text-lg'
+              >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href='#' className='text-gray-600 hover:text-blue-600 text-lg'>
+              <Link
+                href='/about'
+                className='text-gray-600 hover:text-blue-600 text-lg'
+              >
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a href='#' className='text-gray-600 hover:text-blue-600 text-lg'>
+              <Link
+                href='/services'
+                className='text-gray-600 hover:text-blue-600 text-lg'
+              >
                 Services
-              </a>
+              </Link>
             </li>
             <li>
-              <a href='#' className='text-gray-600 hover:text-blue-600 text-lg'>
+              <Link
+                href='/contact'
+                className='text-gray-600 hover:text-blue-600 text-lg'
+              >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -37,7 +51,11 @@ export default function HomePage() {
             <div className='w-full lg:w-1/2 lg:pr-10 mb-10 lg:mb-0'>
               <div className='w-full max-w-lg'>
                 <div className='rounded-xl overflow-hidden'>
-                  <div className='w-full h-96 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-xl'></div>
+                  <div
+                    className='w-full h-96 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-xl'
+                    role='img'
+                    aria-label='Decorative gradient image'
+                  ></div>
                 </div>
               </div>
             </div>
@@ -49,8 +67,8 @@ export default function HomePage() {
                 omiyage APP
               </h1>
               <p className='text-gray-600 mb-8'>
-                Free and Premium themes, UI Kit's, templates and landing pages
-                built with Tailwind CSS, HTML & Next.js.
+                Free and Premium themes, UI Kit&apos;s, templates and landing
+                pages built with Tailwind CSS, HTML &amp; Next.js.
               </p>
               <div className='flex flex-wrap'>
                 <button className='bg-blue-600 text-white rounded-lg px-6 py-3 font-medium mr-4 mb-4 hover:bg-blue-700 transition duration-300'>
@@ -64,6 +82,7 @@ export default function HomePage() {
                     stroke='currentColor'
                     viewBox='0 0 24 24'
                     xmlns='http://www.w3.org/2000/svg'
+                    aria-hidden='true'
                   >
                     <path
                       strokeLinecap='round'

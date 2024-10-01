@@ -1,6 +1,5 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\pages\requiredfield\page.tsx
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Q1 from '@/app/client/components/q1';
 import Q2 from '@/app/client/components/q2';
 import Q3 from '@/app/client/components/q3';
@@ -9,9 +8,18 @@ import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
 
-const RequiredFieldPage = () => {
+type Answer = '' | string;
+
+interface Answers {
+  q1: Answer;
+  q2: Answer;
+  q3: Answer;
+  q4: Answer;
+}
+
+const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState({
+  const [answers, setAnswers] = useState<Answers>({
     q1: '',
     q2: '',
     q3: '',
@@ -21,38 +29,44 @@ const RequiredFieldPage = () => {
   const [showResult, setShowResult] = useState(false);
   const questions = [Q1, Q2, Q3, Q4];
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     const currentAnswer =
-      answers[`q${currentQuestionIndex + 1}` as keyof typeof answers];
+      answers[`q${currentQuestionIndex + 1}` as keyof Answers];
     if (currentAnswer || currentQuestionIndex >= questions.length) {
       setError(null);
       if (currentQuestionIndex < questions.length) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setCurrentQuestionIndex((prev) => prev + 1);
       }
     } else {
       setError('選択肢を選んでください。');
     }
-  };
+  }, [currentQuestionIndex, answers, questions.length]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     if (currentQuestionIndex > 0) {
       setError(null);
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionIndex((prev) => prev - 1);
     }
-  };
+  }, [currentQuestionIndex]);
 
-  const handleOptionSelect = (option: string) => {
-    setAnswers({ ...answers, [`q${currentQuestionIndex + 1}`]: option });
-    if (currentQuestionIndex < questions.length - 1) {
-      handleNext();
-    }
-  };
+  const handleOptionSelect = useCallback(
+    (option: string) => {
+      setAnswers((prev) => ({
+        ...prev,
+        [`q${currentQuestionIndex + 1}`]: option,
+      }));
+      if (currentQuestionIndex < questions.length - 1) {
+        handleNext();
+      }
+    },
+    [currentQuestionIndex, questions.length, handleNext]
+  );
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     setShowResult(true);
-  };
+  }, []);
 
-  const handleResetSearch = () => {
+  const handleResetSearch = useCallback(() => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
     setAnswers({
@@ -61,13 +75,13 @@ const RequiredFieldPage = () => {
       q3: '',
       q4: '',
     });
-  };
+  }, []);
 
-  const handleEditSearch = () => {
+  const handleEditSearch = useCallback(() => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
     // answers はリセットしない
-  };
+  }, []);
 
   const isConfirmPage = currentQuestionIndex === questions.length;
 
@@ -83,7 +97,7 @@ const RequiredFieldPage = () => {
           <Result
             answers={answers}
             onResetSearch={handleResetSearch}
-            onEditSearch={handleEditSearch} // 新しい関数を渡す
+            onEditSearch={handleEditSearch}
           />
         ) : (
           <Slide
@@ -98,11 +112,9 @@ const RequiredFieldPage = () => {
               <QuestionComponent
                 key={index}
                 onNext={handleOptionSelect}
-                selectedOption={
-                  answers[`q${index + 1}` as keyof typeof answers]
-                }
-                setSelectedOption={(option) =>
-                  setAnswers({ ...answers, [`q${index + 1}`]: option })
+                selectedOption={answers[`q${index + 1}` as keyof Answers]}
+                setSelectedOption={(option: string) =>
+                  setAnswers((prev) => ({ ...prev, [`q${index + 1}`]: option }))
                 }
               />
             ))}
