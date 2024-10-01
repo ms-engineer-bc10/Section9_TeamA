@@ -38,14 +38,14 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
       // モックデータ（実際のAPIレスポンスに置き換えてください）
       const mockResult: SearchResult = {
         imageUrl: '/placeholder-image.jpg',
-        name: `551蓬莱 豚まん (検索回数: ${searchCount})`,
-        llmComment: `大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。(検索回数: ${searchCount})`,
+        name: `551蓬莱 豚まん (検索回数: ${searchCount + 1})`,
+        llmComment: `大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。(検索回数: ${
+          searchCount + 1
+        })`,
       };
 
       setCurrentResult(mockResult);
-      if (searchCount < 7) {
-        setSearchCount((prevCount) => prevCount + 1);
-      }
+      setSearchCount((prevCount) => prevCount + 1);
       setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
     } catch (error) {
       console.error('検索エラー:', error);
