@@ -17,13 +17,13 @@ interface SearchResult {
 
 const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [searchCount, setSearchCount] = useState(0);
+  const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const performSearch = useCallback(async () => {
-    if (searchCount >= 5) {
+    if (searchCount >= 7) {
       setError('検索条件を変更してください');
       return;
     }
@@ -38,14 +38,14 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
       // モックデータ（実際のAPIレスポンスに置き換えてください）
       const mockResult: SearchResult = {
         imageUrl: '/placeholder-image.jpg',
-        name: `551蓬莱 豚まん (検索回数: ${searchCount + 1})`,
-        llmComment: `大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。(検索回数: ${
-          searchCount + 1
-        })`,
+        name: `551蓬莱 豚まん (検索回数: ${searchCount})`,
+        llmComment: `大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。(検索回数: ${searchCount})`,
       };
 
       setCurrentResult(mockResult);
-      setSearchCount((prevCount) => prevCount + 1);
+      if (searchCount < 7) {
+        setSearchCount((prevCount) => prevCount + 1);
+      }
       setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
     } catch (error) {
       console.error('検索エラー:', error);
@@ -60,7 +60,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
   }, []);
 
   const handleSearchClick = () => {
-    if (searchCount < 5) {
+    if (searchCount < 7) {
       performSearch();
     }
   };
@@ -140,7 +140,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
           onClick={handleSearchClick}
           className='bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4'
           aria-label='他のOMIYAGEを探す'
-          disabled={searchCount >= 5}
+          disabled={searchCount >= 7}
         >
           他のOMIYAGEも探してみよう
         </button>
@@ -153,7 +153,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
         </button>
       </div>
 
-      {searchCount >= 5 && (
+      {searchCount >= 7 && (
         <p className='mt-4 text-red-500 text-center'>
           検索条件を変更してください
         </p>
