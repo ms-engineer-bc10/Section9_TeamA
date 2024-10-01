@@ -2,7 +2,7 @@
 'use client';
 import React from 'react';
 
-const Q2 = ({ onNext, selectedOption, setSelectedOption }) => {
+const Q2 = ({ selectedOption, setSelectedOption }) => {
   const options = ['食べ物', 'モノ'];
 
   const handleOptionClick = (option: string) => {

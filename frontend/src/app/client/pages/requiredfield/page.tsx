@@ -1,4 +1,3 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\pages\requiredfield\page.tsx
 'use client';
 import React, { useState } from 'react';
 import Q1 from '@/app/client/components/q1';
