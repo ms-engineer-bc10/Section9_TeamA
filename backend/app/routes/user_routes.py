@@ -15,15 +15,17 @@ def get_recommendations():
     price_from, price_to = parse_price(price)
     shopping_results = search_yahoo_shopping(price_from, price_to)
 
+    selected_product = shopping_results['hits'][0]
     ai_input_data = {
         'recipient': recipient,
         'category': data.get('category'),
         'price': price,
         'quantity': quantity,
-        'location': location
+        'location': location,
+        'selected_product': selected_product
     }
 
-    ai_recommend = get_openai_recommendation(ai_input_data, shopping_results)
+    ai_recommend = get_openai_recommendation(ai_input_data)
 
     places_results = search_google_places(location, radius=1000)
 
@@ -62,6 +64,7 @@ def generate_recommendation_response(shopping_results, ai_recommend, places_resu
 
     return jsonify({
         'おすすめ商品一覧': formatted_shopping_results,
-        'AIが選ぶおすすめ': ai_recommend,
+        'AIが選ぶおすすめ商品': formatted_shopping_results[0]['商品名'],
+        'AIおすすめポイント': ai_recommend,
         '近隣店舗': places_results
     })

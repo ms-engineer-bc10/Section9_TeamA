@@ -34,7 +34,7 @@ const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, 
       setCurrentResult({
         imageUrl: searchResults.おすすめ商品一覧[0].画像URL || '/placeholder-image.jpg',
         name: searchResults.おすすめ商品一覧[0].商品名,
-        llmComment: searchResults.おすすめ商品一覧[0].説明,
+        llmComment: searchResults.AIおすすめポイント || searchResults.おすすめ商品一覧[0].説明,
       });
       setSearchCount((prevCount) => prevCount + 1);
       setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
@@ -114,8 +114,8 @@ const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, 
                   <span className='text-lg'>地図</span>
                 </div>
                 <div className='flex-1 bg-gray-100 p-4 rounded-lg'>
-                  <p className='text-lg font-semibold mb-2'>LLMコメント</p>
-                  <p className='text-sm'>{currentResult.llmComment}</p>
+                  <p className='text-lg font-semibold mb-2'>AIのおすすめポイント</p>
+                  <p className='text-sm'>{currentResult.llmComment}</p>  {/* AIコメントを表示 */}
                 </div>
               </div>
             </div>
