@@ -22,7 +22,12 @@ interface SearchResult {
   llmComment: string;
 }
 
-const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, onEditSearch }) => {
+const Result: React.FC<ResultProps> = ({
+  answers,
+  searchResults,
+  onResetSearch,
+  onEditSearch,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
@@ -32,9 +37,12 @@ const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, 
   const performSearch = useCallback(() => {
     if (searchResults && searchCount < 7) {
       setCurrentResult({
-        imageUrl: searchResults.おすすめ商品一覧[0].画像URL || '/placeholder-image.jpg',
+        imageUrl:
+          searchResults.おすすめ商品一覧[0].画像URL || '/placeholder-image.jpg',
         name: searchResults.おすすめ商品一覧[0].商品名,
-        llmComment: searchResults.AIおすすめポイント || searchResults.おすすめ商品一覧[0].説明,
+        llmComment:
+          searchResults.AIおすすめポイント ||
+          searchResults.おすすめ商品一覧[0].説明,
       });
       setSearchCount((prevCount) => prevCount + 1);
       setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
@@ -114,8 +122,11 @@ const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, 
                   <span className='text-lg'>地図</span>
                 </div>
                 <div className='flex-1 bg-gray-100 p-4 rounded-lg'>
-                  <p className='text-lg font-semibold mb-2'>AIのおすすめポイント</p>
-                  <p className='text-sm'>{currentResult.llmComment}</p>  {/* AIコメントを表示 */}
+                  <p className='text-lg font-semibold mb-2'>
+                    AIのおすすめポイント
+                  </p>
+                  <p className='text-sm'>{currentResult.llmComment}</p>{' '}
+                  {/* AIコメントを表示 */}
                 </div>
               </div>
             </div>
@@ -146,14 +157,6 @@ const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, 
           検索条件を変更してください
         </p>
       )}
-
-      <div className='mt-4'>
-        <h4 className='text-xl font-semibold'>選択した回答:</h4>
-        <p>Q1: {answers.q1}</p>
-        <p>Q2: {answers.q2}</p>
-        <p>Q3: {answers.q3}</p>
-        <p>Q4: {answers.q4}</p>
-      </div>
     </div>
   );
 };
