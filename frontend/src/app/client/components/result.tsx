@@ -4,16 +4,14 @@ import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
 
-// Answers型の定義
-interface Answers {
-  q1: string;
-  q2: string;
-  q3: string;
-  q4: string;
-}
-
 interface ResultProps {
-  answers: Answers;  // Answers型のanswersをResultPropsに追加
+  answers: {
+    q1: string;
+    q2: string;
+    q3: string;
+    q4: string;
+  };
+  searchResults: any;
   onResetSearch: () => void;
   onEditSearch: () => void;
 }
@@ -24,45 +22,26 @@ interface SearchResult {
   llmComment: string;
 }
 
-const Result: React.FC<ResultProps> = ({ answers, onResetSearch, onEditSearch }) => {
+const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, onEditSearch }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const performSearch = useCallback(async () => {
-    if (searchCount >= 7) {
-      setError('検索条件を変更してください');
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // バックエンド処理のシミュレーション
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // モックデータ（実際のAPIレスポンスに置き換えてください）
-      const mockResult: SearchResult = {
-        imageUrl: '/placeholder-image.jpg',
-        name: `551蓬莱 豚まん (検索回数: ${searchCount + 1})`,
-        llmComment: `大阪の名物として有名な551蓬莱の豚まんは、ジューシーで香り豊かな一品です。お土産として人気が高く、多くの人々に愛されています。(検索回数: ${
-          searchCount + 1
-        })`,
-      };
-
-      setCurrentResult(mockResult);
+  const performSearch = useCallback(() => {
+    if (searchResults && searchCount < 7) {
+      setCurrentResult({
+        imageUrl: searchResults.おすすめ商品一覧[0].画像URL || '/placeholder-image.jpg',
+        name: searchResults.おすすめ商品一覧[0].商品名,
+        llmComment: searchResults.おすすめ商品一覧[0].説明,
+      });
       setSearchCount((prevCount) => prevCount + 1);
       setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
-    } catch (error) {
-      console.error('検索エラー:', error);
-      setError('検索中にエラーが発生しました。もう一度お試しください。');
-    } finally {
-      setIsLoading(false);
+    } else if (searchCount >= 7) {
+      setError('検索条件を変更してください');
     }
-  }, [searchCount]);
+  }, [searchResults, searchCount]);
 
   useEffect(() => {
     performSearch();

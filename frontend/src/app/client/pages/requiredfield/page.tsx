@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import React, { useState, useCallback } from 'react';
 import Q1 from '@/app/client/components/q1';
 import Q2 from '@/app/client/components/q2';
@@ -7,6 +8,7 @@ import Q4 from '@/app/client/components/q4';
 import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
+import Loading from '@/app/client/components/loading';
 
 type Answer = '' | string;
 
@@ -27,6 +29,8 @@ const RequiredFieldPage: React.FC = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState(null);
   const questions = [Q1, Q2, Q3, Q4];
 
   const handleNext = useCallback(() => {
@@ -62,9 +66,39 @@ const RequiredFieldPage: React.FC = () => {
     [currentQuestionIndex, questions.length, handleNext]
   );
 
-  const handleSearch = useCallback(() => {
-    setShowResult(true);
-  }, []);
+  const handleSearch = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/user/recommend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          recipient: answers.q1,
+          category: answers.q2,
+          price: answers.q3,
+          quantity: answers.q4,
+          location: '35.681236,139.767125', // ダミーの位置情報。今後位置情報取得機能を追加
+        }),
+      });
+  
+      // ステータスコードが200番台でない場合はエラーを投げる
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      setSearchResults(data); // 結果を保存
+      setShowResult(true); // 結果を表示
+    } catch (error) {
+      setError('検索中にエラーが発生しました。');
+      console.error('APIリクエストエラー:', error);
+    } finally {
+      setIsLoading(false); // ローディング終了
+    }
+  }, [answers]);
+  
 
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
@@ -93,9 +127,12 @@ const RequiredFieldPage: React.FC = () => {
         </p>
       </div>
       <div className='w-full max-w-lg'>
-        {showResult ? (
+        {isLoading ? (
+          <Loading />
+        ) : showResult ? (
           <Result
             answers={answers}
+            searchResults={searchResults}
             onResetSearch={handleResetSearch}
             onEditSearch={handleEditSearch}
           />
