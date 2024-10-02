@@ -22,6 +22,8 @@ interface SearchResult {
   llmComment: string;
 }
 
+const MAX_SEARCH_COUNT = 5;
+
 const Result: React.FC<ResultProps> = ({
   answers,
   searchResults,
@@ -31,38 +33,33 @@ const Result: React.FC<ResultProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const performSearch = useCallback(() => {
-    if (searchResults && searchCount < 7) {
+  const updateSearchResult = useCallback(() => {
+    if (searchResults && searchResults.おすすめ商品一覧.length > 0) {
+      const result = searchResults.おすすめ商品一覧[0];
       setCurrentResult({
-        imageUrl:
-          searchResults.おすすめ商品一覧[0].画像URL || '/placeholder-image.jpg',
-        name: searchResults.おすすめ商品一覧[0].商品名,
-        llmComment:
-          searchResults.AIおすすめポイント ||
-          searchResults.おすすめ商品一覧[0].説明,
+        imageUrl: result.画像URL || '/placeholder-image.jpg',
+        name: result.商品名,
+        llmComment: searchResults.AIおすすめポイント || result.説明,
       });
-      setSearchCount((prevCount) => prevCount + 1);
-      setIsFavorite(false); // 新しい結果が表示されたらお気に入り状態をリセット
-    } else if (searchCount >= 7) {
-      setError('検索条件を変更してください');
     }
-  }, [searchResults, searchCount]);
+  }, [searchResults]);
 
   useEffect(() => {
-    performSearch();
-  }, [performSearch]);
+    updateSearchResult();
+  }, [updateSearchResult]);
 
   const handleSearchClick = () => {
-    if (searchCount < 7) {
-      performSearch();
+    if (searchCount < MAX_SEARCH_COUNT) {
+      setSearchCount((prevCount) => prevCount + 1);
+      setIsFavorite(false);
+      updateSearchResult();
     }
   };
 
   const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
+    setIsFavorite((prev) => !prev);
   };
 
   if (isLoading) {
@@ -125,8 +122,7 @@ const Result: React.FC<ResultProps> = ({
                   <p className='text-lg font-semibold mb-2'>
                     AIのおすすめポイント
                   </p>
-                  <p className='text-sm'>{currentResult.llmComment}</p>{' '}
-                  {/* AIコメントを表示 */}
+                  <p className='text-sm'>{currentResult.llmComment}</p>
                 </div>
               </div>
             </div>
@@ -139,7 +135,7 @@ const Result: React.FC<ResultProps> = ({
           onClick={handleSearchClick}
           className='bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4'
           aria-label='他のOMIYAGEを探す'
-          disabled={searchCount >= 7}
+          disabled={searchCount >= MAX_SEARCH_COUNT}
         >
           他のOMIYAGEも探してみよう
         </button>
@@ -152,7 +148,11 @@ const Result: React.FC<ResultProps> = ({
         </button>
       </div>
 
-      {searchCount >= 7 && (
+      <p className='mt-4 text-left font-bold text-gray-600'>
+        検索回数: {searchCount} / {MAX_SEARCH_COUNT}
+      </p>
+
+      {searchCount >= MAX_SEARCH_COUNT && (
         <p className='mt-4 text-red-500 text-center'>
           検索条件を変更してください
         </p>
