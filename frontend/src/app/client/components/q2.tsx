@@ -2,7 +2,13 @@
 'use client';
 import React from 'react';
 
-const Q2 = ({ selectedOption, setSelectedOption }) => {
+// Propsの型を定義
+interface Q2Props {
+  selectedOption: string;
+  setSelectedOption: (option: string) => void;
+}
+
+const Q2: React.FC<Q2Props> = ({ selectedOption, setSelectedOption }) => {
   const options = ['食べ物', 'モノ'];
 
   const handleOptionClick = (option: string) => {
