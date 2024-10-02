@@ -96,8 +96,8 @@ const Result: React.FC<ResultProps> = ({ answers, searchResults, onResetSearch, 
                 <Image
                   src={currentResult.imageUrl}
                   alt={currentResult.name}
-                  layout='fill'
-                  objectFit='cover'
+                  fill
+                  style={{ objectFit: 'cover' }}
                   className='rounded-lg'
                 />
               </div>
