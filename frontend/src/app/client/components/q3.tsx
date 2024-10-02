@@ -2,7 +2,13 @@
 'use client';
 import React from 'react';
 
-const Q3 = ({ selectedOption, setSelectedOption }) => {
+// Propsの型を定義
+interface Q3Props {
+  selectedOption: string;
+  setSelectedOption: (option: string) => void;
+}
+
+const Q3: React.FC<Q3Props> = ({ selectedOption, setSelectedOption }) => {
   const options = [
     '¥0〜1,999',
     '¥2,000〜3,999',

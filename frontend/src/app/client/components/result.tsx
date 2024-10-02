@@ -4,7 +4,16 @@ import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
 
+// Answers型の定義
+interface Answers {
+  q1: string;
+  q2: string;
+  q3: string;
+  q4: string;
+}
+
 interface ResultProps {
+  answers: Answers;  // Answers型のanswersをResultPropsに追加
   onResetSearch: () => void;
   onEditSearch: () => void;
 }
@@ -15,7 +24,7 @@ interface SearchResult {
   llmComment: string;
 }
 
-const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
+const Result: React.FC<ResultProps> = ({ answers, onResetSearch, onEditSearch }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
@@ -57,7 +66,7 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
 
   useEffect(() => {
     performSearch();
-  }, []);
+  }, [performSearch]);
 
   const handleSearchClick = () => {
     if (searchCount < 7) {
@@ -158,6 +167,14 @@ const Result: React.FC<ResultProps> = ({ onResetSearch, onEditSearch }) => {
           検索条件を変更してください
         </p>
       )}
+
+      <div className='mt-4'>
+        <h4 className='text-xl font-semibold'>選択した回答:</h4>
+        <p>Q1: {answers.q1}</p>
+        <p>Q2: {answers.q2}</p>
+        <p>Q3: {answers.q3}</p>
+        <p>Q4: {answers.q4}</p>
+      </div>
     </div>
   );
 };
