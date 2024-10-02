@@ -14,19 +14,24 @@ def get_recommendations():
     price = data.get('price')
     quantity = data.get('quantity')
     location = data.get('location')
-
-    query = f"{recipient}に渡す、{price}の予算内で、個数が{quantity}入りのおみやげ"
     price_from, price_to = parse_price(price)
-
-    ai_recommendation = get_openai_recommendation(query)
     shopping_results = search_yahoo_shopping(price_from, price_to)
+
+    selected_product = shopping_results['hits'][0]
+    ai_input_data = {
+        'recipient': recipient,
+        'category': data.get('category'),
+        'price': price,
+        'quantity': quantity,
+        'location': location,
+        'selected_product': selected_product
+    }
+
+    ai_recommend = get_openai_recommendation(ai_input_data)
+
     places_results = search_google_places(location, radius=1000)
 
-    return jsonify({
-        'AIのコメント': ai_recommendation,
-        'おすすめ商品': shopping_results,
-        '近隣店舗': places_results,
-    })
+    return generate_recommendation_response(shopping_results, ai_recommend, places_results)
 
 def parse_price(price_str):
     # 「¥」「,」を削除
@@ -45,6 +50,27 @@ def parse_price(price_str):
             price_to = int(price_str)
 
     return price_from, price_to
+
+def generate_recommendation_response(shopping_results, ai_recommend, places_results):
+    formatted_shopping_results = []
+    for item in shopping_results.get('hits', []):
+        product = {
+            '商品名': item.get('name', '不明'),
+            '価格': item.get('price', '不明'),
+            '個数': item.get('quantity', '不明'),
+            '説明': item.get('description', '説明なし'),
+            '画像URL': item.get('image', {}).get('medium', '画像なし'),
+            '商品URL': item.get('url', 'URLなし')
+        }
+        formatted_shopping_results.append(product)
+
+    return jsonify({
+        'おすすめ商品一覧': formatted_shopping_results,
+        'AIが選ぶおすすめ商品': formatted_shopping_results[0]['商品名'],
+        'AIおすすめポイント': ai_recommend,
+        '近隣店舗': places_results
+    })
+
 
 # 以下、ユーザー関連の CRUD 操作を追加
 

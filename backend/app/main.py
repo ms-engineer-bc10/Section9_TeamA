@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.models import db
+from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
 from app.routes.condition_routes import condition_routes
@@ -15,6 +16,7 @@ migrate = Migrate()
 # アプリケーションファクトリ関数を定義
 def create_app():
     app = Flask(__name__)
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000", "methods": ["GET", "POST", "OPTIONS"], "allow_headers": "*"}})
     
     # データベース設定
     database_url = os.getenv('DATABASE_URL', 'sqlite:///default.db')
