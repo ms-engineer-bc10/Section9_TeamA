@@ -1,10 +1,15 @@
 import os
 from flask import Flask
-from app.routes.user_routes import user_routes
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.models import db
 from flask_cors import CORS
+
+from app.routes.user_routes import user_routes
+from app.routes.condition_routes import condition_routes
+from app.routes.recommend_routes import recommend_routes
+from app.routes.store_routes import store_routes
+from app.routes.api_request_routes import api_request_routes
 
 migrate = Migrate()
 
@@ -22,13 +27,24 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     
-    # ルートを登録
+    # # ルートを登録(ブループリントの登録)
     app.register_blueprint(user_routes, url_prefix='/api/user')
+    app.register_blueprint(condition_routes, url_prefix='/api/conditions')
+    app.register_blueprint(recommend_routes, url_prefix='/api/recommends')
+    app.register_blueprint(store_routes, url_prefix='/api/stores')
+    app.register_blueprint(api_request_routes, url_prefix='/api/api_requests')
     
+    
+
+    @app.route('/')
+    def hello_world():
+        return 'Hello, World!'
+    
+
     return app
 
 # アプリケーションインスタンスを作成
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
