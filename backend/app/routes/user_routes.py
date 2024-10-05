@@ -17,21 +17,21 @@ def get_recommendations():
     price_from, price_to = parse_price(price)
     shopping_results = search_yahoo_shopping(price_from, price_to)
 
-    selected_product = shopping_results['hits'][0]
     ai_input_data = {
         'recipient': recipient,
         'category': data.get('category'),
         'price': price,
         'quantity': quantity,
         'location': location,
-        'selected_product': selected_product
+        'shopping_results': shopping_results
     }
 
-    ai_recommend = get_openai_recommendation(ai_input_data)
+    ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
+
 
     places_results = search_google_places(location, radius=1000)
 
-    return generate_recommendation_response(shopping_results, ai_recommend, places_results)
+    return generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
 
 def parse_price(price_str):
     # 「¥」「,」を削除
@@ -51,7 +51,7 @@ def parse_price(price_str):
 
     return price_from, price_to
 
-def generate_recommendation_response(shopping_results, ai_recommend, places_results):
+def generate_recommendation_response(shopping_results, selected_product, product_comment_response, places_results):
     formatted_shopping_results = []
     for item in shopping_results.get('hits', []):
         product = {
@@ -66,8 +66,8 @@ def generate_recommendation_response(shopping_results, ai_recommend, places_resu
 
     return jsonify({
         'おすすめ商品一覧': formatted_shopping_results,
-        'AIが選ぶおすすめ商品': formatted_shopping_results[0]['商品名'],
-        'AIおすすめポイント': ai_recommend,
+        'AIが選ぶおすすめ商品': selected_product['name'],
+        'AIおすすめポイント': product_comment_response,
         '近隣店舗': places_results
     })
 
