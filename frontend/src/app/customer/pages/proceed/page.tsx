@@ -1,9 +1,11 @@
 'use client';
+
 import React, { useState } from 'react';
 import Tabs from '../../components/Tabs';
+import Subscribed from '../../components/Subscribed';
 import Ranking from '../../components/Ranking';
 
-const ProceedPage = () => {
+const ProceedPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Search');
   const tabs = ['Search', 'Likes', 'Ranking', 'History', 'Settings'];
 
@@ -12,7 +14,7 @@ const ProceedPage = () => {
       case 'Search':
         return <div>Search content here</div>;
       case 'Likes':
-        return <div>Likes content here</div>;
+        return <Subscribed />;
       case 'Ranking':
         return <Ranking />;
       case 'History':
