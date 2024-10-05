@@ -6,7 +6,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(request: Request) {
-  if (request.method === 'POST') {
     try {
       // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create({
@@ -27,7 +26,4 @@ export async function POST(request: Request) {
     } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode || 500 });
     }
-  } else {
-    return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
   }
-}
