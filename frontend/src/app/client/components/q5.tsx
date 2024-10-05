@@ -60,21 +60,12 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   ];
 
   useEffect(() => {
-    if (selectedOption === '現在地') {
-      setShowPrefectureSelect(false);
-    } else if (selectedOption && selectedOption !== '場所を指定して提案') {
-      setShowPrefectureSelect(true);
-    }
+    setShowPrefectureSelect(selectedOption === '場所を指定して提案');
   }, [selectedOption]);
 
   const handleOptionClick = (option: string) => {
-    if (option === '現在地から提案') {
-      setSelectedOption('現在地');
-      setShowPrefectureSelect(false);
-    } else {
-      setSelectedOption('場所を指定して提案');
-      setShowPrefectureSelect(true);
-    }
+    setSelectedOption(option);
+    setShowPrefectureSelect(option === '場所を指定して提案');
   };
 
   const handlePrefectureChange = (
@@ -96,10 +87,7 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
           <button
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
-              (option === '現在地から提案' && selectedOption === '現在地') ||
-              (option === '場所を指定して提案' &&
-                selectedOption &&
-                selectedOption !== '現在地')
+              selectedOption === option
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 hover:bg-gray-300'
             }`}
