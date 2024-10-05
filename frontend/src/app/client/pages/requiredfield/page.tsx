@@ -24,7 +24,7 @@ interface Answers {
 const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
-    Q5: '',
+    q5: '',
     q1: '',
     q2: '',
     q3: '',

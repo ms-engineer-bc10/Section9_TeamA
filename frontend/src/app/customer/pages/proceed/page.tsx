@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import Tabs from '../../components/Tabs';
-import Subscribed from '../../components/Subscribed';
-import Ranking from '../../components/Ranking';
+import Subscribed from '../../components/subscribed';
+import Ranking from '../../components/ranking';
 
 const ProceedPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Search');
