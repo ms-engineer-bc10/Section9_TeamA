@@ -16,7 +16,6 @@ COPY . .
 # アプリケーションをビルド
 RUN npm run build
 
-
 # 開発モードで実行
 CMD ["npm", "run", "dev"]
 
