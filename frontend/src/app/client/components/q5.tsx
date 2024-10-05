@@ -8,8 +8,6 @@ interface Q5Props {
 
 const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   const [showPrefectureSelect, setShowPrefectureSelect] = useState(false);
-  const [localSelectedOption, setLocalSelectedOption] =
-    useState(selectedOption);
   const options = ['現在地から提案', '場所を指定して提案'];
   const prefectures = [
     '北海道',
@@ -62,17 +60,19 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   ];
 
   useEffect(() => {
-    setShowPrefectureSelect(localSelectedOption === '場所を指定して提案');
-  }, [localSelectedOption]);
+    setShowPrefectureSelect(
+      selectedOption !== '現在地' && selectedOption !== ''
+    );
+  }, [selectedOption]);
 
   const handleOptionClick = (option: string) => {
     if (option === '現在地から提案') {
       setSelectedOption('現在地');
-      setLocalSelectedOption('現在地から提案');
     } else {
-      setLocalSelectedOption(option);
       setShowPrefectureSelect(true);
-      setSelectedOption(''); // リセット
+      if (selectedOption === '現在地') {
+        setSelectedOption(''); // リセット
+      }
     }
   };
 
@@ -80,9 +80,7 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selected = event.target.value;
-    if (selected) {
-      setSelectedOption(selected);
-    }
+    setSelectedOption(selected);
   };
 
   return (
@@ -95,10 +93,10 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
           <button
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
-              (option === '現在地から提案' &&
-                localSelectedOption === '現在地から提案') ||
+              (option === '現在地から提案' && selectedOption === '現在地') ||
               (option === '場所を指定して提案' &&
-                prefectures.includes(selectedOption))
+                selectedOption !== '現在地' &&
+                selectedOption !== '')
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 hover:bg-gray-300'
             }`}
@@ -112,7 +110,7 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
         <select
           onChange={handlePrefectureChange}
           className='w-full mt-4 p-2 border rounded-md'
-          value={prefectures.includes(selectedOption) ? selectedOption : ''}
+          value={selectedOption}
         >
           <option value=''>都道府県を選択</option>
           {prefectures.map((prefecture) => (
