@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.models import db
 from flask_cors import CORS
+from dotenv import load_dotenv
+# import stripe
 
 from app.routes.user_routes import user_routes
 from app.routes.condition_routes import condition_routes
@@ -12,6 +14,9 @@ from app.routes.store_routes import store_routes
 from app.routes.api_request_routes import api_request_routes
 
 migrate = Migrate()
+
+# 環境変数を読み込む
+load_dotenv()
 
 # アプリケーションファクトリ関数を定義
 def create_app():
@@ -23,6 +28,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
+    # Stripe設定
+    # stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
     # データベースとマイグレーションの初期化
     db.init_app(app)
     migrate.init_app(app, db)

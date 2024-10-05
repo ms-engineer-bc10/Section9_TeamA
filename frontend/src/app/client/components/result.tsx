@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
+import StripeCheckoutButton from './StripeCheckoutButton'; // Import the StripeCheckoutButton component
 
 interface ResultProps {
   answers: {
@@ -124,6 +125,9 @@ const Result: React.FC<ResultProps> = ({
                   </p>
                   <p className='text-sm'>{currentResult.llmComment}</p>
                 </div>
+              </div>
+              <div className='mt-4'>
+                <StripeCheckoutButton />
               </div>
             </div>
           </motion.div>

@@ -13,7 +13,7 @@ def search_yahoo_shopping(price_from=None, price_to=None):
         'sort': '+price',
         'results': '10',
         # "location"で入力された場所情報をqueryに含める必要あり
-        'query': 'おみやげ 大阪'
+        'query': 'おみやげ 東京'
     }
 
     if price_from is not None:
