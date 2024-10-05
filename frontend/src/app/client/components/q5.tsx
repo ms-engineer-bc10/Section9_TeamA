@@ -8,6 +8,8 @@ interface Q5Props {
 
 const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   const [showPrefectureSelect, setShowPrefectureSelect] = useState(false);
+  const [localSelectedOption, setLocalSelectedOption] =
+    useState(selectedOption);
   const options = ['現在地から提案', '場所を指定して提案'];
   const prefectures = [
     '北海道',
@@ -60,12 +62,18 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   ];
 
   useEffect(() => {
-    setShowPrefectureSelect(selectedOption === '場所を指定して提案');
-  }, [selectedOption]);
+    setShowPrefectureSelect(localSelectedOption === '場所を指定して提案');
+  }, [localSelectedOption]);
 
   const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setShowPrefectureSelect(option === '場所を指定して提案');
+    if (option === '現在地から提案') {
+      setSelectedOption('現在地');
+      setLocalSelectedOption('現在地から提案');
+    } else {
+      setLocalSelectedOption(option);
+      setShowPrefectureSelect(true);
+      setSelectedOption(''); // リセット
+    }
   };
 
   const handlePrefectureChange = (
@@ -87,7 +95,10 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
           <button
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
-              selectedOption === option
+              (option === '現在地から提案' &&
+                localSelectedOption === '現在地から提案') ||
+              (option === '場所を指定して提案' &&
+                prefectures.includes(selectedOption))
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 hover:bg-gray-300'
             }`}
@@ -101,7 +112,7 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
         <select
           onChange={handlePrefectureChange}
           className='w-full mt-4 p-2 border rounded-md'
-          value={selectedOption !== '場所を指定して提案' ? selectedOption : ''}
+          value={prefectures.includes(selectedOption) ? selectedOption : ''}
         >
           <option value=''>都道府県を選択</option>
           {prefectures.map((prefecture) => (
