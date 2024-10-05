@@ -6,6 +6,7 @@ import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
 
 interface ResultProps {
   answers: {
+    q5: string;
     q1: string;
     q2: string;
     q3: string;

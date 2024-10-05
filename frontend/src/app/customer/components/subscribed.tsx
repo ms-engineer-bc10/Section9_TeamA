@@ -16,7 +16,7 @@ const Subscribed: React.FC = () => {
     // この例では仮のデータを使用しています
     const mockData: LikedPhoto[] = Array.from({ length: 20 }, (_, i) => ({
       id: `${i + 1}`,
-      imageUrl: `/images/photo${i + 1}.jpg`,
+      imageUrl: `/api/placeholder/400/400`,
       likedAt: new Date(2023, 4, i + 1), // 2023年5月1日から順に日付を設定
     }));
     setLikedPhotos(mockData);
@@ -43,12 +43,12 @@ const Subscribed: React.FC = () => {
           <option value='oldest'>古い順</option>
         </select>
       </div>
-      <div className='overflow-y-auto flex-grow'>
-        <div
-          className='grid grid-cols-3 gap-4'
-          style={{ gridTemplateRows: 'repeat(4, 1fr)' }}
-        >
-          {sortedPhotos.slice(0, 12).map((photo) => (
+      <div
+        className='overflow-y-auto flex-grow'
+        style={{ maxHeight: 'calc(100vh - 200px)' }}
+      >
+        <div className='grid grid-cols-3 gap-4'>
+          {sortedPhotos.map((photo) => (
             <div key={photo.id} className='aspect-square relative'>
               <Image
                 src={photo.imageUrl}
@@ -60,21 +60,6 @@ const Subscribed: React.FC = () => {
             </div>
           ))}
         </div>
-        {sortedPhotos.length > 12 && (
-          <div className='mt-4 grid grid-cols-3 gap-4'>
-            {sortedPhotos.slice(12).map((photo) => (
-              <div key={photo.id} className='aspect-square relative'>
-                <Image
-                  src={photo.imageUrl}
-                  alt='Liked photo'
-                  layout='fill'
-                  objectFit='cover'
-                  className='rounded-lg'
-                />
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

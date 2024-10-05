@@ -4,6 +4,7 @@ import React from 'react';
 
 interface ConfirmProps {
   answers: {
+    q5: string;
     q1: string;
     q2: string;
     q3: string;

@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import React, { useState, useCallback } from 'react';
 import Q1 from '@/app/client/components/q1';
 import Q2 from '@/app/client/components/q2';
 import Q3 from '@/app/client/components/q3';
 import Q4 from '@/app/client/components/q4';
+import Q5 from '@/app/client/components/q5';
 import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
@@ -17,11 +18,13 @@ interface Answers {
   q2: Answer;
   q3: Answer;
   q4: Answer;
+  q5: Answer;
 }
 
 const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
+    Q5: '',
     q1: '',
     q2: '',
     q3: '',
@@ -31,7 +34,7 @@ const RequiredFieldPage: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
-  const questions = [Q1, Q2, Q3, Q4];
+  const questions = [Q5, Q1, Q2, Q3, Q4];
 
   const handleNext = useCallback(() => {
     const currentAnswer =
@@ -75,6 +78,7 @@ const RequiredFieldPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          place: answers.q5,
           recipient: answers.q1,
           category: answers.q2,
           price: answers.q3,
@@ -82,12 +86,12 @@ const RequiredFieldPage: React.FC = () => {
           location: '35.681236,139.767125', // ダミーの位置情報。今後位置情報取得機能を追加
         }),
       });
-  
+
       // ステータスコードが200番台でない場合はエラーを投げる
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       setSearchResults(data); // 結果を保存
       setShowResult(true); // 結果を表示
@@ -98,12 +102,12 @@ const RequiredFieldPage: React.FC = () => {
       setIsLoading(false); // ローディング終了
     }
   }, [answers]);
-  
 
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
     setAnswers({
+      q5: '',
       q1: '',
       q2: '',
       q3: '',
