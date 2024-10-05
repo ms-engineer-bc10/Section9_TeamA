@@ -88,7 +88,7 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   return (
     <div className='w-full max-w-lg bg-white shadow-md rounded-lg p-6'>
       <h1 className='text-xl font-semibold mb-4 text-center'>
-        OMIVALを使いたい場所は？
+        OMIYAGEを買いたい場所は？
       </h1>
       <div className='grid grid-cols-2 gap-4 mb-4'>
         {options.map((option) => (
