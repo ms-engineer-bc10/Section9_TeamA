@@ -1,10 +1,12 @@
+'use client';
+
 import React from 'react';
 
-type TabsProps = {
+interface TabsProps {
   tabs: string[];
   activeTab: string;
   onTabChange: (tab: string) => void;
-};
+}
 
 const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
   return (
