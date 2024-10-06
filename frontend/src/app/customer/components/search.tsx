@@ -123,12 +123,9 @@ const Search: React.FC = () => {
 
   const handleEditSearch = useCallback(() => {
     setShowResult(false);
-    setCurrentStep(0); // Q5 に戻る
+    setCurrentStep(0);
     setError(null);
-    // answers の状態はそのまま維持
   }, []);
-
-  const isNextDisabled = !answers[steps[currentStep].key as keyof Answers];
 
   return (
     <div className='bg-gray-100'>
@@ -150,7 +147,6 @@ const Search: React.FC = () => {
             totalQuestions={steps.length - 1}
             error={error}
             isConfirmPage={currentStep === steps.length - 1}
-            isNextDisabled={isNextDisabled}
           >
             {steps.map(({ component: StepComponent, key }, index) => (
               <div
