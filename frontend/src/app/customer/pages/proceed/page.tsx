@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Tabs from '../../components/Tabs';
 import Subscribed from '../../components/subscribed';
 import Ranking from '../../components/ranking';
+import History from '../../components/history';
+import Search from '../../components/search'; // 新しく追加
 
 const ProceedPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Search');
@@ -12,13 +14,13 @@ const ProceedPage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Search':
-        return <div>Search content here</div>;
+        return <Search />;
       case 'Likes':
         return <Subscribed />;
       case 'Ranking':
         return <Ranking />;
       case 'History':
-        return <div>History content here</div>;
+        return <History />; // 修正: Historyコンポーネントを返すように変更
       case 'Settings':
         return <div>Settings content here</div>;
       default:
