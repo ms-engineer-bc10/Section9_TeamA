@@ -1,4 +1,3 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\confirm.tsx
 'use client';
 import React from 'react';
 

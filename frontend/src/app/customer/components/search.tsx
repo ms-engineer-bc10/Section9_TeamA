@@ -128,8 +128,6 @@ const Search: React.FC = () => {
     // answers の状態はそのまま維持
   }, []);
 
-  const isNextDisabled = !answers[steps[currentStep].key as keyof Answers];
-
   return (
     <div className='bg-gray-100'>
       <div className='w-full max-w-lg mx-auto bg-white shadow-md rounded-lg overflow-hidden'>
@@ -150,7 +148,6 @@ const Search: React.FC = () => {
             totalQuestions={steps.length - 1}
             error={error}
             isConfirmPage={currentStep === steps.length - 1}
-            isNextDisabled={isNextDisabled}
           >
             {steps.map(({ component: StepComponent, key }, index) => (
               <div
@@ -166,11 +163,20 @@ const Search: React.FC = () => {
                     setSelectedOption={(option: string) =>
                       handleOptionSelect(option)
                     }
+                    answers={{
+                      q5: '',
+                      q1: '',
+                      q2: '',
+                      q3: '',
+                      q4: '',
+                    }}
+                    onSearch={function (): void {
+                      throw new Error('Function not implemented.');
+                    }}
                   />
                 )}
               </div>
             ))}
-            {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}
           </Slide>
         )}
       </div>
