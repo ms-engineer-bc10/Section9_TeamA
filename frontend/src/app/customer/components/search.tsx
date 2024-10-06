@@ -123,8 +123,9 @@ const Search: React.FC = () => {
 
   const handleEditSearch = useCallback(() => {
     setShowResult(false);
-    setCurrentStep(0);
+    setCurrentStep(0); // Q5 に戻る
     setError(null);
+    // answers の状態はそのまま維持
   }, []);
 
   return (
@@ -162,11 +163,20 @@ const Search: React.FC = () => {
                     setSelectedOption={(option: string) =>
                       handleOptionSelect(option)
                     }
+                    answers={{
+                      q5: '',
+                      q1: '',
+                      q2: '',
+                      q3: '',
+                      q4: '',
+                    }}
+                    onSearch={function (): void {
+                      throw new Error('Function not implemented.');
+                    }}
                   />
                 )}
               </div>
             ))}
-            {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}
           </Slide>
         )}
       </div>
