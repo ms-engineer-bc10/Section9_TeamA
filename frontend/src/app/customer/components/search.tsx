@@ -21,8 +21,8 @@ interface Answers {
   q5: Answer;
 }
 
-const RequiredFieldPage: React.FC = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+const Search: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
     q5: '',
     q1: '',
@@ -34,39 +34,45 @@ const RequiredFieldPage: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
-  const questions = [Q5, Q1, Q2, Q3, Q4];
+
+  const steps = [
+    { component: Q5, key: 'q5' },
+    { component: Q1, key: 'q1' },
+    { component: Q2, key: 'q2' },
+    { component: Q3, key: 'q3' },
+    { component: Q4, key: 'q4' },
+    { component: Confirm, key: 'confirm' },
+  ];
 
   const handleNext = useCallback(() => {
-    const currentAnswer =
-      answers[`q${currentQuestionIndex + 1}` as keyof Answers];
-    if (currentAnswer || currentQuestionIndex >= questions.length) {
-      setError(null);
-      if (currentQuestionIndex < questions.length) {
-        setCurrentQuestionIndex((prev) => prev + 1);
+    const currentQuestionKey = steps[currentStep].key as keyof Answers;
+    if (currentStep < steps.length - 1) {
+      if (answers[currentQuestionKey]) {
+        setError(null);
+        setCurrentStep((prev) => prev + 1);
+      } else {
+        setError('選択してください');
       }
-    } else {
-      setError('選択肢を選んでください。');
     }
-  }, [currentQuestionIndex, answers, questions.length]);
+  }, [currentStep, answers, steps.length]);
 
   const handlePrev = useCallback(() => {
-    if (currentQuestionIndex > 0) {
+    if (currentStep > 0) {
       setError(null);
-      setCurrentQuestionIndex((prev) => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
-  }, [currentQuestionIndex]);
+  }, [currentStep]);
 
   const handleOptionSelect = useCallback(
     (option: string) => {
+      const currentQuestionKey = steps[currentStep].key as keyof Answers;
       setAnswers((prev) => ({
         ...prev,
-        [`q${currentQuestionIndex + 1}`]: option,
+        [currentQuestionKey]: option,
       }));
-      if (currentQuestionIndex < questions.length - 1) {
-        handleNext();
-      }
+      setError(null);
     },
-    [currentQuestionIndex, questions.length, handleNext]
+    [currentStep, steps]
   );
 
   const handleSearch = useCallback(async () => {
@@ -83,29 +89,28 @@ const RequiredFieldPage: React.FC = () => {
           category: answers.q2,
           price: answers.q3,
           quantity: answers.q4,
-          location: '35.681236,139.767125', // ダミーの位置情報。今後位置情報取得機能を追加
+          location: '35.681236,139.767125', // ダミーの位置情報
         }),
       });
 
-      // ステータスコードが200番台でない場合はエラーを投げる
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      setSearchResults(data); // 結果を保存
-      setShowResult(true); // 結果を表示
+      setSearchResults(data);
+      setShowResult(true);
     } catch (error) {
       setError('検索中にエラーが発生しました。');
       console.error('APIリクエストエラー:', error);
     } finally {
-      setIsLoading(false); // ローディング終了
+      setIsLoading(false);
     }
   }, [answers]);
 
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
-    setCurrentQuestionIndex(0);
+    setCurrentStep(0);
     setAnswers({
       q5: '',
       q1: '',
@@ -113,24 +118,19 @@ const RequiredFieldPage: React.FC = () => {
       q3: '',
       q4: '',
     });
+    setError(null);
   }, []);
 
   const handleEditSearch = useCallback(() => {
     setShowResult(false);
-    setCurrentQuestionIndex(0);
-    // answers はリセットしない
+    setCurrentStep(0); // Q5 に戻る
+    setError(null);
+    // answers の状態はそのまま維持
   }, []);
 
-  const isConfirmPage = currentQuestionIndex === questions.length;
-
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
-      <div className='w-full max-w-lg p-4 mb-8 border-4 border-blue-500 rounded-md text-center bg-white shadow-md'>
-        <p className='text-lg text-gray-700'>
-          あなたにピッタリのOMIYAGEを見つけましょう！
-        </p>
-      </div>
-      <div className='w-full max-w-lg'>
+    <div className='bg-gray-100'>
+      <div className='w-full max-w-lg mx-auto bg-white shadow-md rounded-lg overflow-hidden'>
         {isLoading ? (
           <Loading />
         ) : showResult ? (
@@ -144,22 +144,39 @@ const RequiredFieldPage: React.FC = () => {
           <Slide
             onPrev={handlePrev}
             onNext={handleNext}
-            currentQuestionIndex={currentQuestionIndex}
-            totalQuestions={questions.length}
+            currentQuestionIndex={currentStep}
+            totalQuestions={steps.length - 1}
             error={error}
-            isConfirmPage={isConfirmPage}
+            isConfirmPage={currentStep === steps.length - 1}
           >
-            {questions.map((QuestionComponent, index) => (
-              <QuestionComponent
-                key={index}
-                onNext={handleOptionSelect}
-                selectedOption={answers[`q${index + 1}` as keyof Answers]}
-                setSelectedOption={(option: string) =>
-                  setAnswers((prev) => ({ ...prev, [`q${index + 1}`]: option }))
-                }
-              />
+            {steps.map(({ component: StepComponent, key }, index) => (
+              <div
+                key={key}
+                style={{ display: currentStep === index ? 'block' : 'none' }}
+              >
+                {key === 'confirm' ? (
+                  <Confirm answers={answers} onSearch={handleSearch} />
+                ) : (
+                  <StepComponent
+                    onNext={handleOptionSelect}
+                    selectedOption={answers[key as keyof Answers]}
+                    setSelectedOption={(option: string) =>
+                      handleOptionSelect(option)
+                    }
+                    answers={{
+                      q5: '',
+                      q1: '',
+                      q2: '',
+                      q3: '',
+                      q4: '',
+                    }}
+                    onSearch={function (): void {
+                      throw new Error('Function not implemented.');
+                    }}
+                  />
+                )}
+              </div>
             ))}
-            <Confirm answers={answers} onSearch={handleSearch} />
           </Slide>
         )}
       </div>
@@ -167,4 +184,4 @@ const RequiredFieldPage: React.FC = () => {
   );
 };
 
-export default RequiredFieldPage;
+export default Search;

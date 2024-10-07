@@ -7,6 +7,7 @@ import StripeCheckoutButton from './StripeCheckoutButton'; // Import the StripeC
 
 interface ResultProps {
   answers: {
+    q5: string;
     q1: string;
     q2: string;
     q3: string;

@@ -11,7 +11,7 @@ def search_yahoo_shopping(price_from=None, price_to=None):
     params = {
         'appid': 'API_KEY',
         'sort': '+price',
-        'results': '10',
+        'results': '30',
         # "location"で入力された場所情報をqueryに含める必要あり
         'query': 'おみやげ 東京'
     }
@@ -22,4 +22,9 @@ def search_yahoo_shopping(price_from=None, price_to=None):
         params['price_to'] = price_to
 
     response = requests.get(url, headers=headers, params=params)
-    return response.json() if response.status_code == 200 else None
+    if response.status_code == 200:
+        result = response.json()
+        for idx, item in enumerate(result.get('hits', [])):
+            item['id'] = idx
+        return result
+    return None

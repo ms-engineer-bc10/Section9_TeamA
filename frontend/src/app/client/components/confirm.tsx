@@ -1,9 +1,9 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\confirm.tsx
 'use client';
 import React from 'react';
 
 interface ConfirmProps {
   answers: {
+    q5: string;
     q1: string;
     q2: string;
     q3: string;
