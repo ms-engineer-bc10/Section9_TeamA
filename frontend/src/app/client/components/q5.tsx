@@ -97,8 +97,8 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
               (option === '場所を指定して提案' &&
                 selectedOption !== '現在地' &&
                 selectedOption !== '')
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-[#2F41B0] text-white'
+                : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
             onClick={() => handleOptionClick(option)}
           >

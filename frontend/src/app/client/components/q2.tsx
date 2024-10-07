@@ -26,8 +26,8 @@ const Q2: React.FC<Q2Props> = ({ selectedOption, setSelectedOption }) => {
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
               selectedOption === option
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-[#2F41B0] text-white'
+                : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
             onClick={() => handleOptionClick(option)}
           >
