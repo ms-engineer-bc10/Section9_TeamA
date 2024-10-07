@@ -10,6 +10,7 @@ import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
 import Loading from '@/app/client/components/loading';
+import Menubar from '@/app/client/components/menubar';
 
 type Answer = '' | string;
 
@@ -162,6 +163,9 @@ const RequiredFieldPage: React.FC = () => {
             <Confirm answers={answers} onSearch={handleSearch} />
           </Slide>
         )}
+      </div>
+      <div className='fixed bottom-0 left-0 right-0'>
+        <Menubar />
       </div>
     </div>
   );
