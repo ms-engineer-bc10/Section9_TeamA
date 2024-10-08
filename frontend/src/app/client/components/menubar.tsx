@@ -33,8 +33,8 @@ const MenuBar: React.FC = () => {
     <div className='fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-full flex justify-around items-center h-14 w-full max-w-lg shadow-lg'>
       <MenuItem icon={Home} label='Home' href='/client/pages/requiredfield' />
       <MenuItem icon={Clock} label='History' href='/client/pages/history' />
-      <MenuItem icon={Heart} label='Likes' />
-      <MenuItem icon={Crown} label='Ranking' />
+      <MenuItem icon={Heart} label='Likes' href='/client/pages/likes' />
+      <MenuItem icon={Crown} label='Ranking' href='/client/pages/ranking' />
     </div>
   );
 };

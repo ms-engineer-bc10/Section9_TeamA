@@ -1,14 +1,17 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\q3.tsx
+// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\budget.tsx
 'use client';
 import React from 'react';
 
 // Propsの型を定義
-interface Q3Props {
+interface budgetProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const Q3: React.FC<Q3Props> = ({ selectedOption, setSelectedOption }) => {
+const budget: React.FC<budgetProps> = ({
+  selectedOption,
+  setSelectedOption,
+}) => {
   const options = [
     '¥0〜1,999',
     '¥2,000〜3,999',
@@ -46,4 +49,4 @@ const Q3: React.FC<Q3Props> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default Q3;
+export default budget;

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
+import MenuBar from '@/app/client/components/menubar';
 
 interface RankingItem {
   id: number;
@@ -118,16 +119,21 @@ const Ranking: React.FC = () => {
   );
 
   return (
-    <div className='bg-white shadow-md rounded-lg p-6'>
-      <h2 className='text-2xl font-bold mb-4 text-center'>
-        人気のお土産ランキング
-      </h2>
+    <div className='flex flex-col min-h-screen bg-gray-100'>
+      <div className='flex-grow container mx-auto px-4 py-8'>
+        <div className='bg-white shadow-md rounded-lg p-6'>
+          <h2 className='text-2xl font-bold mb-4 text-center'>
+            人気のお土産ランキング
+          </h2>
 
-      <div className='overflow-y-auto max-h-[600px] space-y-4'>
-        {rankingData.map((item, index) => (
-          <RankingItem key={item.id} item={item} index={index} />
-        ))}
+          <div className='overflow-y-auto max-h-[calc(100vh-300px)] space-y-4'>
+            {rankingData.map((item, index) => (
+              <RankingItem key={item.id} item={item} index={index} />
+            ))}
+          </div>
+        </div>
       </div>
+      <MenuBar />
     </div>
   );
 };

@@ -1,12 +1,15 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-interface Q5Props {
+interface locationProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
+const location: React.FC<locationProps> = ({
+  selectedOption,
+  setSelectedOption,
+}) => {
   const [showPrefectureSelect, setShowPrefectureSelect] = useState(false);
   const options = ['現在地から提案', '場所を指定して提案'];
   const prefectures = [
@@ -124,4 +127,4 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default Q5;
+export default location;

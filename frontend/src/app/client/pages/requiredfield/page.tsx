@@ -2,11 +2,11 @@
 
 import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
-import Q1 from '@/app/client/components/q1';
-import Q2 from '@/app/client/components/q2';
-import Q3 from '@/app/client/components/q3';
-import Q4 from '@/app/client/components/q4';
-import Q5 from '@/app/client/components/q5';
+import target from '@/app/client/components/target';
+import genre from '@/app/client/components/genre';
+import budget from '@/app/client/components/budget';
+import quantity from '@/app/client/components/quantity';
+import location from '@/app/client/components/location';
 import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
@@ -16,11 +16,11 @@ import MenuBar from '@/app/client/components/menubar';
 type Answer = '' | string;
 
 interface Answers {
-  q1: Answer;
-  q2: Answer;
-  q3: Answer;
-  q4: Answer;
-  q5: Answer;
+  target: Answer;
+  genre: Answer;
+  budget: Answer;
+  quantity: Answer;
+  location: Answer;
 }
 
 const MenuItem: React.FC<{
@@ -52,17 +52,17 @@ const MenuItem: React.FC<{
 const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
-    q5: '',
-    q1: '',
-    q2: '',
-    q3: '',
-    q4: '',
+    location: '',
+    target: '',
+    genre: '',
+    budget: '',
+    quantity: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
-  const questions = [Q5, Q1, Q2, Q3, Q4];
+  const questions = [location, target, genre, budget, quantity];
 
   const handleNext = useCallback(() => {
     const currentAnswer =
@@ -106,11 +106,11 @@ const RequiredFieldPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          place: answers.q5,
-          recipient: answers.q1,
-          category: answers.q2,
-          price: answers.q3,
-          quantity: answers.q4,
+          place: answers.location,
+          recipient: answers.target,
+          category: answers.genre,
+          price: answers.budget,
+          quantity: answers.quantity,
           location: '35.681236,139.767125', // ダミーの位置情報。今後位置情報取得機能を追加
         }),
       });
@@ -135,11 +135,11 @@ const RequiredFieldPage: React.FC = () => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
     setAnswers({
-      q5: '',
-      q1: '',
-      q2: '',
-      q3: '',
-      q4: '',
+      location: '',
+      target: '',
+      genre: '',
+      budget: '',
+      quantity: '',
     });
   }, []);
 

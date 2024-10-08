@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import MenuBar from '@/app/client/components/menubar';
 
 interface LikedPhoto {
   id: string;
@@ -9,7 +10,7 @@ interface LikedPhoto {
   likedAt: Date;
 }
 
-const Subscribed: React.FC = () => {
+const LikesPage: React.FC = () => {
   const [likedPhotos, setLikedPhotos] = useState<LikedPhoto[]>([]);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
@@ -32,35 +33,44 @@ const Subscribed: React.FC = () => {
   });
 
   return (
-    <div className='bg-white shadow-md rounded-lg p-6'>
-      <h2 className='text-2xl font-bold mb-4 text-center'>いいねした写真</h2>
-      <div className='mb-4 flex justify-end'>
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as 'newest' | 'oldest')}
-          className='border rounded p-2'
-        >
-          <option value='newest'>新しい順</option>
-          <option value='oldest'>古い順</option>
-        </select>
-      </div>
-      <div className='overflow-y-auto max-h-[600px]'>
-        <div className='grid grid-cols-3 gap-4'>
-          {sortedPhotos.map((photo) => (
-            <div key={photo.id} className='aspect-square relative'>
-              <Image
-                src={photo.imageUrl}
-                alt={`Liked photo ${photo.id}`}
-                layout='fill'
-                objectFit='cover'
-                className='rounded-lg'
-              />
+    <div className='flex flex-col min-h-screen bg-gray-100'>
+      <div className='flex-grow container mx-auto px-4 py-8'>
+        <div className='bg-white shadow-md rounded-lg p-6'>
+          <h2 className='text-2xl font-bold mb-4 text-center'>
+            いいねした写真
+          </h2>
+          <div className='mb-4 flex justify-end'>
+            <select
+              value={sortOrder}
+              onChange={(e) =>
+                setSortOrder(e.target.value as 'newest' | 'oldest')
+              }
+              className='border rounded p-2'
+            >
+              <option value='newest'>新しい順</option>
+              <option value='oldest'>古い順</option>
+            </select>
+          </div>
+          <div className='overflow-y-auto max-h-[calc(100vh-300px)]'>
+            <div className='grid grid-cols-3 gap-4'>
+              {sortedPhotos.map((photo) => (
+                <div key={photo.id} className='aspect-square relative'>
+                  <Image
+                    src={photo.imageUrl}
+                    alt={`Liked photo ${photo.id}`}
+                    layout='fill'
+                    objectFit='cover'
+                    className='rounded-lg'
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
+      <MenuBar />
     </div>
   );
 };
 
-export default Subscribed;
+export default LikesPage;

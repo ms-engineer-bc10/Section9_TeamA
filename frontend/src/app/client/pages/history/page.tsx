@@ -8,11 +8,11 @@ interface HistoryItem {
   id: string;
   date: string;
   answers: {
-    q5: string; // 個数
-    q1: string; // 現在地
-    q2: string; // 誰と
-    q3: string; // 食べ物
-    q4: string; // 金額
+    location: string; //
+    target: string; //
+    genre: string; //
+    budget: string; //
+    quantity: string; //
   };
   image: string;
 }
@@ -22,11 +22,11 @@ const mockHistoryItems: HistoryItem[] = [
     id: '1',
     date: '10/1',
     answers: {
-      q5: '2〜5個',
-      q1: '東京',
-      q2: '友人',
-      q3: '和菓子',
-      q4: '¥1,000〜2,999',
+      location: '2〜5個',
+      target: '東京',
+      genre: '友人',
+      budget: '和菓子',
+      quantity: '¥1,000〜2,999',
     },
     image: '/api/placeholder/100/100',
   },

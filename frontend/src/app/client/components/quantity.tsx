@@ -1,14 +1,14 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\q4.tsx
+// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\quantity.tsx
 'use client';
 import React from 'react';
 
-interface Q4Props {
+interface quantityProps {
   onNext: (selectedOption: string) => void;
   selectedOption: string | null;
   setSelectedOption: (option: string) => void;
 }
 
-const Q4: React.FC<Q4Props> = ({
+const quantity: React.FC<quantityProps> = ({
   onNext,
   selectedOption,
   setSelectedOption,
@@ -42,4 +42,4 @@ const Q4: React.FC<Q4Props> = ({
   );
 };
 
-export default Q4;
+export default quantity;
