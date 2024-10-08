@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import Link from 'next/link';
 import Q1 from '@/app/client/components/q1';
 import Q2 from '@/app/client/components/q2';
 import Q3 from '@/app/client/components/q3';
@@ -10,7 +11,7 @@ import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
 import Loading from '@/app/client/components/loading';
-import Menubar from '@/app/client/components/menubar';
+import MenuBar from '@/app/client/components/menubar';
 
 type Answer = '' | string;
 
@@ -21,6 +22,32 @@ interface Answers {
   q4: Answer;
   q5: Answer;
 }
+
+const MenuItem: React.FC<{
+  icon: React.ElementType;
+  label: string;
+  href?: string;
+}> = ({ icon: Icon, label, href }) => {
+  const content = (
+    <>
+      <Icon size={20} />
+      <span className='text-xs mt-0.5'>{label}</span>
+    </>
+  );
+
+  return href ? (
+    <Link
+      href={href}
+      className='flex flex-col items-center justify-center w-full py-1 text-gray-600 hover:text-blue-500 transition-colors'
+    >
+      {content}
+    </Link>
+  ) : (
+    <button className='flex flex-col items-center justify-center w-full py-1 text-gray-600 hover:text-blue-500 transition-colors'>
+      {content}
+    </button>
+  );
+};
 
 const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -125,7 +152,7 @@ const RequiredFieldPage: React.FC = () => {
   const isConfirmPage = currentQuestionIndex === questions.length;
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
+    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
       <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
         <p className='text-lg text-gray-700'>
           あなたにピッタリのOMIYAGEを見つけましょう！
@@ -164,9 +191,7 @@ const RequiredFieldPage: React.FC = () => {
           </Slide>
         )}
       </div>
-      <div className='fixed bottom-0 left-0 right-0'>
-        <Menubar />
-      </div>
+      <MenuBar />
     </div>
   );
 };
