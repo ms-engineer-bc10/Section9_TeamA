@@ -1,14 +1,17 @@
-// src/app/components/q1.tsx (同様に Q2, Q3, Q4 も修正)
+// src/app/components/target.tsx (同様に genre, budget, quantity も修正)
 'use client';
 import React from 'react';
 
 // Propsの型を定義
-interface Q1Props {
+interface targetProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const Q1: React.FC<Q1Props> = ({ selectedOption, setSelectedOption }) => {
+const target: React.FC<targetProps> = ({
+  selectedOption,
+  setSelectedOption,
+}) => {
   const options = ['家族', '友人', '恋人', '職場', '自分'];
 
   const handleOptionClick = (option: string) => {
@@ -26,8 +29,8 @@ const Q1: React.FC<Q1Props> = ({ selectedOption, setSelectedOption }) => {
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
               selectedOption === option
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-[#2F41B0] text-white'
+                : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
             onClick={() => handleOptionClick(option)}
           >
@@ -38,8 +41,8 @@ const Q1: React.FC<Q1Props> = ({ selectedOption, setSelectedOption }) => {
           key='自分'
           className={`col-span-2 py-2 px-4 text-lg rounded-md border transition-colors ${
             selectedOption === '自分'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 hover:bg-gray-300'
+              ? 'bg-[#2F41B0] text-white'
+              : 'bg-gray-200 hover:bg-[#5A73D7]'
           }`}
           onClick={() => handleOptionClick('自分')}
         >
@@ -50,4 +53,4 @@ const Q1: React.FC<Q1Props> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default Q1;
+export default target;

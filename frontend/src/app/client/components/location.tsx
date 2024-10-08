@@ -1,12 +1,16 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 
-interface Q5Props {
+interface LocationProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
+const Location: React.FC<LocationProps> = ({
+  selectedOption,
+  setSelectedOption,
+}) => {
   const [showPrefectureSelect, setShowPrefectureSelect] = useState(false);
   const options = ['現在地から提案', '場所を指定して提案'];
   const prefectures = [
@@ -97,8 +101,8 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
               (option === '場所を指定して提案' &&
                 selectedOption !== '現在地' &&
                 selectedOption !== '')
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-[#2F41B0] text-white'
+                : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
             onClick={() => handleOptionClick(option)}
           >
@@ -124,4 +128,4 @@ const Q5: React.FC<Q5Props> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default Q5;
+export default Location;
