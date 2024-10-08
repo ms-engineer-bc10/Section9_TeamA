@@ -1,33 +1,36 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\client\components\q2.tsx
+// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\quantity.tsx
 'use client';
 import React from 'react';
 
-// Propsの型を定義
-interface Q2Props {
-  selectedOption: string;
+interface quantityProps {
+  onNext: (selectedOption: string) => void;
+  selectedOption: string | null;
   setSelectedOption: (option: string) => void;
 }
 
-const Q2: React.FC<Q2Props> = ({ selectedOption, setSelectedOption }) => {
-  const options = ['食べ物', 'モノ'];
+const quantity: React.FC<quantityProps> = ({
+  onNext,
+  selectedOption,
+  setSelectedOption,
+}) => {
+  const options = ['1個', '2〜5個', '6〜10個', '11〜15個', '16個以上'];
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
+    onNext(option);
   };
 
   return (
     <div className='w-full max-w-lg bg-white shadow-md rounded-lg p-6'>
-      <h1 className='text-xl font-semibold mb-4 text-center'>
-        希望のOMIYAGEジャンルは？
-      </h1>
+      <h1 className='text-xl font-semibold mb-4 text-center'>個数は？</h1>
       <div className='grid grid-cols-2 gap-4 mb-4'>
         {options.map((option) => (
           <button
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
               selectedOption === option
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-[#2F41B0] text-white'
+                : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
             onClick={() => handleOptionClick(option)}
           >
@@ -39,4 +42,4 @@ const Q2: React.FC<Q2Props> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default Q2;
+export default quantity;
