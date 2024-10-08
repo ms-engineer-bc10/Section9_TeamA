@@ -7,11 +7,11 @@ import StripeCheckoutButton from './StripeCheckoutButton'; // Import the StripeC
 
 interface ResultProps {
   answers: {
-    q5: string;
-    q1: string;
-    q2: string;
-    q3: string;
-    q4: string;
+    location: string;
+    target: string;
+    genre: string;
+    budget: string;
+    quantity: string;
   };
   searchResults: any;
   onResetSearch: () => void;

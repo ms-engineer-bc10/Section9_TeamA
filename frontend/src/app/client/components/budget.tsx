@@ -1,14 +1,17 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\q3.tsx
+// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\budget.tsx
 'use client';
 import React from 'react';
 
 // Propsの型を定義
-interface Q3Props {
+interface budgetProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const Q3: React.FC<Q3Props> = ({ selectedOption, setSelectedOption }) => {
+const budget: React.FC<budgetProps> = ({
+  selectedOption,
+  setSelectedOption,
+}) => {
   const options = [
     '¥0〜1,999',
     '¥2,000〜3,999',
@@ -33,8 +36,8 @@ const Q3: React.FC<Q3Props> = ({ selectedOption, setSelectedOption }) => {
             key={option}
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
               selectedOption === option
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-[#2F41B0] text-white'
+                : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
             onClick={() => handleOptionClick(option)}
           >
@@ -46,4 +49,4 @@ const Q3: React.FC<Q3Props> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default Q3;
+export default budget;

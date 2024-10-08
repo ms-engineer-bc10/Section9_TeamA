@@ -1,4 +1,3 @@
-// C:\Users\ki3ic\BC10\private\jikken\my-app\src\app\components\slide.tsx
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSpring, animated } from 'react-spring';
@@ -40,7 +39,7 @@ const Slide: React.FC<SlideProps> = ({
         <button
           onClick={onPrev}
           disabled={currentQuestionIndex === 0}
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50'
+          className='bg-[#2F41B0] hover:bg-[#5A73D7] text-white font-bold py-2 px-4 rounded disabled:opacity-50'
         >
           <ChevronLeft />
         </button>
@@ -51,14 +50,14 @@ const Slide: React.FC<SlideProps> = ({
                 <div
                   key={i}
                   className={`w-2 h-2 rounded-full ${
-                    i === currentQuestionIndex ? 'bg-blue-500' : 'bg-gray-300'
+                    i === currentQuestionIndex ? 'bg-[#2F41B0]' : 'bg-gray-300'
                   }`}
                 />
               ))}
             </div>
             <button
               onClick={onNext}
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+              className='bg-[#2F41B0] hover:bg-[#5A73D7] text-white font-bold py-2 px-4 rounded'
             >
               <ChevronRight />
             </button>
