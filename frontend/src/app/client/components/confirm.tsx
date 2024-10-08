@@ -62,4 +62,3 @@ const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
 };
 
 export default Confirm;
-``;
