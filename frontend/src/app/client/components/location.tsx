@@ -1,12 +1,13 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 
-interface locationProps {
+interface LocationProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const location: React.FC<locationProps> = ({
+const Location: React.FC<LocationProps> = ({
   selectedOption,
   setSelectedOption,
 }) => {
@@ -127,4 +128,4 @@ const location: React.FC<locationProps> = ({
   );
 };
 
-export default location;
+export default Location;
