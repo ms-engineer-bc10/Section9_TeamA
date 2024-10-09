@@ -2,17 +2,18 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { Trash2 } from 'lucide-react';
 import MenuBar from '@/app/client/components/menubar';
 
 interface HistoryItem {
   id: string;
   date: string;
   answers: {
-    location: string; //
-    target: string; //
-    genre: string; //
-    budget: string; //
-    quantity: string; //
+    location: string;
+    target: string;
+    genre: string;
+    budget: string;
+    quantity: string;
   };
   image: string;
 }
@@ -22,41 +23,111 @@ const mockHistoryItems: HistoryItem[] = [
     id: '1',
     date: '10/1',
     answers: {
-      location: '2〜5個',
-      target: '東京',
-      genre: '友人',
-      budget: '和菓子',
-      quantity: '¥1,000〜2,999',
+      location: '現在地',
+      target: '友人',
+      genre: '食べ物',
+      budget: '1,000～1,999',
+      quantity: '5個以内',
     },
     image: '/api/placeholder/100/100',
   },
-  // ... 他のモックデータ項目
+  {
+    id: '2',
+    date: '10/2',
+    answers: {
+      location: '東京',
+      target: '家族',
+      genre: 'お土産',
+      budget: '2,000～4,999',
+      quantity: '10個以内',
+    },
+    image: '/api/placeholder/100/100',
+  },
+  {
+    id: '3',
+    date: '10/3',
+    answers: {
+      location: '大阪',
+      target: '同僚',
+      genre: '雑貨',
+      budget: '5,000～9,999',
+      quantity: '3個以内',
+    },
+    image: '/api/placeholder/100/100',
+  },
+  {
+    id: '4',
+    date: '10/4',
+    answers: {
+      location: '京都',
+      target: '恋人',
+      genre: 'アクセサリー',
+      budget: '10,000～19,999',
+      quantity: '1個',
+    },
+    image: '/api/placeholder/100/100',
+  },
+  {
+    id: '5',
+    date: '10/5',
+    answers: {
+      location: '北海道',
+      target: '先生',
+      genre: 'スイーツ',
+      budget: '1,000～1,999',
+      quantity: '6個以内',
+    },
+    image: '/api/placeholder/100/100',
+  },
+  {
+    id: '6',
+    date: '10/6',
+    answers: {
+      location: '沖縄',
+      target: '自分用',
+      genre: 'ファッション',
+      budget: '20,000以上',
+      quantity: '2個以内',
+    },
+    image: '/api/placeholder/100/100',
+  },
 ];
 
-const HistoryItem: React.FC<{ item: HistoryItem }> = ({ item }) => (
+const HistoryItem: React.FC<{
+  item: HistoryItem;
+  onDelete: (id: string) => void;
+}> = ({ item, onDelete }) => (
   <div className='border rounded-lg p-2'>
-    <div className='grid grid-cols-6 gap-2 items-center'>
+    <div className='grid grid-cols-7 gap-1 items-center'>
       <div className='row-span-3 flex items-center justify-center'>
-        <div className='w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center'>
-          <span className='text-lg font-semibold'>{item.date}</span>
+        <div className='w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center'>
+          <span className='text-sm font-bold'>{item.date}</span>
         </div>
       </div>
-      <div className='col-span-4 grid grid-cols-2 gap-1'>
-        {Object.entries(item.answers).map(([key, value]) => (
+      <div className='col-span-5 grid grid-cols-2 gap-1'>
+        {Object.entries(item.answers).map(([key, value], index) => (
           <div
             key={key}
-            className='py-1 px-2 text-sm rounded-md bg-gray-200 text-gray-700 truncate'
+            className={`py-1 px-1 text-xs rounded-md bg-gray-200 text-gray-700 truncate font-semibold ${
+              index === 4 ? 'col-span-1' : ''
+            }`}
           >
             {value}
           </div>
         ))}
+        <button
+          onClick={() => onDelete(item.id)}
+          className='py-1 px-1 text-xs rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
+        >
+          <Trash2 size={14} className='mr-1' /> 削除
+        </button>
       </div>
       <div className='row-span-3'>
         <Image
           src={item.image}
           alt='選択したアイテム'
-          width={96}
-          height={96}
+          width={64}
+          height={64}
           className='object-cover rounded-md mx-auto'
         />
       </div>
@@ -74,17 +145,17 @@ const Pagination: React.FC<{
     <button
       onClick={onPrevPage}
       disabled={currentPage === 1}
-      className='py-2 px-4 text-sm rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50'
+      className='py-2 px-4 text-xs rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50 font-semibold'
     >
       前へ
     </button>
-    <span className='py-2 px-4 text-sm'>
+    <span className='py-2 px-4 text-xs font-semibold'>
       {currentPage} / {totalPages}
     </span>
     <button
       onClick={onNextPage}
       disabled={currentPage === totalPages}
-      className='py-2 px-4 text-sm rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50'
+      className='py-2 px-4 text-xs rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50 font-semibold'
     >
       次へ
     </button>
@@ -92,28 +163,32 @@ const Pagination: React.FC<{
 );
 
 const History: React.FC = () => {
+  const [historyItems, setHistoryItems] = useState(mockHistoryItems);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = mockHistoryItems.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const totalPages = Math.ceil(mockHistoryItems.length / itemsPerPage);
+  const currentItems = historyItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(historyItems.length / itemsPerPage);
 
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
+  const handleDelete = (id: string) => {
+    setHistoryItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  };
+
   return (
-    <div className='flex flex-col items-center justify-start min-h-screen bg-gray-100 pb-24'>
-      <div className='w-full max-w-4xl bg-white shadow-md rounded-lg p-6 my-8'>
-        <h1 className='text-xl font-semibold mb-4 text-center'>検索履歴</h1>
-        <div className='space-y-4 max-h-[60vh] overflow-y-auto'>
+    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
+      <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
+        <h1 className='text-lg font-bold text-gray-700'>検索履歴</h1>
+      </div>
+      <div className='w-full max-w-lg bg-white shadow-md rounded-lg p-4'>
+        <div className='space-y-3 max-h-[60vh] overflow-y-auto'>
           {currentItems.map((item) => (
-            <HistoryItem key={item.id} item={item} />
+            <HistoryItem key={item.id} item={item} onDelete={handleDelete} />
           ))}
         </div>
         <Pagination
