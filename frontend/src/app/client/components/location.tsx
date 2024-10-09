@@ -72,6 +72,19 @@ const Location: React.FC<LocationProps> = ({
   const handleOptionClick = (option: string) => {
     if (option === '現在地から提案') {
       setSelectedOption('現在地');
+    
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+          },
+          (error) => {
+            console.error("Error retrieving location", error);
+          }
+        );
+      }
+      
     } else {
       setShowPrefectureSelect(true);
       if (selectedOption === '現在地') {
