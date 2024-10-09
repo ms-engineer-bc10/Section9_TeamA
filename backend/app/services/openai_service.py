@@ -11,8 +11,16 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
     location = get_recommendations.get('location')
     shopping_results = get_recommendations.get('shopping_results', {}).get('hits', [])
 
+    if not shopping_results:
+        print("No shopping results found.")
+        return None, None
+
     # 以前の提案商品を除外した商品リストを作成
     filtered_products = [item for item in shopping_results if item['id'] != previous_product_id]
+
+    if not filtered_products:
+        print("No products found after filtering.")
+        return None, None
 
     products_list = [{
         '商品名': item.get('name', '不明'),

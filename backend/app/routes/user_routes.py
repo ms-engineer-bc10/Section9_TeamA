@@ -13,36 +13,33 @@ user_routes = Blueprint('user_routes', __name__)
 def get_recommendations():
     data = request.json
     print(f"Received data: {data}")
-
-    if not data:
-        return jsonify({"error": "No data received"}), 400
-
     budget = data.get('budget')
-    if not budget:
-        return jsonify({"error": "Budget is required"}), 400
-    
-    target = data.get('target')
-    budget = data.get('budget')
-    quantity = data.get('quantity')
-    location = data.get('location')
     budget_from, budget_to = parse_budget(budget)
+    
+    # YahooショッピングAPIからの結果を取得
     shopping_results = search_yahoo_shopping(budget_from, budget_to)
+    if not shopping_results:
+        return jsonify({"error": "No shopping results found"}), 500
     print(f"Shopping results: {shopping_results}")
 
     ai_input_data = {
-        'target': target,
+        'target': data.get('target'),
         'genre': data.get('genre'),
         'budget': budget,
-        'quantity': quantity,
-        'location': location,
+        'quantity': data.get('quantity'),
+        'location': data.get('location'),
         'shopping_results': shopping_results
     }
     print(f"AI Input Data: {ai_input_data}")
 
     ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
+    if not ai_recommend or not selected_product:
+        return jsonify({"error": "AI recommendation failed"}), 500
 
 
-    places_results = search_google_places(location, radius=1000)
+    places_results = search_google_places(data.get('location'), radius=1000)
+    if not places_results:
+        return jsonify({"error": "No places found"}), 500
 
     return generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
 
