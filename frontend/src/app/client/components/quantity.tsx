@@ -2,13 +2,13 @@
 'use client';
 import React from 'react';
 
-interface quantityProps {
+interface QuantityProps {
   onNext: (selectedOption: string) => void;
   selectedOption: string | null;
   setSelectedOption: (option: string) => void;
 }
 
-const quantity: React.FC<quantityProps> = ({
+const Quantity: React.FC<QuantityProps> = ({
   onNext,
   selectedOption,
   setSelectedOption,
@@ -42,4 +42,4 @@ const quantity: React.FC<quantityProps> = ({
   );
 };
 
-export default quantity;
+export default Quantity;

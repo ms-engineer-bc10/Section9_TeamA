@@ -3,12 +3,12 @@
 import React from 'react';
 
 // Propsの型を定義
-interface genreProps {
+interface GenreProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const genre: React.FC<genreProps> = ({ selectedOption, setSelectedOption }) => {
+const Genre: React.FC<GenreProps> = ({ selectedOption, setSelectedOption }) => {
   const options = ['食べ物', 'モノ'];
 
   const handleOptionClick = (option: string) => {
@@ -39,4 +39,4 @@ const genre: React.FC<genreProps> = ({ selectedOption, setSelectedOption }) => {
   );
 };
 
-export default genre;
+export default Genre;
