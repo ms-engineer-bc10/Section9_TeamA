@@ -12,12 +12,22 @@ user_routes = Blueprint('user_routes', __name__)
 @user_routes.route('/recommend', methods=['POST'])
 def get_recommendations():
     data = request.json
+    print(f"Received data: {data}")
+
+    if not data:
+        return jsonify({"error": "No data received"}), 400
+
+    budget = data.get('budget')
+    if not budget:
+        return jsonify({"error": "Budget is required"}), 400
+    
     target = data.get('target')
     budget = data.get('budget')
     quantity = data.get('quantity')
     location = data.get('location')
-    price_from, price_to = parse_budget(budget)
-    shopping_results = search_yahoo_shopping(price_from, price_to)
+    budget_from, budget_to = parse_budget(budget)
+    shopping_results = search_yahoo_shopping(budget_from, budget_to)
+    print(f"Shopping results: {shopping_results}")
 
     ai_input_data = {
         'target': target,
@@ -27,6 +37,7 @@ def get_recommendations():
         'location': location,
         'shopping_results': shopping_results
     }
+    print(f"AI Input Data: {ai_input_data}")
 
     ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
 
