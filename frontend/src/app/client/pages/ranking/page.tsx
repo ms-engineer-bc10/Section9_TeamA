@@ -17,7 +17,6 @@ const Ranking: React.FC = () => {
   const [rankingData, setRankingData] = useState<RankingItem[]>([]);
 
   useEffect(() => {
-    // TODO: APIからランキングデータを取得する
     const mockData: RankingItem[] = [
       {
         id: 1,
@@ -61,7 +60,34 @@ const Ranking: React.FC = () => {
         productName: '白い恋人',
         likes: 85,
       },
-      // ... 他のアイテムを追加
+      {
+        id: 7,
+        imageUrl: '/images/product7.jpg',
+        shopName: '萩の月',
+        productName: '萩の月',
+        likes: 80,
+      },
+      {
+        id: 8,
+        imageUrl: '/images/product8.jpg',
+        shopName: '鳩サブレー',
+        productName: '鳩サブレー',
+        likes: 75,
+      },
+      {
+        id: 9,
+        imageUrl: '/images/product9.jpg',
+        shopName: 'ルタオ',
+        productName: 'ドゥーブルフロマージュ',
+        likes: 70,
+      },
+      {
+        id: 10,
+        imageUrl: '/images/product10.jpg',
+        shopName: 'じゃがポックル',
+        productName: 'じゃがポックル',
+        likes: 65,
+      },
     ];
     setRankingData(mockData);
   }, []);
@@ -69,13 +95,13 @@ const Ranking: React.FC = () => {
   const getRankColor = (index: number) => {
     switch (index) {
       case 0:
-        return 'bg-yellow-400 text-yellow-800';
+        return 'bg-yellow-400';
       case 1:
-        return 'bg-gray-300 text-gray-800';
+        return 'bg-gray-300';
       case 2:
-        return 'bg-orange-300 text-orange-800';
+        return 'bg-orange-300';
       default:
-        return 'bg-blue-200 text-blue-800';
+        return 'bg-blue-200';
     }
   };
 
@@ -94,11 +120,11 @@ const Ranking: React.FC = () => {
       <div
         className={`${getRankColor(
           index
-        )} w-10 h-10 flex items-center justify-center rounded-full mr-4`}
+        )} w-10 h-10 flex items-center justify-center rounded-full mr-6 flex-shrink-0`}
       >
-        <span className='text-xl font-bold'>{index + 1}</span>
+        <span className='text-base font-bold'>{index + 1}</span>
       </div>
-      <div className='relative w-20 h-20 mr-4'>
+      <div className='relative w-20 h-20 mr-6 flex-shrink-0'>
         <Image
           src={item.imageUrl}
           alt={item.productName}
@@ -107,13 +133,13 @@ const Ranking: React.FC = () => {
           className='rounded-md'
         />
       </div>
-      <div className='flex-grow'>
-        <h3 className='font-semibold'>{item.shopName}</h3>
-        <p className='text-sm text-gray-600'>{item.productName}</p>
+      <div className='flex-grow min-w-0 pl-2'>
+        <h3 className='font-semibold text-lg truncate'>{item.shopName}</h3>
+        <p className='text-sm text-gray-600 truncate'>{item.productName}</p>
       </div>
-      <div className='flex items-center'>
-        <Heart className='w-5 h-5 text-red-500 mr-1' />
-        <span className='font-semibold'>{item.likes}</span>
+      <div className='flex items-center flex-shrink-0 ml-4'>
+        <Heart className='w-5 h-5 text-red-500 mr-2' />
+        <span className='font-semibold text-lg'>{item.likes}</span>
       </div>
     </div>
   );
@@ -121,15 +147,23 @@ const Ranking: React.FC = () => {
   return (
     <div className='flex flex-col min-h-screen bg-gray-100'>
       <div className='flex-grow container mx-auto px-4 py-8'>
-        <div className='bg-white shadow-md rounded-lg p-6'>
+        <div className='bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto'>
           <h2 className='text-2xl font-bold mb-4 text-center'>
             人気のお土産ランキング
           </h2>
-
-          <div className='overflow-y-auto max-h-[calc(100vh-300px)] space-y-4'>
-            {rankingData.map((item, index) => (
-              <RankingItem key={item.id} item={item} index={index} />
-            ))}
+          <div className='overflow-y-auto md:overflow-visible max-h-[calc(100vh-300px)] md:max-h-none'>
+            <div className='md:grid md:grid-cols-2 md:gap-4 space-y-4 md:space-y-0'>
+              <div className='space-y-4'>
+                {rankingData.slice(0, 5).map((item, index) => (
+                  <RankingItem key={item.id} item={item} index={index} />
+                ))}
+              </div>
+              <div className='space-y-4'>
+                {rankingData.slice(5, 10).map((item, index) => (
+                  <RankingItem key={item.id} item={item} index={index + 5} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
