@@ -78,13 +78,17 @@ const Location: React.FC<LocationProps> = ({
           (position) => {
             const { latitude, longitude } = position.coords;
             console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+            setLocationError(null);
           },
           (error) => {
             console.error("Error retrieving location", error);
+            setLocationError("位置情報を取得できませんでした。");
           }
         );
+      } else {
+        setLocationError("このブラウザは位置情報取得に対応していません。");
       }
-      
+
     } else {
       setShowPrefectureSelect(true);
       if (selectedOption === '現在地') {
