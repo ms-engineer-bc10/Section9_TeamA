@@ -21,6 +21,7 @@ interface Answers {
   budget: Answer;
   quantity: Answer;
   location: Answer;
+  location_type: Answer;
 }
 
 const MenuItem: React.FC<{
@@ -52,6 +53,7 @@ const MenuItem: React.FC<{
 const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
+    location_type: '',
     location: '',
     target: '',
     genre: '',
@@ -100,10 +102,11 @@ const RequiredFieldPage: React.FC = () => {
     [currentQuestionIndex, questions.length, handleNext, questionKeys]
   );
 
-  const handleLocationChange = (location: string) => {
+  const handleLocationChange = (location: string, location_type: string) => {
     setAnswers((prev) => ({
       ...prev,
       location,
+      location_type,
     }));
   };
 
@@ -122,6 +125,7 @@ const RequiredFieldPage: React.FC = () => {
           budget: answers.budget,
           quantity: answers.quantity,
           location: answers.location,
+          location_type: answers.location_type,
         }),
       });
 
@@ -144,6 +148,7 @@ const RequiredFieldPage: React.FC = () => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
     setAnswers({
+      location_type: '',
       location: '',
       target: '',
       genre: '',

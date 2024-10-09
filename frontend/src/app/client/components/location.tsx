@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 interface LocationProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
-  onLocationChange: (location: string) => void;
+  onLocationChange: (location: string, locationType: string) => void;
 }
 
 const Location: React.FC<LocationProps> = ({
@@ -79,7 +79,7 @@ const Location: React.FC<LocationProps> = ({
           (position) => {
             const { latitude, longitude } = position.coords;
             const location = `${latitude},${longitude}`;
-            onLocationChange(location);
+            onLocationChange(location, 'current');
             setLocationError(null);
           },
           (error) => {
@@ -101,7 +101,7 @@ const Location: React.FC<LocationProps> = ({
   const handlePrefectureChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = event.target.value;
     setSelectedOption(selected);
-    onLocationChange(selected);
+    onLocationChange(selected, 'prefecture');
   };
 
   return (
