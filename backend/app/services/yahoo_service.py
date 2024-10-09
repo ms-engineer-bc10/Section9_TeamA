@@ -10,7 +10,7 @@ def search_yahoo_shopping(price_from=None, price_to=None):
     headers = {'Authorization': f'Bearer {API_KEY}'}
     params = {
         'appid': 'API_KEY',
-        'sort': '+price',
+        'sort': '+budget',
         'results': '30',
         # "location"で入力された場所情報をqueryに含める必要あり
         'query': 'おみやげ 大阪'
