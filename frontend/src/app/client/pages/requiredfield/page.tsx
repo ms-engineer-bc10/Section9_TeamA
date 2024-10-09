@@ -62,11 +62,13 @@ const RequiredFieldPage: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
+
+  // 質問とanswersのキーの対応関係
+  const questionKeys = ['location', 'target', 'genre', 'budget', 'quantity'];
   const questions = [location, target, genre, budget, quantity];
 
   const handleNext = useCallback(() => {
-    const currentAnswer =
-      answers[`q${currentQuestionIndex + 1}` as keyof Answers];
+    const currentAnswer = answers[questionKeys[currentQuestionIndex] as keyof Answers];
     if (currentAnswer || currentQuestionIndex >= questions.length) {
       setError(null);
       if (currentQuestionIndex < questions.length) {
@@ -86,36 +88,38 @@ const RequiredFieldPage: React.FC = () => {
 
   const handleOptionSelect = useCallback(
     (option: string) => {
+      const currentQuestionKey = questionKeys[currentQuestionIndex];
       setAnswers((prev) => ({
         ...prev,
-        [`q${currentQuestionIndex + 1}`]: option,
+        [currentQuestionKey]: option,
       }));
+      console.log('Selected:', option);  // デバッグ用ログ
       if (currentQuestionIndex < questions.length - 1) {
         handleNext();
       }
     },
-    [currentQuestionIndex, questions.length, handleNext]
+    [currentQuestionIndex, questions.length, handleNext, questionKeys]
   );
 
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     try {
+      console.log('Sending answers:', answers);  // デバッグ用ログ
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          place: answers.location,
-          recipient: answers.target,
-          category: answers.genre,
-          price: answers.budget,
+          target: answers.target,
+          genre: answers.genre,
+          budget: answers.budget,
           quantity: answers.quantity,
           location: '35.681236,139.767125', // ダミーの位置情報。今後位置情報取得機能を追加
         }),
       });
 
-      // ステータスコードが200番台でない場合はエラーを投げる
+      // ステータスコードが200番台でない場合はエラーを投げる      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -181,9 +185,9 @@ const RequiredFieldPage: React.FC = () => {
               <QuestionComponent
                 key={index}
                 onNext={handleOptionSelect}
-                selectedOption={answers[`q${index + 1}` as keyof Answers]}
+                selectedOption={answers[questionKeys[index] as keyof Answers]}
                 setSelectedOption={(option: string) =>
-                  setAnswers((prev) => ({ ...prev, [`q${index + 1}`]: option }))
+                  setAnswers((prev) => ({ ...prev, [questionKeys[index]]: option }))
                 }
               />
             ))}

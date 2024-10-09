@@ -12,7 +12,7 @@ def create_recommend():
             condition_id=data['condition_id'],
             product_name=data['product_name'],
             product_url=data['product_url'],
-            product_price=data['product_price'],
+            product_budget=data['product_budget'],
             store_id=data['store_id'],
             comment=data['comment']
         )
@@ -32,7 +32,7 @@ def get_recommend(id):
             "condition_id": recommend.condition_id,
             "product_name": recommend.product_name,
             "product_url": recommend.product_url,
-            "product_price": recommend.product_price,
+            "product_budget": recommend.product_budget,
             "store_id": recommend.store_id,
             "recommended_at": recommend.recommended_at,
             "comment": recommend.comment
@@ -46,7 +46,7 @@ def get_condition_recommends(condition_id):
         "id": recommend.id,
         "product_name": recommend.product_name,
         "product_url": recommend.product_url,
-        "product_price": recommend.product_price,
+        "product_budget": recommend.product_budget,
         "store_id": recommend.store_id,
         "recommended_at": recommend.recommended_at,
         "comment": recommend.comment

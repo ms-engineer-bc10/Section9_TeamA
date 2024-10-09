@@ -16,7 +16,7 @@ migrate = Migrate()
 # アプリケーションファクトリ関数を定義
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000", "methods": ["GET", "POST", "OPTIONS"], "allow_headers": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}})
     
     # データベース設定
     database_url = os.getenv('DATABASE_URL', 'sqlite:///default.db')
