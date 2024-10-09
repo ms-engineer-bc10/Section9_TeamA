@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.services.openai_service import get_openai_recommendation
 from app.services.yahoo_service import search_yahoo_shopping
 from app.services.google_service import search_google_places
-from app.utils.price_utils import parse_price
+from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
 from sqlalchemy.exc import SQLAlchemyError
@@ -12,17 +12,17 @@ user_routes = Blueprint('user_routes', __name__)
 @user_routes.route('/recommend', methods=['POST'])
 def get_recommendations():
     data = request.json
-    recipient = data.get('recipient')
-    price = data.get('price')
+    target = data.get('target')
+    budget = data.get('budget')
     quantity = data.get('quantity')
     location = data.get('location')
-    price_from, price_to = parse_price(price)
+    price_from, price_to = parse_budget(budget)
     shopping_results = search_yahoo_shopping(price_from, price_to)
 
     ai_input_data = {
-        'recipient': recipient,
-        'category': data.get('category'),
-        'price': price,
+        'target': target,
+        'genre': data.get('genre'),
+        'budget': budget,
         'quantity': quantity,
         'location': location,
         'shopping_results': shopping_results

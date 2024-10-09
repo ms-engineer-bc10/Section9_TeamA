@@ -5,7 +5,7 @@ def generate_recommendation_response(shopping_results, selected_product, product
     for item in shopping_results.get('hits', []):
         product = {
             '商品名': item.get('name', '不明'),
-            '価格': item.get('price', '不明'),
+            '価格': item.get('budget', '不明'),
             '個数': item.get('quantity', '不明'),
             '説明': item.get('description', '説明なし'),
             '画像URL': item.get('image', {}).get('medium', '画像なし'),
