@@ -11,23 +11,11 @@ interface LikedPhoto {
   likedAt: Date;
 }
 
-// バックエンドAPIとの連携を想定したインターフェース
-// interface ApiResponse {
-//   photos: LikedPhoto[];
-//   totalPages: number;
-//   currentPage: number;
-// }
-
 const LikesPage: React.FC = () => {
   const [likedPhotos, setLikedPhotos] = useState<LikedPhoto[]>([]);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const photosPerPage = 9;
-
-  // バックエンド連携用の状態
-  // const [totalPages, setTotalPages] = useState(1);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // ダミーデータの生成 (100枚の写真を想定)
@@ -39,35 +27,11 @@ const LikesPage: React.FC = () => {
     setLikedPhotos(mockData);
   }, []);
 
-  // バックエンドAPIからデータを取得する関数
-  // const fetchPhotos = async (page: number, order: 'newest' | 'oldest') => {
-  //   setIsLoading(true);
-  //   setError(null);
-  //   try {
-  //     const response = await fetch(`/api/liked-photos?page=${page}&order=${order}`);
-  //     if (!response.ok) {
-  //       throw new Error('Failed to fetch photos');
-  //     }
-  //     const data: ApiResponse = await response.json();
-  //     setLikedPhotos(data.photos);
-  //     setTotalPages(data.totalPages);
-  //     setCurrentPage(data.currentPage);
-  //   } catch (err) {
-  //     setError('写真の読み込みに失敗しました。後でもう一度お試しください。');
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchPhotos(currentPage, sortOrder);
-  // }, [currentPage, sortOrder]);
-
   const sortedPhotos = [...likedPhotos].sort((a, b) => {
     if (sortOrder === 'newest') {
-      return b.likedAt.getTime() - a.likedAt.getTime();
+      return b.likedAt.getTime() - a.likedAt.getTime(); // 新しい順（降順）
     } else {
-      return a.likedAt.getTime() - b.likedAt.getTime();
+      return a.likedAt.getTime() - b.likedAt.getTime(); // 古い順（昇順）
     }
   });
 
@@ -85,12 +49,10 @@ const LikesPage: React.FC = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
-  // バックエンド連携時のソート順変更ハンドラ
-  // const handleSortChange = (newOrder: 'newest' | 'oldest') => {
-  //   setSortOrder(newOrder);
-  //   setCurrentPage(1);  // ソート順変更時にページを1にリセット
-  //   fetchPhotos(1, newOrder);
-  // };
+  const handleSortChange = (newOrder: 'newest' | 'oldest') => {
+    setSortOrder(newOrder);
+    setCurrentPage(1); // ソート順を変更したら最初のページに戻る
+  };
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
@@ -102,9 +64,8 @@ const LikesPage: React.FC = () => {
           <div className='mb-4 flex justify-end'>
             <select
               value={sortOrder}
-              onChange={
-                (e) => setSortOrder(e.target.value as 'newest' | 'oldest')
-                // handleSortChange(e.target.value as 'newest' | 'oldest')
+              onChange={(e) =>
+                handleSortChange(e.target.value as 'newest' | 'oldest')
               }
               className='border rounded p-2'
             >
@@ -112,12 +73,6 @@ const LikesPage: React.FC = () => {
               <option value='oldest'>古い順</option>
             </select>
           </div>
-          {/* バックエンド連携時のローディングとエラー表示 */}
-          {/* {isLoading ? (
-            <div className='text-center py-4'>読み込み中...</div>
-          ) : error ? (
-            <div className='text-center text-red-500 py-4'>{error}</div>
-          ) : ( */}
           <div className='overflow-y-auto max-h-[calc(100vh-300px)]'>
             <div className='grid grid-cols-3 gap-4'>
               {currentPhotos.map((photo) => (
@@ -133,7 +88,6 @@ const LikesPage: React.FC = () => {
               ))}
             </div>
           </div>
-          {/* )} */}
           {totalPages > 1 && (
             <div className='mt-4 flex justify-between items-center'>
               <button
