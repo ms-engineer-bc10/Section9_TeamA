@@ -104,7 +104,7 @@ const HistoryItem: React.FC<{
           <span className='text-sm font-bold'>{item.date}</span>
         </div>
       </div>
-      <div className='col-span-5 grid grid-cols-2 gap-1'>
+      <div className='col-span-4 grid grid-cols-2 gap-1'>
         {Object.entries(item.answers).map(([key, value], index) => (
           <div
             key={key}
@@ -122,14 +122,23 @@ const HistoryItem: React.FC<{
           <Trash2 size={14} className='mr-1' /> 削除
         </button>
       </div>
-      <div className='row-span-3'>
-        <Image
-          src={item.image}
-          alt='選択したアイテム'
-          width={64}
-          height={64}
-          className='object-cover rounded-md mx-auto'
-        />
+      <div className='col-span-2 row-span-3 border-2 border-gray-300 rounded-md overflow-hidden'>
+        {' '}
+        {/* overflow-hidden を追加 */}
+        <div
+          className='relative w-full h-full'
+          style={{ aspectRatio: '1 / 1' }}
+        >
+          {' '}
+          {/* アスペクト比を1:1に固定 */}
+          <Image
+            src={item.image}
+            alt='選択したアイテム'
+            layout='fill'
+            objectFit='cover'
+            className='rounded-md'
+          />
+        </div>
       </div>
     </div>
   </div>
