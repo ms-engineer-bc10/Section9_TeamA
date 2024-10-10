@@ -8,6 +8,7 @@ interface ConfirmProps {
     genre: string;
     budget: string;
     quantity: string;
+    location_type?: string;
   };
   onSearch: () => void;
 }
@@ -31,7 +32,7 @@ const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
   };
 
   const filledAnswers = Object.entries(answers).filter(
-    ([_, value]) => value !== ''
+    ([key, value]) => value !== '' && key !== 'location_type'
   );
 
   return (
