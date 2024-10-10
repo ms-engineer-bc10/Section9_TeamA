@@ -3,12 +3,12 @@
 import React from 'react';
 
 // Propsの型を定義
-interface targetProps {
+interface TargetProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const target: React.FC<targetProps> = ({
+const Target: React.FC<TargetProps> = ({
   selectedOption,
   setSelectedOption,
 }) => {
@@ -53,4 +53,4 @@ const target: React.FC<targetProps> = ({
   );
 };
 
-export default target;
+export default Target;

@@ -3,12 +3,12 @@
 import React from 'react';
 
 // Propsの型を定義
-interface budgetProps {
+interface BudgetProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
 
-const budget: React.FC<budgetProps> = ({
+const Budget: React.FC<BudgetProps> = ({
   selectedOption,
   setSelectedOption,
 }) => {
@@ -49,4 +49,4 @@ const budget: React.FC<budgetProps> = ({
   );
 };
 
-export default budget;
+export default Budget;

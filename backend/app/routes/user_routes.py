@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.services.openai_service import get_openai_recommendation
 from app.services.yahoo_service import search_yahoo_shopping
 from app.services.google_service import search_google_places
-from app.utils.price_utils import parse_price
+from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
 from sqlalchemy.exc import SQLAlchemyError
@@ -12,26 +12,34 @@ user_routes = Blueprint('user_routes', __name__)
 @user_routes.route('/recommend', methods=['POST'])
 def get_recommendations():
     data = request.json
-    recipient = data.get('recipient')
-    price = data.get('price')
-    quantity = data.get('quantity')
-    location = data.get('location')
-    price_from, price_to = parse_price(price)
-    shopping_results = search_yahoo_shopping(price_from, price_to)
+    print(f"Received data: {data}")
+    budget = data.get('budget')
+    budget_from, budget_to = parse_budget(budget)
+    
+    # YahooショッピングAPIからの結果を取得
+    shopping_results = search_yahoo_shopping(budget_from, budget_to)
+    if not shopping_results:
+        return jsonify({"error": "No shopping results found"}), 500
+    print(f"Shopping results: {shopping_results}")
 
     ai_input_data = {
-        'recipient': recipient,
-        'category': data.get('category'),
-        'price': price,
-        'quantity': quantity,
-        'location': location,
+        'target': data.get('target'),
+        'genre': data.get('genre'),
+        'budget': budget,
+        'quantity': data.get('quantity'),
+        'location': data.get('location'),
         'shopping_results': shopping_results
     }
+    print(f"AI Input Data: {ai_input_data}")
 
     ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
+    if not ai_recommend or not selected_product:
+        return jsonify({"error": "AI recommendation failed"}), 500
 
 
-    places_results = search_google_places(location, radius=1000)
+    places_results = search_google_places(data.get('location'), radius=1000)
+    if not places_results:
+        return jsonify({"error": "No places found"}), 500
 
     return generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
 
