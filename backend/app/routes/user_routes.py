@@ -1,7 +1,10 @@
+import traceback
+import logging
 from flask import Blueprint, request, jsonify
 from app.services.openai_service import get_openai_recommendation
 from app.services.yahoo_service import search_yahoo_shopping
 from app.services.google_service import search_google_places
+from app.services.google_geocoding_service import get_prefecture_from_latlng
 from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
@@ -11,37 +14,60 @@ user_routes = Blueprint('user_routes', __name__)
 
 @user_routes.route('/recommend', methods=['POST'])
 def get_recommendations():
-    data = request.json
-    print(f"Received data: {data}")
-    budget = data.get('budget')
-    budget_from, budget_to = parse_budget(budget)
-    
-    # YahooショッピングAPIからの結果を取得
-    shopping_results = search_yahoo_shopping(budget_from, budget_to)
-    if not shopping_results:
-        return jsonify({"error": "No shopping results found"}), 500
-    print(f"Shopping results: {shopping_results}")
+    try:
+        data = request.json
+        print(f"Received data: {data}")
 
-    ai_input_data = {
-        'target': data.get('target'),
-        'genre': data.get('genre'),
-        'budget': budget,
-        'quantity': data.get('quantity'),
-        'location': data.get('location'),
-        'shopping_results': shopping_results
-    }
-    print(f"AI Input Data: {ai_input_data}")
+        budget = data.get('budget')
+        budget_from, budget_to = parse_budget(budget)
+        print(f"Parsed budget: {budget_from} to {budget_to}")
 
-    ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
-    if not ai_recommend or not selected_product:
-        return jsonify({"error": "AI recommendation failed"}), 500
+        location = data.get('location')
+        if "," in location:
+            print(f"Location is latlng format: {location}")
+            location = get_prefecture_from_latlng(location)
+            print(f"Converted latlng to prefecture: {location}")
+        
+        print(f"Fetching Yahoo Shopping results for location: {location} and budget: {budget_from} to {budget_to}")
+        shopping_results = search_yahoo_shopping(location, budget_from, budget_to)
+        if not shopping_results:
+            print("No shopping results found")
+            return jsonify({"error": "No shopping results found"}), 500
+        print(f"Shopping results: {shopping_results}")
 
+        ai_input_data = {
+            'target': data.get('target'),
+            'genre': data.get('genre'),
+            'budget': budget,
+            'quantity': data.get('quantity'),
+            'location': location,
+            'shopping_results': shopping_results
+        }
+        print(f"AI Input Data: {ai_input_data}")
 
-    places_results = search_google_places(data.get('location'), radius=1000)
-    if not places_results:
-        return jsonify({"error": "No places found"}), 500
+        print("Fetching AI recommendation...")
+        ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
+        print(f"AI recommendation: {ai_recommend}, Selected product: {selected_product}")
+        if not ai_recommend or not selected_product:
+            print("AI recommendation failed")
+            return jsonify({"error": "AI recommendation failed"}), 500
 
-    return generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
+        print(f"Fetching nearby places for location: {location}")
+        places_results = search_google_places(location, radius=1000)
+        print(f"Places results: {places_results}")
+        if not places_results:
+            print("No places found")
+            return jsonify({"error": "No places found"}), 500
+
+        response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
+        print(f"Final recommendation response: {response}")
+        return response
+
+    except Exception as e:
+        print(f"Error occurred: {str(e)}")
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error"}), 500
+
 
 # 以下、ユーザー関連の CRUD 操作を追加
 
