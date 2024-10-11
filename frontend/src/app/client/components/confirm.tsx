@@ -8,6 +8,7 @@ interface ConfirmProps {
     genre: string;
     budget: string;
     quantity: string;
+    location_type?: string;
   };
   onSearch: () => void;
 }
@@ -21,8 +22,17 @@ const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
     quantity: '数量',
   };
 
+  const displayLocation = (location: string) => {
+    // 緯度・経度の場合「現在地」と表示
+    if (/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(location)) {
+      return '現在地';
+    }
+    // 都道府県が選ばれている場合はそのまま表示
+    return location;
+  };
+
   const filledAnswers = Object.entries(answers).filter(
-    ([_, value]) => value !== ''
+    ([key, value]) => value !== '' && key !== 'location_type'
   );
 
   return (
@@ -37,7 +47,7 @@ const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
             className='py-2 px-4 text-lg rounded-md bg-gray-200 text-gray-700'
           >
             <div className='font-semibold'>{answerLabels[key]}</div>
-            <div>{value}</div>
+            <div>{key === 'location' ? displayLocation(value) : value}</div>
           </div>
         ))}
       </div>

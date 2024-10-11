@@ -6,7 +6,7 @@ import target from '@/app/client/components/target';
 import genre from '@/app/client/components/genre';
 import budget from '@/app/client/components/budget';
 import quantity from '@/app/client/components/quantity';
-import location from '@/app/client/components/location';
+import Location from '@/app/client/components/location';
 import Confirm from '@/app/client/components/confirm';
 import Slide from '@/app/client/components/slide';
 import Result from '@/app/client/components/result';
@@ -21,6 +21,7 @@ interface Answers {
   budget: Answer;
   quantity: Answer;
   location: Answer;
+  location_type: Answer;
 }
 
 const MenuItem: React.FC<{
@@ -52,6 +53,7 @@ const MenuItem: React.FC<{
 const RequiredFieldPage: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
+    location_type: '',
     location: '',
     target: '',
     genre: '',
@@ -65,7 +67,7 @@ const RequiredFieldPage: React.FC = () => {
 
   // 質問とanswersのキーの対応関係
   const questionKeys = ['location', 'target', 'genre', 'budget', 'quantity'];
-  const questions = [location, target, genre, budget, quantity];
+  const questions = [Location, target, genre, budget, quantity];
 
   const handleNext = useCallback(() => {
     const currentAnswer =
@@ -94,7 +96,7 @@ const RequiredFieldPage: React.FC = () => {
         ...prev,
         [currentQuestionKey]: option,
       }));
-      console.log('Selected:', option); // デバッグ用ログ
+
       if (currentQuestionIndex < questions.length - 1) {
         handleNext();
       }
@@ -102,10 +104,18 @@ const RequiredFieldPage: React.FC = () => {
     [currentQuestionIndex, questions.length, handleNext, questionKeys]
   );
 
+  const handleLocationChange = (location: string, location_type: string) => {
+    setAnswers((prev) => ({
+      ...prev,
+      location,
+      location_type,
+    }));
+  };
+
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     try {
-      console.log('Sending answers:', answers); // デバッグ用ログ
+
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
@@ -116,11 +126,11 @@ const RequiredFieldPage: React.FC = () => {
           genre: answers.genre,
           budget: answers.budget,
           quantity: answers.quantity,
-          location: '35.681236,139.767125', // ダミーの位置情報。今後位置情報取得機能を追加
+          location: answers.location,
+          location_type: answers.location_type,
         }),
       });
 
-      // ステータスコードが200番台でない場合はエラーを投げる
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -140,6 +150,7 @@ const RequiredFieldPage: React.FC = () => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
     setAnswers({
+      location_type: '',
       location: '',
       target: '',
       genre: '',
@@ -193,6 +204,7 @@ const RequiredFieldPage: React.FC = () => {
                     [questionKeys[index]]: option,
                   }))
                 }
+                onLocationChange={handleLocationChange}
               />
             ))}
             <Confirm answers={answers} onSearch={handleSearch} />

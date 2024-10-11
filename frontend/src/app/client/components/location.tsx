@@ -5,13 +5,16 @@ import React, { useState, useEffect } from 'react';
 interface LocationProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
+  onLocationChange: (location: string, locationType: string) => void;
 }
 
 const Location: React.FC<LocationProps> = ({
   selectedOption,
   setSelectedOption,
+  onLocationChange,
 }) => {
   const [showPrefectureSelect, setShowPrefectureSelect] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const options = ['現在地から提案', '場所を指定して提案'];
   const prefectures = [
     '北海道',
@@ -64,14 +67,29 @@ const Location: React.FC<LocationProps> = ({
   ];
 
   useEffect(() => {
-    setShowPrefectureSelect(
-      selectedOption !== '現在地' && selectedOption !== ''
-    );
+    setShowPrefectureSelect(selectedOption !== '現在地' && selectedOption !== '');
   }, [selectedOption]);
 
   const handleOptionClick = (option: string) => {
     if (option === '現在地から提案') {
       setSelectedOption('現在地');
+
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            const location = `${latitude},${longitude}`;
+            onLocationChange(location, 'current');
+            setLocationError(null);
+          },
+          (error) => {
+            console.error("Error retrieving location", error);
+            setLocationError("位置情報を取得できませんでした。");
+          }
+        );
+      } else {
+        setLocationError("このブラウザは位置情報取得に対応していません。");
+      }
     } else {
       setShowPrefectureSelect(true);
       if (selectedOption === '現在地') {
@@ -80,11 +98,10 @@ const Location: React.FC<LocationProps> = ({
     }
   };
 
-  const handlePrefectureChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handlePrefectureChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = event.target.value;
     setSelectedOption(selected);
+    onLocationChange(selected, 'prefecture');
   };
 
   return (
@@ -99,8 +116,7 @@ const Location: React.FC<LocationProps> = ({
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
               (option === '現在地から提案' && selectedOption === '現在地') ||
               (option === '場所を指定して提案' &&
-                selectedOption !== '現在地' &&
-                selectedOption !== '')
+                selectedOption !== '現在地' && selectedOption !== '')
                 ? 'bg-[#2F41B0] text-white'
                 : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}
@@ -110,6 +126,9 @@ const Location: React.FC<LocationProps> = ({
           </button>
         ))}
       </div>
+      {locationError && (
+        <div className='text-red-500 mb-4'>{locationError}</div>
+      )}
       {showPrefectureSelect && (
         <select
           onChange={handlePrefectureChange}
