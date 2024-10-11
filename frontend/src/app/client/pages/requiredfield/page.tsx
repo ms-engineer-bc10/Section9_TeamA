@@ -70,7 +70,8 @@ const RequiredFieldPage: React.FC = () => {
   const questions = [Location, target, genre, budget, quantity];
 
   const handleNext = useCallback(() => {
-    const currentAnswer = answers[questionKeys[currentQuestionIndex] as keyof Answers];
+    const currentAnswer =
+      answers[questionKeys[currentQuestionIndex] as keyof Answers];
     if (currentAnswer || currentQuestionIndex >= questions.length) {
       setError(null);
       if (currentQuestionIndex < questions.length) {
@@ -95,6 +96,7 @@ const RequiredFieldPage: React.FC = () => {
         ...prev,
         [currentQuestionKey]: option,
       }));
+
       if (currentQuestionIndex < questions.length - 1) {
         handleNext();
       }
@@ -113,7 +115,7 @@ const RequiredFieldPage: React.FC = () => {
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     try {
-      console.log('Sending answers:', answers);
+
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
@@ -197,7 +199,10 @@ const RequiredFieldPage: React.FC = () => {
                 onNext={handleOptionSelect}
                 selectedOption={answers[questionKeys[index] as keyof Answers]}
                 setSelectedOption={(option: string) =>
-                  setAnswers((prev) => ({ ...prev, [questionKeys[index]]: option }))
+                  setAnswers((prev) => ({
+                    ...prev,
+                    [questionKeys[index]]: option,
+                  }))
                 }
                 onLocationChange={handleLocationChange}
               />
