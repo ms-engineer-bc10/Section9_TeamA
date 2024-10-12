@@ -8,14 +8,17 @@ def search_google_places(location, radius=1000):
 
     base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
-        "location": location,
+        "location": "35.66,139.69",
+
         "radius": radius,
+
         "type": "store",
         "key": api_key
     }
 
     try:
         response = requests.get(base_url, params=params)
+        print(f"Google Places API response: {response}", flush=True)
         print(f"Google Places API Response Status: {response.status_code}")
     except Exception as e:
         print(f"Error in Google Places API request: {e}")
@@ -25,7 +28,7 @@ def search_google_places(location, radius=1000):
         raise Exception(f"Google Places API request failed with status code {response.status_code}")
 
     data = response.json()
-    print(f"Google Places API response data: {data}")
+
 
     if "results" not in data:
         return []
