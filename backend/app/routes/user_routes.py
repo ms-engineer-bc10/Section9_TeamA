@@ -16,7 +16,6 @@ user_routes = Blueprint('user_routes', __name__)
 def get_recommendations():
     try:
         data = request.json
-        # print(f"Received data: {data}")
 
         budget = data.get('budget')
         budget_from, budget_to = parse_budget(budget)
@@ -33,7 +32,7 @@ def get_recommendations():
         if not shopping_results:
             print("No shopping results found")
             return jsonify({"error": "No shopping results found"}), 500
-        # print(f"Shopping results: {shopping_results}")
+        
 
         ai_input_data = {
             'target': data.get('target'),
@@ -44,21 +43,26 @@ def get_recommendations():
             'shopping_results': shopping_results
         }
 
-        try:
-            print(f"AI Input Data: {ai_input_data}")
-        except:
+        # print(f"AI Input Data: {ai_input_data}")
 
-            print("Fetching AI recommendation...")
-            
+        print("Fetching AI recommendation...")
         ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
         print(f"AI recommendation: {ai_recommend}, Selected product: {selected_product}")
         if not ai_recommend or not selected_product:
             print("AI recommendation failed")
             return jsonify({"error": "AI recommendation failed"}), 500
-    
-        print(location, flush=True)
+
+        recommendations_data = {
+            'target': data.get('target'),
+            'genre': data.get('genre'),
+            'budget': budget,
+            'quantity': data.get('quantity'),
+            'location': location,
+            'shopping_results': shopping_results
+        }
+
         print(f"Fetching nearby places for location: {location}")
-        places_results = search_google_places(location, radius=1000)
+        places_results = search_google_places(location, recommendations_data, radius=1000)
         print(f"Places results: {places_results}")
         if not places_results:
             print("No places found")
