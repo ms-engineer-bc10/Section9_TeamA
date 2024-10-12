@@ -102,7 +102,7 @@ def get_user(uid):
             "registered_at": user.registered_at,
             "latest_login_at": user.latest_login_at,
             "condition_count": user.condition_count,
-            "recomend_count": user.recomend_count
+            "recommend_count": user.recommend_count
         }), 200
     return jsonify({"error": "User not found"}), 404
 
