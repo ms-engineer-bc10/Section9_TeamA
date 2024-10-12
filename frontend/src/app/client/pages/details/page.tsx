@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { MapPin, MessageSquare } from 'lucide-react';
 
 interface ProductData {
   id: number;
@@ -42,16 +41,6 @@ const ProductCard: React.FC = () => {
               〜商品情報〜
             </h3>
             <p className='text-sm text-gray-700'>{dummyData.description}</p>
-          </div>
-          <div className='flex space-x-4'>
-            <button className='flex-1 flex items-center justify-center py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors'>
-              <MapPin size={20} className='mr-2' />
-              <span>地図</span>
-            </button>
-            <button className='flex-1 flex items-center justify-center py-2 px-4 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors'>
-              <MessageSquare size={20} className='mr-2' />
-              <span>LLMからのコメント</span>
-            </button>
           </div>
         </div>
       </div>
