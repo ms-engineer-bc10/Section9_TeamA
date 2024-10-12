@@ -32,7 +32,9 @@ def get_recommendations():
         if not shopping_results:
             print("No shopping results found")
             return jsonify({"error": "No shopping results found"}), 500
-        
+
+        for idx, item in enumerate(shopping_results.get('hits', [])):
+            item['id'] = idx
 
         ai_input_data = {
             'target': data.get('target'),
@@ -42,7 +44,6 @@ def get_recommendations():
             'location': location,
             'shopping_results': shopping_results
         }
-
         # print(f"AI Input Data: {ai_input_data}")
 
         print("Fetching AI recommendation...")

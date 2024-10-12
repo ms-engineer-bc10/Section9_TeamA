@@ -15,7 +15,6 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         print("No shopping results found.")
         return None, None
 
-    # 以前の提案商品を除外した商品リストを作成
     filtered_products = [item for item in shopping_results if item['id'] != previous_product_id]
 
     if not filtered_products:
@@ -23,6 +22,7 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         return None, None
 
     products_list = [{
+        '商品ID': item.get('id', '不明'),
         '商品名': item.get('name', '不明'),
         '価格': item.get('budget', '不明'),
         '説明': item.get('description', '説明なし')
@@ -42,20 +42,20 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         ],
         max_tokens=200
     )
-    
-    if product_selection_response and 'choices' in product_selection_response:
-        selected_product_name = product_selection_response['choices'][0]['message']['content']
-        selected_product = None
 
+    if product_selection_response and 'choices' in product_selection_response:
+        selected_product_info = product_selection_response['choices'][0]['message']['content']
+        selected_product_id = None
+        
         for item in filtered_products:
-            if selected_product_name in item['name']:
+            if str(item['id']) in selected_product_info:
+                selected_product_id = item['id']
                 selected_product = item
                 break
 
-        if not selected_product:
+        if not selected_product_id:
             selected_product = filtered_products[0]
 
-        # 選ばれた商品についてコメントを生成
         product_comment_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -65,7 +65,7 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
                 },
                 {
                     "role": "user",
-                    "content": f"商品名: {selected_product.get('name', '不明')}, 価格: {selected_product.get('budget', '不明')}, 説明: {selected_product.get('description', '説明なし')}"
+                    "content": f"商品ID: {selected_product.get('id', '不明')}, 商品名: {selected_product.get('name', '不明')}, 価格: {selected_product.get('budget', '不明')}, 説明: {selected_product.get('description', '説明なし')}"
                 }
             ],
             max_tokens=100
