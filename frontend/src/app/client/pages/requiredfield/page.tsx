@@ -136,15 +136,20 @@ const RequiredFieldPage: React.FC = () => {
       }
 
       const data = await response.json();
-      setSearchResults(data); // 結果を保存
-      setShowResult(true); // 結果を表示
-    } catch (error) {
+    setSearchResults(data); // 結果を保存
+    setShowResult(true); // 結果を表示
+  } catch (error: any) {
+    if (error instanceof Error) {
+      setError(`検索中にエラーが発生しました: ${error.message}`);
+      console.error('APIリクエストエラー:', error.message, error.stack);
+    } else {
       setError('検索中にエラーが発生しました。');
       console.error('APIリクエストエラー:', error);
-    } finally {
-      setIsLoading(false); // ローディング終了
     }
-  }, [answers]);
+  } finally {
+    setIsLoading(false); // ローディング終了
+  }
+}, [answers]);
 
   const handleResetSearch = useCallback(() => {
     setShowResult(false);

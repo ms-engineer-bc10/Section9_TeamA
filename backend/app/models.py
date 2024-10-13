@@ -25,7 +25,7 @@ class User(db.Model):
     registered_at = db.Column(db.DateTime, default=datetime.now)
     latest_login_at = db.Column(db.DateTime)
     condition_count = db.Column(db.Integer, default=0)
-    recomend_count = db.Column(db.Integer, default=0)
+    recommend_count = db.Column(db.Integer, default=0)
     stripe_auth = db.Column(db.String(255))
     payment_reg_at = db.Column(db.DateTime)
 
