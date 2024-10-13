@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
 import MapComponent from './map';
@@ -138,10 +137,11 @@ const Result: React.FC<ResultProps> = ({
                   onClick={handleFavoriteClick}
                 />
               </div>
-              <div className='flex space-x-4 mb-6'>
-                <div className='flex-1 bg-gray-100 p-4 rounded-lg flex items-center justify-center'>
-                  <MapPin className='w-8 h-8 text-blue-500 mr-2' />
-                  <span className='text-lg'>地図</span>
+              <div className='flex space-x-4 mb-6' style={{ alignItems: 'stretch' }}>
+                <div className='flex-1 bg-gray-100 p-4 rounded-lg'>
+                  <div className='h-full w-full'>
+                    <MapComponent places={places} />
+                  </div>
                 </div>
                 <div className='flex-1 bg-gray-100 p-4 rounded-lg'>
                   <p className='text-lg font-semibold mb-2'>
@@ -150,7 +150,6 @@ const Result: React.FC<ResultProps> = ({
                   <p className='text-sm'>{currentResult.llmComment}</p>
                 </div>
               </div>
-              <MapComponent places={places} />
             </div>
           </motion.div>
         )}
@@ -172,7 +171,7 @@ const Result: React.FC<ResultProps> = ({
         >
           条件を変更する
         </button>
-        </div>
+      </div>
 
       <p className='mt-4 text-left font-bold text-gray-600'>
         検索回数: {searchCount} / {MAX_SEARCH_COUNT}
