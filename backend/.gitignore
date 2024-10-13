@@ -50,3 +50,6 @@ alembic/versions/*
 *.bak
 *.tmp
 *.temp
+
+#firebase-admin.json
+firebase-adminsdk.json
