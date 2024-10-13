@@ -6,7 +6,7 @@ from app.services.google_geocoding_service import get_prefecture_from_latlng
 load_dotenv()
 API_KEY = os.getenv("YAHOO_API_KEY")
 
-def search_yahoo_shopping(location, budget_from=None, budget_to=None):
+def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size=300):
     # locationが緯度・経度の形式ならGeocoding APIで都道府県名に変換
     if ',' in location:
         prefecture = get_prefecture_from_latlng(location)
@@ -22,7 +22,8 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None):
         'appid': 'API_KEY',
         'sort': '+price',
         'results': '20',
-        'query': query
+        'query': query,
+        'image_size': "300"
     }
 
     if budget_from is not None:
@@ -40,12 +41,14 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None):
 
         filtered_results = []
         for idx, item in enumerate(hits):
+            image_url = item.get('exImage', {}).get('url', '')
+
             filtered_item = {
                 'id': idx,
                 'name': item.get('name', '不明'),
                 'description': item.get('description', '説明なし'),
                 'url': item.get('url', ''),
-                'image_url': item.get('image', {}).get('medium', ''),
+                'image_url': image_url if image_url else '/placeholder-image.jpg',
                 'price': item.get('price', '不明')
             }
             filtered_results.append(filtered_item)

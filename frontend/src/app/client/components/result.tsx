@@ -41,7 +41,7 @@ const Result: React.FC<ResultProps> = ({
       const aiSelectedProduct = searchResults.おすすめ商品一覧.find(
         (item: any) => item.商品名 === searchResults['AIが選ぶおすすめ商品']
       );
-  
+
       if (aiSelectedProduct) {
         setCurrentResult({
           imageUrl: aiSelectedProduct.画像URL || '/placeholder-image.jpg',
@@ -49,17 +49,17 @@ const Result: React.FC<ResultProps> = ({
           llmComment: searchResults.AIおすすめポイント || aiSelectedProduct.説明,
         });
       } else {
-
         const result = searchResults.おすすめ商品一覧[0];
         setCurrentResult({
-          imageUrl: result.画像URL || '/placeholder-image.jpg',
+          // 画像URLのサイズを指定する
+          imageUrl: result.画像URL.replace('image_size=76', 'image_size=300') || '/placeholder-image.jpg',
           name: result.商品名,
           llmComment: searchResults.AIおすすめポイント || result.説明,
         });
       }
     }
   }, [searchResults]);
-  
+
   useEffect(() => {
     updateSearchResult();
   }, [updateSearchResult]);
@@ -115,7 +115,8 @@ const Result: React.FC<ResultProps> = ({
                 <Image
                   src={currentResult.imageUrl}
                   alt={currentResult.name}
-                  fill
+                  width={300}  // 指定サイズ300x300
+                  height={300} // 指定サイズ300x300
                   style={{ objectFit: 'cover' }}
                   className='rounded-lg'
                 />
