@@ -34,7 +34,7 @@ const Login = () => {
         console.log('ID Token:', idToken);
 
         // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
-        router.push('/todolist');
+        router.push('/souvenir');
       })
       .catch((error) => {
         if (error.code === 'auth/user-not-found') {
