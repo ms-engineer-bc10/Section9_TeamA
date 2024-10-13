@@ -120,16 +120,17 @@ const Result: React.FC<ResultProps> = ({
               <h2 className='text-2xl font-bold text-center mb-6'>
                 あなたにピッタリなOMIYAGEはこれ！
               </h2>
-              <div className='mb-6 relative h-64'>
+              <div className='mb-6 relative h-64 flex justify-center'>
                 <Image
                   src={currentResult.imageUrl}
                   alt={currentResult.name}
                   width={300}  // 指定サイズ300x300
                   height={300} // 指定サイズ300x300
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'cover', display: 'block' }}
                   className='rounded-lg'
                 />
               </div>
+
               <div className='flex justify-between items-center mb-4'>
                 <h3 className='text-xl font-semibold'>{currentResult.name}</h3>
                 <FavoriteIconAnim
