@@ -9,7 +9,7 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
     budget = get_recommendations.get('budget')
     quantity = get_recommendations.get('quantity')
     location = get_recommendations.get('location')
-    shopping_results = get_recommendations.get('shopping_results', {}).get('hits', [])
+    shopping_results = get_recommendations.get('shopping_results', [])
 
     if not shopping_results:
         print("No shopping results found.")
@@ -37,7 +37,8 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
                     "あなたはおみやげ専門のアシスタントです。ユーザーの条件に最も合った商品を1つ選んでください。"
                     "ユーザーが求めている商品は、受取人の関係やカテゴリ、価格帯、数量が重要な要素です。"
                     "条件で指定されているlocationが旅先になる。旅先で購入するおみやげを選ぶよう考慮してください。"
-                    "リストの中から最もこれらの条件に適した商品を選び、選択理由も考慮してください。"
+                    "商品IDを基に、条件に最も適した商品を選び、その商品名とIDのみを返答してください。"
+                    "リストの中から1つだけ選択し、その商品IDと理由を明示してください。"
                 )
             },
             {
@@ -57,9 +58,8 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
     if product_selection_response and 'choices' in product_selection_response:
         selected_product_info = product_selection_response['choices'][0]['message']['content']
         selected_product_id = None
-        
         for item in filtered_products:
-            if str(item['id']) in selected_product_info:
+            if f"商品ID: {item['id']}" in selected_product_info:
                 selected_product_id = item['id']
                 selected_product = item
                 break

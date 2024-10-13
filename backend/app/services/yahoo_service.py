@@ -14,8 +14,6 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None):
             print("Error converting latlng to prefecture.")
             return None
         location = prefecture
-    else:
-        location = location
 
     url = "https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch"
     headers = {'Authorization': f'Bearer {API_KEY}'}
@@ -38,9 +36,22 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None):
 
     if response.status_code == 200:
         result = response.json()
-        for idx, item in enumerate(result.get('hits', [])):
-            item['id'] = idx
-        return result
+        hits = result.get('hits', [])
+
+        filtered_results = []
+        for idx, item in enumerate(hits):
+            filtered_item = {
+                'id': idx,
+                'name': item.get('name', '不明'),
+                'description': item.get('description', '説明なし'),
+                'url': item.get('url', ''),
+                'image_url': item.get('image', {}).get('medium', ''),
+                'price': item.get('price', '不明')
+            }
+            filtered_results.append(filtered_item)
+
+        print(f"フィルタリング結果: {filtered_results}", flush=True)
+        return filtered_results
     else:
         print(f"Error in Yahoo API request: {response.status_code}, {response.text}")
     return None
