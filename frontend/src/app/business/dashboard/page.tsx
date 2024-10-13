@@ -42,9 +42,11 @@ export default function BusinessDashboard() {
           </div>
         </div>
         <div className="mt-8">
-          <Link href="/business/service" className="text-blue-600 hover:text-blue-800">
-            ← サービス一覧に戻る
+        <div className="flex justify-center">
+          <Link href="/business/service" className="bg-blue-500 hover:bg-blue-600 text-white text-lg font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+            ← 会員トップページに戻る
           </Link>
+        </div>
         </div>
       </div>
     </div>
