@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FavoriteIconAnim } from '@/app/client/components/ui/heart';
+import MapComponent from './map';
 
 interface ResultProps {
   answers: {
@@ -35,6 +36,7 @@ const Result: React.FC<ResultProps> = ({
   const [searchCount, setSearchCount] = useState(1);
   const [currentResult, setCurrentResult] = useState<SearchResult | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [places, setPlaces] = useState([]);
 
   const updateSearchResult = useCallback(() => {
     if (searchResults && searchResults.おすすめ商品一覧.length > 0) {
@@ -51,12 +53,20 @@ const Result: React.FC<ResultProps> = ({
       } else {
         const result = searchResults.おすすめ商品一覧[0];
         setCurrentResult({
-          // 画像URLのサイズを指定する
           imageUrl: result.画像URL.replace('image_size=76', 'image_size=300') || '/placeholder-image.jpg',
           name: result.商品名,
           llmComment: searchResults.AIおすすめポイント || result.説明,
         });
       }
+
+      const stores = searchResults.近隣店舗.map((store: any) => ({
+        name: store.name,
+        location: {
+          lat: store.location.lat,
+          lng: store.location.lng,
+        },
+      }));
+      setPlaces(stores);
     }
   }, [searchResults]);
 
@@ -140,6 +150,7 @@ const Result: React.FC<ResultProps> = ({
                   <p className='text-sm'>{currentResult.llmComment}</p>
                 </div>
               </div>
+              <MapComponent places={places} />
             </div>
           </motion.div>
         )}
@@ -161,7 +172,7 @@ const Result: React.FC<ResultProps> = ({
         >
           条件を変更する
         </button>
-      </div>
+        </div>
 
       <p className='mt-4 text-left font-bold text-gray-600'>
         検索回数: {searchCount} / {MAX_SEARCH_COUNT}
