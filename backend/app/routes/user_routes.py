@@ -26,13 +26,16 @@ def get_recommendations():
             print(f"Location is latlng format: {location}")
             location = get_prefecture_from_latlng(location)
             print(f"Converted latlng to prefecture: {location}")
-        
+
         print(f"Fetching Yahoo Shopping results for location: {location} and budget: {budget_from} to {budget_to}")
         shopping_results = search_yahoo_shopping(location, budget_from, budget_to)
+        print(f"フィルタリング結果: {shopping_results}", flush=True)
         if not shopping_results:
             print("No shopping results found")
             return jsonify({"error": "No shopping results found"}), 500
-        
+
+        for idx, item in enumerate(shopping_results):
+            item['id'] = idx
 
         ai_input_data = {
             'target': data.get('target'),
@@ -42,8 +45,6 @@ def get_recommendations():
             'location': location,
             'shopping_results': shopping_results
         }
-
-        # print(f"AI Input Data: {ai_input_data}")
 
         print("Fetching AI recommendation...")
         ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
