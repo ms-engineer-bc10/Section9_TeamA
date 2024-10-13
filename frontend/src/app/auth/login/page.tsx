@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  //   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { auth } from '@/firebase';
@@ -34,7 +31,7 @@ const Login = () => {
         console.log('ID Token:', idToken);
 
         // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
-        router.push('/souvenir');
+        router.push('/client/pages/requiredfield');
       })
       .catch((error) => {
         if (error.code === 'auth/user-not-found') {

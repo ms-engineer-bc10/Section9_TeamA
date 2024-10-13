@@ -30,7 +30,7 @@ const Register = () => {
         console.log('ID Token:', idToken);
 
         // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
-        router.push('/souvenir');
+        router.push('/client/pages/requiredfield');
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
