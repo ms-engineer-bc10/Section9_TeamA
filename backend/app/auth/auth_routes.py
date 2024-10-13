@@ -1,14 +1,29 @@
+# app/auth/auth_routes.py
+
 from flask import Blueprint, request, jsonify
-from app.auth.auth_service import verify_id_token
+from .auth_utils import verify_token
+from .auth_service import create_or_update_user
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/login', methods=['POST'])
-def login():
-    id_token = request.headers.get('Authorization').split(' ')[1]
+@auth_bp.route('/register', methods=['POST'])
+@verify_token
+def register_user():
     try:
-        uid = verify_id_token(id_token)
-        # uidを使ってユーザーを作成または更新
-        return jsonify({"uid": uid}), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 401
+        uid = request.uid
+        user_data = request.json
+        user = create_or_update_user(uid, user_data.get('email'))
+        return jsonify({"message": "User registered successfully", "uid": uid}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@auth_bp.route('/user', methods=['POST'])
+@verify_token
+def update_user():
+    try:
+        uid = request.uid
+        user_data = request.json
+        user = create_or_update_user(uid, user_data.get('email'))
+        return jsonify({"message": "User updated successfully", "uid": uid}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

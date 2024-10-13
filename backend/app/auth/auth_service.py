@@ -1,10 +1,14 @@
-import firebase_admin
-from firebase_admin import auth
+# app/auth/auth_service.py
 
-def verify_id_token(id_token):
-    try:
-        decoded_token = auth.verify_id_token(id_token)
-        uid = decoded_token['uid']
-        return uid
-    except Exception as e:
-        raise ValueError(f"Token verification failed: {e}")
+from app import db
+from app.models import User  # モデルを適切に import してください
+
+def create_or_update_user(uid, email):
+    user = User.query.filter_by(firebase_uid=uid).first()
+    if user:
+        user.email = email
+    else:
+        user = User(firebase_uid=uid, email=email)
+        db.session.add(user)
+    db.session.commit()
+    return user

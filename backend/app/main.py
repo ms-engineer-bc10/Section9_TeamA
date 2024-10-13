@@ -11,6 +11,9 @@ from app.routes.recommend_routes import recommend_routes
 from app.routes.store_routes import store_routes
 from app.routes.api_request_routes import api_request_routes
 
+import firebase_admin
+from firebase_admin import credentials
+
 migrate = Migrate()
 
 # アプリケーションファクトリ関数を定義
@@ -26,6 +29,13 @@ def create_app():
     # データベースとマイグレーションの初期化
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # Firebase Admin SDKの初期化
+    cred = credentials.Certificate(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+    firebase_admin.initialize_app(cred, {
+        'projectId': os.environ['FIREBASE_PROJECT_ID'],
+    })
+
     
     # # ルートを登録(ブループリントの登録)
     app.register_blueprint(user_routes, url_prefix='/api/user')
