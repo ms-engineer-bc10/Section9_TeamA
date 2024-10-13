@@ -94,4 +94,4 @@ wrapt==1.16.0
 yarl==1.9.4
 zipp==3.20.0
 openai==0.28
-firebase-admin==6.3.0
+
