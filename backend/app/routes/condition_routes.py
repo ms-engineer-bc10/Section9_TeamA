@@ -1,19 +1,26 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Condition
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
-condition_routes = Blueprint('condition', __name__)
+condition_routes = Blueprint('condition_routes', __name__)
 
-@condition_routes.route('', methods=['POST'])
+# POSTエンドポイント：条件データをデータベースに保存
+@condition_routes.route('/conditions', methods=['POST'])
 def create_condition():
     try:
-        data = request.json
+        data = request.get_json()
         new_condition = Condition(
-            uid=data['uid'],
+            user_id=data['user_id'],
             target=data['target'],
             genre=data['genre'],
-            budget=data['budget'],
-            quantity=data['quantity']
+            budget_min=data['budget_min'],
+            budget_max=data['budget_max'],
+            quantity=data['quantity'],
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            prefecture_name=data.get('prefecture_name', ''),
+            searched_at=datetime.now()
         )
         db.session.add(new_condition)
         db.session.commit()
@@ -22,29 +29,39 @@ def create_condition():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-@condition_routes.route('/<int:id>', methods=['GET'])
+# GETエンドポイント：特定の条件データを取得
+@condition_routes.route('/conditions/<int:id>', methods=['GET'])
 def get_condition(id):
     condition = Condition.query.get(id)
     if condition:
         return jsonify({
             "id": condition.id,
-            "uid": condition.uid,
+            "user_id": condition.user_id,
             "target": condition.target,
             "genre": condition.genre,
-            "budget": condition.budget,
+            "budget_min": condition.budget_min,
+            "budget_max": condition.budget_max,
             "quantity": condition.quantity,
+            "latitude": condition.latitude,
+            "longitude": condition.longitude,
+            "prefecture_name": condition.prefecture_name,
             "searched_at": condition.searched_at
         }), 200
     return jsonify({"error": "Condition not found"}), 404
 
-@condition_routes.route('/user/<uid>', methods=['GET'])
-def get_user_conditions(uid):
-    conditions = Condition.query.filter_by(uid=uid).all()
+# GETエンドポイント：特定ユーザーの条件データを取得
+@condition_routes.route('/conditions/user/<user_id>', methods=['GET'])
+def get_user_conditions(user_id):
+    conditions = Condition.query.filter_by(user_id=user_id).all()
     return jsonify([{
         "id": condition.id,
         "target": condition.target,
         "genre": condition.genre,
-        "budget": condition.budget,
+        "budget_min": condition.budget_min,
+        "budget_max": condition.budget_max,
         "quantity": condition.quantity,
+        "latitude": condition.latitude,
+        "longitude": condition.longitude,
+        "prefecture_name": condition.prefecture_name,
         "searched_at": condition.searched_at
     } for condition in conditions]), 200
