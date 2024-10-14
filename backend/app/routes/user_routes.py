@@ -9,6 +9,7 @@ from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
 user_routes = Blueprint('user_routes', __name__)
 
@@ -81,16 +82,18 @@ def get_recommendations():
 
 # 以下、ユーザー関連の CRUD 操作を追加
 
-@user_routes.route('', methods=['POST'])
+# POSTエンドポイント：新規ユーザーを作成
+@user_routes.route('/users', methods=['POST'])
 def create_user():
     try:
-        data = request.json
+        data = request.get_json()
         new_user = User(
             uid=data['uid'],
             name=data['name'],
             email=data['email'],
-            age=data['age'],
-            gender=data['gender']
+            age=data.get('age'),
+            gender=data.get('gender'),
+            registered_at=datetime.now()
         )
         db.session.add(new_user)
         db.session.commit()
@@ -99,7 +102,8 @@ def create_user():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-@user_routes.route('/<uid>', methods=['GET'])
+# GETエンドポイント：特定のユーザー情報を取得
+@user_routes.route('/users/<uid>', methods=['GET'])
 def get_user(uid):
     user = User.query.get(uid)
     if user:
@@ -116,24 +120,27 @@ def get_user(uid):
         }), 200
     return jsonify({"error": "User not found"}), 404
 
-@user_routes.route('/<uid>', methods=['PUT'])
+# PUTエンドポイント：特定のユーザー情報を更新
+@user_routes.route('/users/<uid>', methods=['PUT'])
 def update_user(uid):
     try:
         user = User.query.get(uid)
         if not user:
             return jsonify({"error": "User not found"}), 404
         
-        data = request.json
+        data = request.get_json()
         for key, value in data.items():
             setattr(user, key, value)
         
+        user.latest_login_at = datetime.now()
         db.session.commit()
         return jsonify({"message": "User updated successfully"}), 200
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-@user_routes.route('/<uid>', methods=['DELETE'])
+# DELETEエンドポイント：特定のユーザーを削除
+@user_routes.route('/users/<uid>', methods=['DELETE'])
 def delete_user(uid):
     try:
         user = User.query.get(uid)
