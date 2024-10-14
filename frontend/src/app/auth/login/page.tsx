@@ -32,7 +32,6 @@ const Login = () => {
         console.log('ID Token:', idToken);
 
         // // バックエンドにリクエストを送信
-        //バックエンドとつながっていないからこれを入れるとネットワークエラーになる
         // const response = await axios.post(
         //   'http://localhost:5000/api/user',
         //   { email: user.email },
