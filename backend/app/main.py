@@ -7,9 +7,11 @@ from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
 from app.routes.condition_routes import condition_routes
-from app.routes.recommend_routes import recommend_routes
+from app.routes.recommendation_routes import recommend_routes
 from app.routes.store_routes import store_routes
 from app.routes.api_request_routes import api_request_routes
+from app.routes.business_routes import business_routes
+from app.routes.like_routes import like_routes
 
 migrate = Migrate()
 
@@ -27,19 +29,18 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     
-    # # ルートを登録(ブループリントの登録)
+    # ルートを登録(ブループリントの登録)
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(condition_routes, url_prefix='/api/conditions')
-    app.register_blueprint(recommend_routes, url_prefix='/api/recommends')
+    app.register_blueprint(recommend_routes, url_prefix='/api/recommendations')
     app.register_blueprint(store_routes, url_prefix='/api/stores')
     app.register_blueprint(api_request_routes, url_prefix='/api/api_requests')
+    app.register_blueprint(business_routes, url_prefix='/api/businesses')
+    app.register_blueprint(like_routes, url_prefix='/api/likes')
     
-    
-
     @app.route('/')
     def hello_world():
         return 'Hello, World!'
-    
 
     return app
 
