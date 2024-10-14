@@ -31,20 +31,26 @@ const Login = () => {
         const idToken = await user.getIdToken();
         console.log('ID Token:', idToken);
 
-        // // バックエンドにリクエストを送信
-        // const response = await axios.post(
-        //   'http://localhost:5000/api/user',
-        //   { email: user.email },
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${idToken}`,
-        //     },
-        //   }
-        // );
+        try {
+          const response = await fetch('http://localhost:5000/api/user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({ email: user.email }),
+          });
 
-        // console.log('Backend response:', response.data);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
-        // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
+          const responseData = await response.json();
+          console.log('Backend response:', responseData);
+        } catch (error) {
+          console.error('Error sending request to backend:', error);
+        }
+
         router.push('/client/pages/requiredfield');
       })
       .catch((error) => {
