@@ -1,14 +1,18 @@
-# app/auth/auth_service.py
-
 from app import db
-from app.models import User  # モデルを適切に import してください
+from app.models import User
+from datetime import datetime
 
 def create_or_update_user(uid, email):
-    user = User.query.filter_by(firebase_uid=uid).first()
-    if user:
-        user.email = email
-    else:
-        user = User(firebase_uid=uid, email=email)
-        db.session.add(user)
-    db.session.commit()
-    return user
+    try:
+        user = User.query.get(uid)
+        if user:
+            user.email = email
+            user.latest_login_at = datetime.now()
+        else:
+            user = User(uid=uid, email=email)
+            db.session.add(user)
+        db.session.commit()
+        return user
+    except Exception as e:
+        db.session.rollback()
+        raise Exception(f"Failed to create or update user: {str(e)}")
