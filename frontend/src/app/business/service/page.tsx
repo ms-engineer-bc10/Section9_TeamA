@@ -67,15 +67,6 @@ function BusinessServiceContent() {
       <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-2xl">
         <h1 className="text-3xl font-bold text-blue-600 mb-4">ビジネス向けおみやげアプリへようこそ！</h1>
         <p className="text-xl text-green-600 mb-6">支払いが正常に完了しました。</p>
-        {/* <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">利用可能なサービス</h2> */}
-          {/* <ul className="text-left list-disc list-inside text-gray-700">
-            <li>リアルタイムの市場状況分析</li>
-            <li>商品の売れ行きレポート</li>
-            <li>カスタマイズされた商品開発支援</li>
-            <li>効果的なプロモーション戦略の提案</li>
-          </ul> */}
-        {/* </div> */}
         <Link href="/business/dashboard" className="bg-blue-500 hover:bg-blue-600 text-white text-lg font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
           ビジネスダッシュボードへ進む
         </Link>
