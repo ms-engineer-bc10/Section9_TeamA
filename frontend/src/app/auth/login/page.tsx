@@ -31,18 +31,19 @@ const Login = () => {
         const idToken = await user.getIdToken();
         console.log('ID Token:', idToken);
 
-        // バックエンドにリクエストを送信
-        const response = await axios.post(
-          'http://localhost:5000/api/user',
-          { email: user.email },
-          {
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-            },
-          }
-        );
+        // // バックエンドにリクエストを送信
+        //バックエンドとつながっていないからこれを入れるとネットワークエラーになる
+        // const response = await axios.post(
+        //   'http://localhost:5000/api/user',
+        //   { email: user.email },
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${idToken}`,
+        //     },
+        //   }
+        // );
 
-        console.log('Backend response:', response.data);
+        // console.log('Backend response:', response.data);
 
         // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
         router.push('/client/pages/requiredfield');

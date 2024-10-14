@@ -38,6 +38,9 @@ const Result: React.FC<ResultProps> = ({
   const [places, setPlaces] = useState([]);
 
   const updateSearchResult = useCallback(() => {
+    console.log(searchResults);
+    console.log(searchResults.おすすめ商品一覧);
+
     if (searchResults && searchResults.おすすめ商品一覧.length > 0) {
       const aiSelectedProduct = searchResults.おすすめ商品一覧.find(
         (item: any) => item.商品名 === searchResults['AIが選ぶおすすめ商品']
@@ -47,12 +50,15 @@ const Result: React.FC<ResultProps> = ({
         setCurrentResult({
           imageUrl: aiSelectedProduct.画像URL || '/placeholder-image.jpg',
           name: aiSelectedProduct.商品名,
-          llmComment: searchResults.AIおすすめポイント || aiSelectedProduct.説明,
+          llmComment:
+            searchResults.AIおすすめポイント || aiSelectedProduct.説明,
         });
       } else {
         const result = searchResults.おすすめ商品一覧[0];
         setCurrentResult({
-          imageUrl: result.画像URL.replace('image_size=76', 'image_size=300') || '/placeholder-image.jpg',
+          imageUrl:
+            result.画像URL.replace('image_size=76', 'image_size=300') ||
+            '/placeholder-image.jpg',
           name: result.商品名,
           llmComment: searchResults.AIおすすめポイント || result.説明,
         });
@@ -124,7 +130,7 @@ const Result: React.FC<ResultProps> = ({
                 <Image
                   src={currentResult.imageUrl}
                   alt={currentResult.name}
-                  width={300}  // 指定サイズ300x300
+                  width={300} // 指定サイズ300x300
                   height={300} // 指定サイズ300x300
                   style={{ objectFit: 'cover', display: 'block' }}
                   className='rounded-lg'
@@ -138,7 +144,10 @@ const Result: React.FC<ResultProps> = ({
                   onClick={handleFavoriteClick}
                 />
               </div>
-              <div className='flex space-x-4 mb-6' style={{ alignItems: 'stretch' }}>
+              <div
+                className='flex space-x-4 mb-6'
+                style={{ alignItems: 'stretch' }}
+              >
                 <div className='flex-1 bg-gray-100 p-4 rounded-lg'>
                   <div className='h-full w-full'>
                     <MapComponent places={places} />
