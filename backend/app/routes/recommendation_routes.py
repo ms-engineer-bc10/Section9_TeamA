@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Recommendation
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
 recommend_routes = Blueprint('recommend', __name__)
 
@@ -9,12 +10,22 @@ recommend_routes = Blueprint('recommend', __name__)
 def create_recommend():
     try:
         data = request.json
+        
+        # 既存の店舗と商品がDBに存在しない場合は作成
+        product = Product.query.get(data['product_id'])
+        if not product:
+            return jsonify({"error": "Product not found"}), 404
+        
+        store = Store.query.get(data['store_id'])
+        if not store:
+            return jsonify({"error": "Store not found"}), 404
+
+        # 新しいRecommendationの作成
         new_recommend = Recommendation(
             condition_id=data['condition_id'],
-            product_id=data['product_id'],
-            store_id=data['store_id'],
-            comment=data.get('comment', None),
-            recommended_at=data.get('recommended_at', None)
+            product_id=product.id,
+            store_id=store.id,
+            recommended_at=data.get('recommended_at', datetime.now())
         )
         db.session.add(new_recommend)
         db.session.commit()
