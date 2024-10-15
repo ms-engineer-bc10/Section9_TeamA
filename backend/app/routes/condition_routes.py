@@ -28,6 +28,28 @@ def create_condition():
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+    
+
+# GETエンドポイント：特定のuser_idとcondition_idに基づいて条件データを取得
+@condition_routes.route('/<int:user_id>/<int:condition_id>', methods=['GET'])
+def get_user_condition(user_id, condition_id):
+    condition = Condition.query.filter_by(user_id=user_id, id=condition_id).first()
+    if condition:
+        return jsonify({
+            "id": condition.id,
+            "user_id": condition.user_id,
+            "target": condition.target,
+            "genre": condition.genre,
+            "budget_min": condition.budget_min,
+            "budget_max": condition.budget_max,
+            "quantity": condition.quantity,
+            "latitude": condition.latitude,
+            "longitude": condition.longitude,
+            "prefecture_name": condition.prefecture_name,
+            "searched_at": condition.searched_at
+        }), 200
+    return jsonify({"error": "Condition not found"}), 404
+
 
 # GETエンドポイント：特定の条件データを取得
 @condition_routes.route('/<int:id>', methods=['GET'])
@@ -50,7 +72,7 @@ def get_condition(id):
     return jsonify({"error": "Condition not found"}), 404
 
 # GETエンドポイント：特定ユーザーの条件データを取得
-@condition_routes.route('/user/<user_id>', methods=['GET'])
+@condition_routes.route('/user/<int:id>', methods=['GET'])
 def get_user_conditions(user_id):
     conditions = Condition.query.filter_by(user_id=user_id).all()
     return jsonify([{
