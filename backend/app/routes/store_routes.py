@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 store_routes = Blueprint('store_routes', __name__)
 
 # POSTエンドポイント：店舗データをデータベースに保存
-@store_routes.route('/stores', methods=['POST'])
+@store_routes.route('', methods=['POST'])
 def create_store():
     try:
         data = request.get_json()
@@ -25,7 +25,7 @@ def create_store():
         return jsonify({"error": str(e)}), 500
 
 # GETエンドポイント：特定の店舗データを取得
-@store_routes.route('/stores/<int:id>', methods=['GET'])
+@store_routes.route('/<int:id>', methods=['GET'])
 def get_store(id):
     store = Store.query.get(id)
     if store:
@@ -41,7 +41,7 @@ def get_store(id):
     return jsonify({"error": "Store not found"}), 404
 
 # GETエンドポイント：すべての店舗データを取得
-@store_routes.route('/stores', methods=['GET'])
+@store_routes.route('', methods=['GET'])
 def get_all_stores():
     stores = Store.query.all()
     return jsonify([{
@@ -55,7 +55,7 @@ def get_all_stores():
     } for store in stores]), 200
 
 # PUTエンドポイント：特定の店舗データを更新
-@store_routes.route('/stores/<int:id>', methods=['PUT'])
+@store_routes.route('/<int:id>', methods=['PUT'])
 def update_store(id):
     store = Store.query.get(id)
     if not store:
@@ -77,7 +77,7 @@ def update_store(id):
         return jsonify({"error": str(e)}), 500
 
 # DELETEエンドポイント：特定の店舗データを削除
-@store_routes.route('/stores/<int:id>', methods=['DELETE'])
+@store_routes.route('/<int:id>', methods=['DELETE'])
 def delete_store(id):
     store = Store.query.get(id)
     if not store:
