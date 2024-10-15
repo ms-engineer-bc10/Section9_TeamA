@@ -6,7 +6,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { auth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 
 type Inputs = {
   email: string;
