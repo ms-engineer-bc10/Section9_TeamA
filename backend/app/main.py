@@ -15,6 +15,7 @@ from app.routes.like_routes import like_routes
 
 import firebase_admin
 from firebase_admin import credentials
+from app.auth.auth_routes import auth_routes
 
 migrate = Migrate()
 
@@ -40,6 +41,7 @@ def create_app():
 
     
     # ルートを登録(ブループリントの登録)
+    app.register_blueprint(auth_routes, url_prefix='/api/auth')
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(condition_routes, url_prefix='/api/conditions')
     app.register_blueprint(recommend_routes, url_prefix='/api/recommendations')
