@@ -6,7 +6,7 @@ from datetime import datetime
 condition_routes = Blueprint('condition_routes', __name__)
 
 # POSTエンドポイント：条件データをデータベースに保存
-@condition_routes.route('/conditions', methods=['POST'])
+@condition_routes.route('', methods=['POST'])
 def create_condition():
     try:
         data = request.get_json()
