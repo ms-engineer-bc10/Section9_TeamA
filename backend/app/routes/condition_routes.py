@@ -30,7 +30,7 @@ def create_condition():
         return jsonify({"error": str(e)}), 500
 
 # GETエンドポイント：特定の条件データを取得
-@condition_routes.route('/conditions/<int:id>', methods=['GET'])
+@condition_routes.route('/<int:id>', methods=['GET'])
 def get_condition(id):
     condition = Condition.query.get(id)
     if condition:
@@ -50,7 +50,7 @@ def get_condition(id):
     return jsonify({"error": "Condition not found"}), 404
 
 # GETエンドポイント：特定ユーザーの条件データを取得
-@condition_routes.route('/conditions/user/<user_id>', methods=['GET'])
+@condition_routes.route('/user/<user_id>', methods=['GET'])
 def get_user_conditions(user_id):
     conditions = Condition.query.filter_by(user_id=user_id).all()
     return jsonify([{
