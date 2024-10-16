@@ -1,6 +1,7 @@
 import os
 import requests
 from app.services.openai_service import get_openai_recommendation
+from app.services.store_service import save_store
 
 def search_google_places(location, recommendations_data, previous_product_id=None, radius=2000):
     api_key = os.getenv("GOOGLE_PLACES_API_KEY")
@@ -15,6 +16,7 @@ def search_google_places(location, recommendations_data, previous_product_id=Non
     
     selected_product_name = selected_product.get('name', '不明')
 
+# todo: 以下の白い恋人は{selected_product_name}を短縮・明確にした後に変更する必要あり
     base_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
     query = f"白い恋人 near {location}"
 
@@ -52,5 +54,11 @@ def search_google_places(location, recommendations_data, previous_product_id=Non
             "location": place.get("geometry", {}).get("location", {})
         })
         print(f"店舗情報: {places}", flush=True)
+
+    # 取得した店舗情報をDBに保存
+    saved_stores = []
+    for place in places:
+        saved_store = save_store(place)  # 各店舗情報を個別に渡す
+        saved_stores.append(saved_store)
 
     return places
