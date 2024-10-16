@@ -1,5 +1,3 @@
-# condition_service.py
-
 from app.models import db, Condition
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
@@ -52,3 +50,27 @@ def save_condition(data):
     except SQLAlchemyError as e:
         db.session.rollback()
         return {'error': str(e)}, 500
+
+
+# GETメソッドで特定のcondition_idに基づいて保存したConditionデータを取得
+def get_condition_by_id(condition_id):
+    try:
+        condition = Condition.query.get(condition_id)
+        if condition:
+            return {
+                "id": condition.id,
+                "user_id": condition.user_id,
+                "target": condition.target,
+                "genre": condition.genre,
+                "budget_min": condition.budget_min,
+                "budget_max": condition.budget_max,
+                "quantity": condition.quantity,
+                "latitude": condition.latitude,
+                "longitude": condition.longitude,
+                "prefecture_name": condition.prefecture_name,
+                "searched_at": condition.searched_at
+            }, 200
+        return {"error": "Condition not found"}, 404
+
+    except SQLAlchemyError as e:
+        return {"error": str(e)}, 500
