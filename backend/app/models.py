@@ -68,6 +68,7 @@ class Store(db.Model):
     open_time = db.Column(db.String(255))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    place_id = db.Column(db.String(255), unique=True)
     
     recommendations = db.relationship('Recommendation', backref='store', lazy=True)
 
