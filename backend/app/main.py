@@ -11,7 +11,6 @@ from app.routes.store_routes import store_routes
 from app.routes.api_request_routes import api_request_routes
 from app.routes.business_routes import business_routes
 from app.routes.like_routes import like_routes
-from app.routes.product_routes import product_routes
 
 migrate = Migrate()
 
@@ -36,7 +35,6 @@ def create_app():
     app.register_blueprint(api_request_routes, url_prefix='/api/api_requests')
     app.register_blueprint(business_routes, url_prefix='/api/businesses')
     app.register_blueprint(like_routes, url_prefix='/api/likes')
-    app.register_blueprint(product_routes, url_prefix='/api/products')
     
     @app.route('/')
     def hello_world():
