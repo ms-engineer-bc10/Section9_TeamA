@@ -2,29 +2,58 @@ from flask import Blueprint, request, jsonify
 from app.models import db, Condition
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
+from app.utils.budget_utils import parse_budget
+from app.services.google_geocoding_service import get_prefecture_from_latlng, get_latlng_from_prefecture
 
 condition_routes = Blueprint('condition_routes', __name__)
 
 # POSTエンドポイント：条件データをデータベースに保存
 @condition_routes.route('', methods=['POST'])
-def create_condition():
+def save_condition():
     try:
         data = request.get_json()
+
+        # 1. 予算を解析
+        budget = data.get('budget')
+        budget_from, budget_to = parse_budget(budget)
+
+        # 2. location_typeに基づいて処理を分ける
+        location = data.get('location')
+        location_type = data.get('location_type')
+
+        if location_type == 'latlng':
+            # 緯度経度情報が提供されている場合
+            latitude, longitude = map(float, location.split(','))
+            prefecture_name = get_prefecture_from_latlng(location)  # 緯度経度から都道府県名を取得
+        elif location_type == 'prefecture':
+            # 都道府県名が提供されている場合
+            prefecture_name = location
+            latlng = get_latlng_from_prefecture(prefecture_name)  # 都道府県名から緯度経度を取得
+            if latlng:
+                latitude, longitude = map(float, latlng.split(','))
+            else:
+                return jsonify({'error': 'Invalid prefecture name'}), 400
+        else:
+            return jsonify({'error': 'Invalid location_type'}), 400
+
+        # 3. データベースに保存
         new_condition = Condition(
-            user_id=data['user_id'],
+            user_id=1,  # ダミーのユーザーID
             target=data['target'],
             genre=data['genre'],
-            budget_min=data['budget_min'],
-            budget_max=data['budget_max'],
+            budget_min=budget_from,
+            budget_max=budget_to,
             quantity=data['quantity'],
-            latitude=data.get('latitude'),
-            longitude=data.get('longitude'),
-            prefecture_name=data.get('prefecture_name', ''),
+            latitude=latitude,
+            longitude=longitude,
+            prefecture_name=prefecture_name,
             searched_at=datetime.now()
         )
         db.session.add(new_condition)
         db.session.commit()
+
         return jsonify({"message": "Condition created successfully"}), 201
+
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
