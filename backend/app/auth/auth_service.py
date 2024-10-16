@@ -9,6 +9,6 @@ def create_or_update_user(uid, email):
     else:
         user = User(uid=uid, email=email, registered_at=datetime.now(), latest_login_at=datetime.now())
         db.session.add(user)
-    
+
     db.session.commit()
     return user
