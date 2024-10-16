@@ -1,5 +1,6 @@
 import os
 import openai
+from app.services.product_service import save_selected_product
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -89,6 +90,12 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
 
         if product_comment_response and 'choices' in product_comment_response:
             ai_recommend = product_comment_response['choices'][0]['message']['content']
+            print(f"おすすめ商品: {selected_product}", flush=True)
+            print(f"Filtered products: {filtered_products}")
+
+            # ここで選ばれた商品をDBに保存
+            save_selected_product(selected_product)
+
             return ai_recommend, selected_product
 
     return None, None
