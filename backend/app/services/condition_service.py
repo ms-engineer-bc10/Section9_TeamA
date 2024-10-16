@@ -74,3 +74,26 @@ def get_condition_by_id(condition_id):
 
     except SQLAlchemyError as e:
         return {"error": str(e)}, 500
+
+
+# GETメソッドで特定のuser_idに基づいてすべてのConditionデータを取得
+def get_conditions_by_user_id(user_id):
+    try:
+        conditions = Condition.query.filter_by(user_id=user_id).all()
+        if conditions:
+            return [{
+                "id": condition.id,
+                "target": condition.target,
+                "genre": condition.genre,
+                "budget_min": condition.budget_min,
+                "budget_max": condition.budget_max,
+                "quantity": condition.quantity,
+                "latitude": condition.latitude,
+                "longitude": condition.longitude,
+                "prefecture_name": condition.prefecture_name,
+                "searched_at": condition.searched_at
+            } for condition in conditions], 200
+        return {"error": "No conditions found for the user"}, 404
+
+    except SQLAlchemyError as e:
+        return {"error": str(e)}, 500
