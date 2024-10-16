@@ -5,6 +5,7 @@ from .auth_service import create_or_update_user
 
 auth_routes = Blueprint('auth', __name__)
 
+#ここ何するのか、、、
 # デコレータ: トークンを検証し、UIDをリクエストに追加
 def verify_token(f):
     @wraps(f)
