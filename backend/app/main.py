@@ -7,7 +7,6 @@ from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
 from app.routes.recommendation_routes import recommend_routes
-from app.routes.store_routes import store_routes
 from app.routes.api_request_routes import api_request_routes
 from app.routes.business_routes import business_routes
 from app.routes.like_routes import like_routes
@@ -31,7 +30,6 @@ def create_app():
     # ルートを登録(ブループリントの登録)
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(recommend_routes, url_prefix='/api/recommendations')
-    app.register_blueprint(store_routes, url_prefix='/api/stores')
     app.register_blueprint(api_request_routes, url_prefix='/api/api_requests')
     app.register_blueprint(business_routes, url_prefix='/api/businesses')
     app.register_blueprint(like_routes, url_prefix='/api/likes')
