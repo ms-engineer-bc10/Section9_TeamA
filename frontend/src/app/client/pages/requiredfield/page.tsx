@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import target from '@/app/client/components/target';
 import genre from '@/app/client/components/genre';
@@ -115,7 +115,6 @@ const RequiredFieldPage: React.FC = () => {
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     try {
-
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
@@ -136,20 +135,20 @@ const RequiredFieldPage: React.FC = () => {
       }
 
       const data = await response.json();
-    setSearchResults(data); // 結果を保存
-    setShowResult(true); // 結果を表示
-  } catch (error: any) {
-    if (error instanceof Error) {
-      setError(`検索中にエラーが発生しました: ${error.message}`);
-      console.error('APIリクエストエラー:', error.message, error.stack);
-    } else {
-      setError('検索中にエラーが発生しました。');
-      console.error('APIリクエストエラー:', error);
+      setSearchResults(data); // 結果を保存
+      setShowResult(true); // 結果を表示
+    } catch (error: any) {
+      if (error instanceof Error) {
+        setError(`検索中にエラーが発生しました: ${error.message}`);
+        console.error('APIリクエストエラー:', error.message, error.stack);
+      } else {
+        setError('検索中にエラーが発生しました。');
+        console.error('APIリクエストエラー:', error);
+      }
+    } finally {
+      setIsLoading(false); // ローディング終了
     }
-  } finally {
-    setIsLoading(false); // ローディング終了
-  }
-}, [answers]);
+  }, [answers]);
 
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
@@ -171,6 +170,15 @@ const RequiredFieldPage: React.FC = () => {
   }, []);
 
   const isConfirmPage = currentQuestionIndex === questions.length;
+
+  useEffect(() => {
+    const idToken = localStorage.getItem('idToken');
+    fetch('http://localhost:5000/api/auth/test', {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+  }, []);
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>

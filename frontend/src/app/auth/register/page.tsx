@@ -29,8 +29,36 @@ const Register = () => {
         const idToken = await user.getIdToken();
         console.log('ID Token:', idToken);
 
-        // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
-        router.push('/client/pages/requiredfield');
+        try {
+          // IDトークンとユーザーのメールをバックエンドに送信
+          const response = await fetch(
+            'http://localhost:5000/api/auth/register',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${idToken}`,
+              },
+              body: JSON.stringify({ email: user.email }),
+              //credentials: 'include',
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const responseData = await response.json();
+          console.log('Backend response:', responseData);
+
+          // 成功したら特定のページにリダイレクト
+          router.push('/client/pages/requiredfield');
+        } catch (error) {
+          console.error('Error:', error);
+          if (error instanceof Error) {
+            alert(`バックエンドとの通信エラー: ${error.message}`);
+          }
+        }
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {

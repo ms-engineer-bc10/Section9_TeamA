@@ -34,22 +34,22 @@ const Login = () => {
       const idToken = await user.getIdToken();
       console.log('ID Token:', idToken);
 
-      const response = await fetch('http://localhost:5000/api/auth/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({ email: user.email }),
-        //credentials: 'include',
-      });
+      // const response = await fetch('http://localhost:5000/api/auth/user', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${idToken}`,
+      //   },
+      //   body: JSON.stringify({ email: user.email }),
+      //   //credentials: 'include',
+      // });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
 
-      const responseData = await response.json();
-      console.log('Backend response:', responseData);
+      // const responseData = await response.json();
+      // console.log('Backend response:', responseData);
 
       router.push('/client/pages/requiredfield');
     } catch (error) {
