@@ -10,6 +10,7 @@ import Link from 'next/link';
 type Inputs = {
   email: string;
   password: string;
+  name?: string; // 名前フィールドが必要であれば追加
 };
 
 const Register = () => {
@@ -22,51 +23,53 @@ const Register = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        // IDトークンを取得
-        const idToken = await user.getIdToken();
-        console.log('ID Token:', idToken);
+    try {
+      // Firebaseでユーザーを作成
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      const user = userCredential.user;
 
-        try {
-          // IDトークンとユーザーのメールをバックエンドに送信
-          const response = await fetch(
-            'http://localhost:5000/api/auth/register',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${idToken}`,
-              },
-              body: JSON.stringify({ email: user.email }),
-              //credentials: 'include',
-            }
-          );
+      // FirebaseからIDトークンを取得
+      const idToken = await user.getIdToken();
+      const uid = user.uid; // UIDを明示的に取得
 
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
+      console.log('ID Token:', idToken);
+      // Firebaseで取得したデータをログで確認
+      console.log('uid:', uid);
+      console.log('email:', data.email);
 
-          const responseData = await response.json();
-          console.log('Backend response:', responseData);
-
-          // 成功したら特定のページにリダイレクト
-          router.push('/client/pages/requiredfield');
-        } catch (error) {
-          console.error('Error:', error);
-          if (error instanceof Error) {
-            alert(`バックエンドとの通信エラー: ${error.message}`);
-          }
-        }
-      })
-      .catch((error) => {
-        if (error.code === 'auth/email-already-in-use') {
-          alert('このメールアドレスはすでに使用されています。');
-        } else {
-          alert(error.message);
-        }
+      // バックエンドにデータを送信
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`, // IDトークンをAuthorizationヘッダーに追加
+        },
+        body: JSON.stringify({
+          idToken, // IDトークンをボディにも送信
+          uid, // Firebaseから取得したUID
+          email: data.email, // 入力されたメールアドレス
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log('Backend response:', responseData); // バックエンドからの応答をコンソールに表示
+
+      // 成功したら特定のページにリダイレクト
+      router.push('/client/pages/requiredfield');
+    } catch (error) {
+      console.error('Error:', error);
+      if (error instanceof Error) {
+        alert(`バックエンドとの通信エラー: ${error.message}`);
+      }
+    }
   };
 
   return (

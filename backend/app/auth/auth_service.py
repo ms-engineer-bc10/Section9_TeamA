@@ -1,14 +1,18 @@
-from app.models import db, User
-from datetime import datetime
+from app.auth.auth_utils import verify_token
 
-def create_or_update_user(uid, email):
-    user = User.query.get(uid)
-    if user:
-        user.email = email
-        user.latest_login_at = datetime.now()
-    else:
-        user = User(uid=uid, email=email, registered_at=datetime.now(), latest_login_at=datetime.now())
-        db.session.add(user)
+# ユーザーを登録するための関数
+def register_user(id_token, uid, email):
+    # IDトークンを検証してデコードされたトークン情報を取得
+    decoded_token = verify_token(id_token)
 
-    db.session.commit()
-    return user
+    # 検証されたUIDと送信されたUIDが一致しているか確認
+    if decoded_token['uid'] != uid:
+        raise Exception("UIDが一致しません")
+
+    # ここでDBへの保存処理を一時的にコメントアウト
+    # 例:
+    # new_user = User(uid=uid, email=email)
+    # db.session.add(new_user)
+    # db.session.commit()
+
+    return {'uid': uid, 'email': email}
