@@ -5,6 +5,7 @@ from app.services.openai_service import get_openai_recommendation
 from app.services.yahoo_service import search_yahoo_shopping
 from app.services.google_service import search_google_places
 from app.services.google_geocoding_service import get_prefecture_from_latlng
+from app.services.store_service import save_store
 from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
@@ -72,6 +73,13 @@ def get_recommendations():
         if not places_results:
             return jsonify({"error": "No places found"}), 500
 
+        # 1つのstore情報をDBに保存する（最初の店舗を保存）
+        first_place = places_results[0]  # 1つ目の店舗情報を取得
+        saved_store = save_store(first_place)  # その店舗をDBに保存
+        if isinstance(saved_store, dict) and 'error' in saved_store:
+            return jsonify(saved_store), 500
+
+        # ユーザーに複数の店舗情報を返す
         response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
         return response
 
