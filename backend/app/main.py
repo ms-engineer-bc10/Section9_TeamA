@@ -29,10 +29,6 @@ def create_app():
     
     # ルートを登録(ブループリントの登録)
     app.register_blueprint(user_routes, url_prefix='/api/user')
-    app.register_blueprint(recommend_routes, url_prefix='/api/recommendations')
-    app.register_blueprint(api_request_routes, url_prefix='/api/api_requests')
-    app.register_blueprint(business_routes, url_prefix='/api/businesses')
-    app.register_blueprint(like_routes, url_prefix='/api/likes')
     
     @app.route('/')
     def hello_world():
