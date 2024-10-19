@@ -4,14 +4,15 @@ from app.auth.auth_service import register_user
 # Blueprintの定義
 auth_routes = Blueprint('auth_routes', __name__)
 
-# /registerエンドポイントの定義
+import traceback  # トレースバック情報を取得するためにインポート
+
 @auth_routes.route('/register', methods=['POST'])
 def register():
     # リクエストからJSONデータを取得
     data = request.get_json()
 
     # デバッグのために受け取ったデータを出力
-    print(f"Received data: {data}")
+    print(f"Received data: {data}", flush=True)
 
     # 受け取ったデータから必要なフィールドを抽出
     id_token = data.get('idToken')
@@ -23,12 +24,12 @@ def register():
         return jsonify({'message': '必要なデータが不足しています。'}), 400
 
     try:
-        # データベース保存のコードはCORS確認のため一旦コメントアウト
-        # user = register_user(id_token, uid, email)
+        # データベースにユーザーを登録
+        user = register_user(id_token, uid, email)
 
-        # テスト用にCORSの確認をするため、仮のレスポンス
-        return jsonify({'message': 'CORS問題が解決しました。'}), 201
+        # 正常に登録された場合のレスポンス
+        return jsonify({'message': 'ユーザー登録に成功しました。', 'user': user}), 201
     except Exception as e:
         # エラー発生時のエラーメッセージを出力
-        print(f"Error during registration: {str(e)}")
+        print(f"Error during registration: {str(e)}", flush=True)
         return jsonify({'message': str(e)}), 400
