@@ -6,6 +6,7 @@ from app.services.yahoo_service import search_yahoo_shopping
 from app.services.google_service import search_google_places
 from app.services.google_geocoding_service import get_prefecture_from_latlng
 from app.services.store_service import save_store
+from app.services.product_service import save_selected_product
 from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
@@ -79,7 +80,7 @@ def get_recommendations():
         if isinstance(saved_store, dict) and 'error' in saved_store:
             return jsonify(saved_store), 500
 
-        # ユーザーに複数の店舗情報を返す
+        # ユーザーに複数の店舗情報を返す、DBに保存
         response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
         return response
 

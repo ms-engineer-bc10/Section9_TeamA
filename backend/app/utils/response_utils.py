@@ -1,5 +1,6 @@
 import logging
 from flask import jsonify
+from app.services.product_service import save_selected_product
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -9,13 +10,21 @@ def generate_recommendation_response(shopping_results, selected_product, ai_reco
     for item in shopping_results:  
         product = {
             '商品名': item.get('name', '不明'),
-            '価格': item.get('budget', '不明'),
+            '価格': item.get('price', '不明'),
             '個数': item.get('quantity', '不明'),
             '説明': item.get('description', '説明なし'),
             '画像URL': item.get('image_url', '画像なし'),
             '商品URL': item.get('url', 'URLなし')
         }
         formatted_shopping_results.append(product)
+
+    if selected_product:
+        save_selected_product(
+            name=selected_product.get('name', '不明'),
+            price=selected_product.get('price', 0),
+            picture=selected_product.get('image_url', '画像なし'),
+            ai_recommend=ai_recommend
+        )
 
     if selected_product:
         ai_selected_product_name = selected_product.get('name', '不明')

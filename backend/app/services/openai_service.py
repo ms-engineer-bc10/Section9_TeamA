@@ -1,6 +1,5 @@
 import os
 import openai
-from app.services.product_service import save_selected_product
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -29,6 +28,7 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         '説明': item.get('description', '説明なし')
     } for item in filtered_products]
 
+    # AIによる商品選定
     product_selection_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -58,16 +58,19 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
 
     if product_selection_response and 'choices' in product_selection_response:
         selected_product_info = product_selection_response['choices'][0]['message']['content']
-        selected_product_id = None
+        selected_product = None
+
+        # 選ばれた商品を検索
         for item in filtered_products:
             if f"商品ID: {item['id']}" in selected_product_info:
                 selected_product_id = item['id']
                 selected_product = item
                 break
 
-        if not selected_product_id:
+        if not selected_product:
             selected_product = filtered_products[0]
 
+        # AIからの推薦ポイント取得
         product_comment_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -91,11 +94,8 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         if product_comment_response and 'choices' in product_comment_response:
             ai_recommend = product_comment_response['choices'][0]['message']['content']
             print(f"おすすめ商品: {selected_product}", flush=True)
-            print(f"Filtered products: {filtered_products}")
 
-            # ここで選ばれた商品をDBに保存
-            save_selected_product(selected_product)
-
+            # AIの推薦理由と商品情報を返す
             return ai_recommend, selected_product
 
     return None, None
