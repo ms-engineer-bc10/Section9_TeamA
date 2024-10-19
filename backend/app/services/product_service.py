@@ -12,7 +12,7 @@ def save_selected_product(name, price, picture, ai_recommend):
         # ユーザーに表示する際には<img src={product.picture} alt={product.name} />のように設定する必要がある
         db.session.add(new_product)
         db.session.commit()
-        return new_product, 201
+        return new_product.id, 201
     except SQLAlchemyError as e:
         db.session.rollback()
         return {'error': str(e)}, 500

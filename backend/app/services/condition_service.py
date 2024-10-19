@@ -45,7 +45,8 @@ def save_condition(data):
         db.session.add(new_condition)
         db.session.commit()
 
-        return {"message": "Condition created successfully", "condition": new_condition}, 201
+        # condition_id を含めてレスポンスを返す
+        return {"message": "Condition created successfully", "condition_id": new_condition.id}, 201
 
     except SQLAlchemyError as e:
         db.session.rollback()
