@@ -6,10 +6,6 @@ from app.models import db
 from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
-from app.routes.recommendation_routes import recommend_routes
-from app.routes.api_request_routes import api_request_routes
-from app.routes.business_routes import business_routes
-from app.routes.like_routes import like_routes
 
 migrate = Migrate()
 
