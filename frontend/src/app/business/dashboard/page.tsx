@@ -25,10 +25,10 @@ export default function BusinessDashboard() {
                     <Link href="/business/price-range/monthly-status">
                       <button className={buttonStyle}>月次状況</button>
                     </Link>
-                    <Link href="/business/construction">
+                    <Link href="/business/price-range/monthlyTrendpage">
                       <button className={buttonStyle}>月次推移</button>
                     </Link>
-                    <Link href="/business/construction">
+                    <Link href="/business/price-range/yearlyTrendpage">
                       <button className={buttonStyle}>年次推移</button>
                     </Link>
                   </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function LandingPage() {
   const buttonStyle = "bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 text-lg";
@@ -136,9 +137,11 @@ export default function LandingPage() {
           </div>
 
           <div className="text-right">
+          <Link href="/business" passHref>
             <button className={businessButtonStyle}>
               BusinessPAGEはこちら
             </button>
+          </Link>
           </div>
         </div>
       </div>
