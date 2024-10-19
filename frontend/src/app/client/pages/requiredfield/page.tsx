@@ -171,14 +171,14 @@ const RequiredFieldPage: React.FC = () => {
 
   const isConfirmPage = currentQuestionIndex === questions.length;
 
-  useEffect(() => {
-    const idToken = localStorage.getItem('idToken');
-    fetch('http://localhost:5000/api/auth/test', {
-      headers: {
-        Authorization: `Bearer ${idToken}`,
-      },
-    });
-  }, []);
+  // useEffect(() => {
+  //   const idToken = localStorage.getItem('idToken');
+  //   fetch('http://localhost:5000/api/auth/register', {
+  //     headers: {
+  //       Authorization: `Bearer ${idToken}`,
+  //     },
+  //   });
+  // }, []);
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
