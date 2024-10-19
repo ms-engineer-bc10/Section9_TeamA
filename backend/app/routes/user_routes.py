@@ -5,6 +5,10 @@ from app.services.openai_service import get_openai_recommendation
 from app.services.yahoo_service import search_yahoo_shopping
 from app.services.google_service import search_google_places
 from app.services.google_geocoding_service import get_prefecture_from_latlng
+from app.services.recommendation_service import save_recommendation
+from app.services.product_service import save_selected_product
+from app.services.condition_service import save_condition
+from app.services.store_service import save_store
 from app.utils.budget_utils import parse_budget
 from app.utils.response_utils import generate_recommendation_response
 from app.models import db, User
@@ -18,10 +22,19 @@ def get_recommendations():
     try:
         data = request.json
 
+        # 条件の保存処理を呼び出し、condition_idを取得
+        save_result, status = save_condition(data)
+        if status != 201:
+            return jsonify(save_result), status
+
+        condition_id = save_result.get('condition_id')  # 保存した条件のIDを取得
+
+        # 1. 予算を解析
         budget = data.get('budget')
         budget_from, budget_to = parse_budget(budget)
         print(f"Parsed budget: {budget_from} to {budget_to}")
 
+        # 2. locationの処理
         location = data.get('location')
         if "," in location:
             print(f"Location is latlng format: {location}")
@@ -30,9 +43,7 @@ def get_recommendations():
 
         print(f"Fetching Yahoo Shopping results for location: {location} and budget: {budget_from} to {budget_to}")
         shopping_results = search_yahoo_shopping(location, budget_from, budget_to)
-        print(f"フィルタリング結果: {shopping_results}", flush=True)
         if not shopping_results:
-            print("No shopping results found")
             return jsonify({"error": "No shopping results found"}), 500
 
         for idx, item in enumerate(shopping_results):
@@ -49,10 +60,18 @@ def get_recommendations():
 
         print("Fetching AI recommendation...")
         ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
-        print(f"AI recommendation: {ai_recommend}, Selected product: {selected_product}")
         if not ai_recommend or not selected_product:
-            print("AI recommendation failed")
             return jsonify({"error": "AI recommendation failed"}), 500
+
+        # 商品を保存し、product_idを取得
+        product_id, status = save_selected_product(
+            name=selected_product.get('name', '不明'),
+            price=selected_product.get('price', 0),
+            picture=selected_product.get('image_url', '画像なし'),
+            ai_recommend=ai_recommend
+        )
+        if status != 201:
+            return jsonify({'error': 'Product could not be saved'}), 500
 
         recommendations_data = {
             'target': data.get('target'),
@@ -65,13 +84,23 @@ def get_recommendations():
 
         print(f"Fetching nearby places for location: {location}")
         places_results = search_google_places(location, recommendations_data, radius=1000)
-        print(f"Places results: {places_results}")
         if not places_results:
-            print("No places found")
             return jsonify({"error": "No places found"}), 500
 
+        # 1つのstore情報をDBに保存する（最初の店舗を保存）
+        first_place = places_results[0]  # 1つ目の店舗情報を取得
+        saved_store = save_store(first_place)  # その店舗をDBに保存
+        if isinstance(saved_store, dict) and 'error' in saved_store:
+            return jsonify(saved_store), 500
+
+        store_id = saved_store.id  # 保存された店舗のIDを取得
+
+        # recommendationテーブルを介してconditionとproduct/storeを紐づける
+        save_recommendation(condition_id, product_id, store_id)
+
+        # ユーザーに複数の店舗情報を返す、DBに保存
         response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
-        print(f"Final recommendation response: {response}")
+
         return response
 
     except Exception as e:
@@ -80,7 +109,7 @@ def get_recommendations():
         return jsonify({"error": "Internal server error"}), 500
 
 
-# 以下、ユーザー関連の CRUD 操作を追加
+# 以下、ユーザー関連の CRUD 操作を追加　下記もservice層に分けることを検討
 
 # POSTエンドポイント：新規ユーザーを作成
 @user_routes.route('/users', methods=['POST'])
