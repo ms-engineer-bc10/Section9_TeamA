@@ -1,6 +1,9 @@
 'use client';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  //   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { auth } from '@/firebase';
@@ -22,52 +25,24 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      // IDトークンを取得
-      //todo:確認後は消すconsole.log
-      const user = userCredential.user;
-      const idToken = await user.getIdToken();
-      console.log('ID Token:', idToken);
+    await signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(async (userCredential) => {
+        // IDトークンを取得
+        //todo:確認後は消すconsole.log
+        const user = userCredential.user;
+        const idToken = await user.getIdToken();
+        console.log('ID Token:', idToken);
 
-      // const response = await fetch('http://localhost:5000/api/auth/user', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: `Bearer ${idToken}`,
-      //   },
-      //   body: JSON.stringify({ email: user.email }),
-      //   //credentials: 'include',
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! status: ${response.status}`);
-      // }
-
-      // const responseData = await response.json();
-      // console.log('Backend response:', responseData);
-
-      router.push('/client/pages/requiredfield');
-    } catch (error) {
-      console.error('Error:', error);
-      if (error instanceof Error) {
-        if (error.message.includes('auth/user-not-found')) {
+        // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
+        router.push('/todolist');
+      })
+      .catch((error) => {
+        if (error.code === 'auth/user-not-found') {
           alert('そのようなユーザーは存在しません。');
-        } else if (error.message.includes('auth/wrong-password')) {
-          alert('パスワードが間違っています。');
-        } else if (error.message.includes('HTTP error')) {
-          alert('バックエンドとの通信に失敗しました。');
         } else {
-          alert(`ログインエラー: ${error.message}`);
+          alert(error.message);
         }
-      } else {
-        alert('予期せぬエラーが発生しました。');
-      }
-    }
+      });
   };
 
   return (

@@ -10,7 +10,6 @@ import Link from 'next/link';
 type Inputs = {
   email: string;
   password: string;
-  name?: string; // 名前フィールドが必要であれば追加
 };
 
 const Register = () => {
@@ -23,53 +22,23 @@ const Register = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    try {
-      // Firebaseでユーザーを作成
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      const user = userCredential.user;
+    await createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        // IDトークンを取得
+        const idToken = await user.getIdToken();
+        console.log('ID Token:', idToken);
 
-      // FirebaseからIDトークンを取得
-      const idToken = await user.getIdToken();
-      const uid = user.uid; // UIDを明示的に取得
-
-      console.log('ID Token:', idToken);
-      // Firebaseで取得したデータをログで確認
-      console.log('uid:', uid);
-      console.log('email:', data.email);
-
-      // バックエンドにデータを送信
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${idToken}`, // IDトークンをAuthorizationヘッダーに追加
-        },
-        body: JSON.stringify({
-          idToken, // IDトークンをボディにも送信
-          uid, // Firebaseから取得したUID
-          email: data.email, // 入力されたメールアドレス
-        }),
+        // トークンを使用してバックエンドにリクエストを送信したり、必要な処理を行います
+        router.push('/todolist');
+      })
+      .catch((error) => {
+        if (error.code === 'auth/email-already-in-use') {
+          alert('このメールアドレスはすでに使用されています。');
+        } else {
+          alert(error.message);
+        }
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      console.log('Backend response:', responseData); // バックエンドからの応答をコンソールに表示
-
-      // 成功したら特定のページにリダイレクト
-      router.push('/client/pages/requiredfield');
-    } catch (error) {
-      console.error('Error:', error);
-      if (error instanceof Error) {
-        alert(`バックエンドとの通信エラー: ${error.message}`);
-      }
-    }
   };
 
   return (
