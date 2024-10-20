@@ -7,6 +7,10 @@ from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
 
+import firebase_admin
+from firebase_admin import credentials
+from app.auth.auth_routes import auth_routes
+
 migrate = Migrate()
 
 # アプリケーションファクトリ関数を定義
@@ -22,8 +26,16 @@ def create_app():
     # データベースとマイグレーションの初期化
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # Firebase Admin SDKの初期化
+    cred = credentials.Certificate(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+    firebase_admin.initialize_app(cred, {
+        'projectId': os.environ['FIREBASE_PROJECT_ID'],
+    })
+
     
     # ルートを登録(ブループリントの登録)
+    app.register_blueprint(auth_routes, url_prefix='/api/auth')
     app.register_blueprint(user_routes, url_prefix='/api/user')
     
     @app.route('/')
