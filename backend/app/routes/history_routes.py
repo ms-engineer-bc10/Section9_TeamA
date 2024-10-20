@@ -11,12 +11,10 @@ def get_user_history():
         recommendations = Recommendation.query.all()
         history_data = []
 
-        # Recommendationを元に履歴データをフォーマット
         for recommendation in recommendations:
             condition = recommendation.condition
             product = recommendation.product
 
-            # 条件や商品情報を元に履歴データを構築
             history_data.append({
                 'id': recommendation.id,
                 'date': recommendation.recommended_at.strftime("%Y-%m-%d"),
@@ -27,7 +25,11 @@ def get_user_history():
                     'budget': f"{condition.budget_min}～{condition.budget_max}",
                     'quantity': condition.quantity,
                 },
-                'image': product.picture  # 商品の写真URL
+                'product': {
+                    'name': product.name,
+                    'price': product.price,
+                    'image': product.picture,
+                }
             })
 
         return jsonify(history_data), 200
