@@ -6,6 +6,7 @@ from app.models import db
 from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
+from app.routes.history_routes import history_routes 
 
 import firebase_admin
 from firebase_admin import credentials
@@ -37,6 +38,7 @@ def create_app():
     # ルートを登録(ブループリントの登録)
     app.register_blueprint(auth_routes, url_prefix='/api/auth')
     app.register_blueprint(user_routes, url_prefix='/api/user')
+    app.register_blueprint(history_routes, url_prefix='/api/history')
     
     @app.route('/')
     def hello_world():
