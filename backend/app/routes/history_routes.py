@@ -4,16 +4,15 @@ from sqlalchemy.exc import SQLAlchemyError
 
 history_routes = Blueprint('history_routes', __name__)
 
-@history_routes.route('/history', methods=['GET'])
+@history_routes.route('/', methods=['GET'])
 def get_user_history():
     try:
-        # 全てのRecommendationを取得
         recommendations = Recommendation.query.all()
         history_data = []
 
         for recommendation in recommendations:
             condition = recommendation.condition
-            product = recommendation.product
+            product = Product.query.get(recommendation.product_id)  
 
             history_data.append({
                 'id': recommendation.id,
@@ -26,9 +25,9 @@ def get_user_history():
                     'quantity': condition.quantity,
                 },
                 'product': {
-                    'name': product.name,
-                    'price': product.price,
-                    'image': product.picture,
+                    'name': product.name if product else '不明',
+                    'price': product.price if product else '不明',
+                    'image': product.picture if product else '画像なし',
                 }
             })
 
