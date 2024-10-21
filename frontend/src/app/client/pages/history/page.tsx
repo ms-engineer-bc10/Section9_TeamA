@@ -50,6 +50,24 @@ const History: React.FC = () => {
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
+  const onDelete = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/history/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setHistoryItems((prevItems) =>
+          prevItems.filter((item) => item.id !== id)
+        );
+      } else {
+        console.error('削除に失敗しました');
+      }
+    } catch (error) {
+      console.error('削除処理中にエラーが発生しました:', error);
+    }
+  };
+
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
       <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
@@ -77,14 +95,17 @@ const History: React.FC = () => {
                     </div>
                   ))}
                   <button
-          onClick={() => onDelete(item.id)}
-          className='py-1 px-1 text-xs rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
-        >
-          <Trash2 size={14} className='mr-1' /> 削除
-        </button>
+                    onClick={() => onDelete(item.id)}
+                    className='py-1 px-1 text-xs rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
+                  >
+                    <Trash2 size={14} className='mr-1' /> 削除
+                  </button>
                 </div>
                 <div className='col-span-2 row-span-3 border-2 border-gray-300 rounded-md overflow-hidden'>
-                  <div className='relative w-full h-full' style={{ aspectRatio: '1 / 1' }}>
+                  <div
+                    className='relative w-full h-full'
+                    style={{ aspectRatio: '1 / 1' }}
+                  >
                     <Image
                       src={item.product.image}
                       alt={item.product.name}
