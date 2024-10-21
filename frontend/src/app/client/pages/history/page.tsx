@@ -41,6 +41,17 @@ const History: React.FC = () => {
     fetchHistory();
   }, []);
 
+  const onDelete = async (id: string) => {
+    try {
+      await fetch(`http://localhost:5000/api/history/${id}`, {
+        method: 'DELETE',
+      });
+      setHistoryItems(historyItems.filter(item => item.id !== id));
+    } catch (error) {
+      console.error('履歴の削除中にエラーが発生しました:', error);
+    }
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = historyItems.slice(indexOfFirstItem, indexOfLastItem);
@@ -77,11 +88,11 @@ const History: React.FC = () => {
                     </div>
                   ))}
                   <button
-          onClick={() => onDelete(item.id)}
-          className='py-1 px-1 text-xs rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
-        >
-          <Trash2 size={14} className='mr-1' /> 削除
-        </button>
+                    onClick={() => onDelete(item.id)}
+                    className='py-1 px-1 text-xs rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
+                  >
+                   <Trash2 size={14} className='mr-1' /> 削除
+               </button>
                 </div>
                 <div className='col-span-2 row-span-3 border-2 border-gray-300 rounded-md overflow-hidden'>
                   <div className='relative w-full h-full' style={{ aspectRatio: '1 / 1' }}>
