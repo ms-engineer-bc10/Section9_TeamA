@@ -25,26 +25,36 @@ def get_recommendations():
         # 条件の保存処理を呼び出し、condition_idを取得
         save_result, status = save_condition(data)
         if status != 201:
+            print(f"Error saving condition: {save_result}", flush=True)#10/20
+            
             return jsonify(save_result), status
 
         condition_id = save_result.get('condition_id')  # 保存した条件のIDを取得
-
+        print(f"Condition saved with ID: {condition_id}", flush=True)#10/20
+        
         # 1. 予算を解析
         budget = data.get('budget')
         budget_from, budget_to = parse_budget(budget)
         print(f"Parsed budget: {budget_from} to {budget_to}")
+        
 
         # 2. locationの処理
         location = data.get('location')
         if "," in location:
             print(f"Location is latlng format: {location}")
+            
             location = get_prefecture_from_latlng(location)
             print(f"Converted latlng to prefecture: {location}")
+            
 
         print(f"Fetching Yahoo Shopping results for location: {location} and budget: {budget_from} to {budget_to}")
+        
         shopping_results = search_yahoo_shopping(location, budget_from, budget_to)
         if not shopping_results:
             return jsonify({"error": "No shopping results found"}), 500
+        
+        print(f"Yahoo Shopping results: {shopping_results}", flush=True)#10/20
+        
 
         for idx, item in enumerate(shopping_results):
             item['id'] = idx
@@ -59,6 +69,7 @@ def get_recommendations():
         }
 
         print("Fetching AI recommendation...")
+        
         ai_recommend, selected_product = get_openai_recommendation(ai_input_data)
         if not ai_recommend or not selected_product:
             return jsonify({"error": "AI recommendation failed"}), 500
@@ -83,6 +94,7 @@ def get_recommendations():
         }
 
         print(f"Fetching nearby places for location: {location}")
+        
         places_results = search_google_places(location, recommendations_data, radius=1000)
         if not places_results:
             return jsonify({"error": "No places found"}), 500
@@ -105,6 +117,7 @@ def get_recommendations():
 
     except Exception as e:
         print(f"Error occurred: {str(e)}")
+        
         traceback.print_exc()
         return jsonify({"error": "Internal server error"}), 500
 
