@@ -117,21 +117,23 @@ const RequiredFieldPage: React.FC = () => {
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     try {
-      // ユーザーがログインしている場合、IDトークンを取得
+      // ユーザーがログインしている場合、IDトークンとuidを取得
       const currentUser = auth.currentUser;
       if (!currentUser) {
         throw new Error("ユーザーが認証されていません");
       }
       console.log("Current user:", currentUser);
-      
-      const idToken = await currentUser.getIdToken(); // IDトークンを取得
-      console.log("ID Token:", idToken);
   
+      const idToken = await currentUser.getIdToken(); // IDトークンを取得
+      const uid = currentUser.uid; // UIDを取得
+      console.log("ID Token:", idToken);
+      console.log("UID:", uid);
+
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`, // トークンをAuthorizationヘッダーに含める
+          'Authorization': `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           target: answers.target,
@@ -140,6 +142,7 @@ const RequiredFieldPage: React.FC = () => {
           quantity: answers.quantity,
           location: answers.location,
           location_type: answers.location_type,
+          uid: uid,
         }),
       });
   
@@ -162,7 +165,7 @@ const RequiredFieldPage: React.FC = () => {
       setIsLoading(false); // ローディング終了
     }
   }, [answers]);
-
+  
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
     setCurrentQuestionIndex(0);

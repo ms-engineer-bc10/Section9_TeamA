@@ -29,9 +29,9 @@ def save_condition(data):
         else:
             return {'error': 'Invalid location_type'}, 400
 
-        # 3. データベースに保存
+        # 3. データベースに保存 (uidを使用)
         new_condition = Condition(
-            user_id=1,  # ダミーのユーザーID
+            user_id=data['uid'],  # リクエストから送られてきたuidを使用
             target=data['target'],
             genre=data['genre'],
             budget_min=budget_from,
