@@ -67,14 +67,19 @@ const Location: React.FC<LocationProps> = ({
   ];
 
   useEffect(() => {
-    setShowPrefectureSelect(selectedOption !== '現在地' && selectedOption !== '');
+    setShowPrefectureSelect(
+      selectedOption !== '現在地' && selectedOption !== ''
+    );
   }, [selectedOption]);
 
   const handleOptionClick = (option: string) => {
+    //console.log('handleoptionclick');
     if (option === '現在地から提案') {
+      // console.log(option);
+
       setSelectedOption('現在地');
 
-      if ("geolocation" in navigator) {
+      if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
@@ -83,12 +88,12 @@ const Location: React.FC<LocationProps> = ({
             setLocationError(null);
           },
           (error) => {
-            console.error("Error retrieving location", error);
-            setLocationError("位置情報を取得できませんでした。");
+            console.error('Error retrieving location', error);
+            setLocationError('位置情報を取得できませんでした。');
           }
         );
       } else {
-        setLocationError("このブラウザは位置情報取得に対応していません。");
+        setLocationError('このブラウザは位置情報取得に対応していません。');
       }
     } else {
       setShowPrefectureSelect(true);
@@ -98,7 +103,9 @@ const Location: React.FC<LocationProps> = ({
     }
   };
 
-  const handlePrefectureChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePrefectureChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selected = event.target.value;
     setSelectedOption(selected);
     onLocationChange(selected, 'prefecture');
@@ -116,7 +123,8 @@ const Location: React.FC<LocationProps> = ({
             className={`py-2 px-4 text-lg rounded-md border transition-colors ${
               (option === '現在地から提案' && selectedOption === '現在地') ||
               (option === '場所を指定して提案' &&
-                selectedOption !== '現在地' && selectedOption !== '')
+                selectedOption !== '現在地' &&
+                selectedOption !== '')
                 ? 'bg-[#2F41B0] text-white'
                 : 'bg-gray-200 hover:bg-[#5A73D7]'
             }`}

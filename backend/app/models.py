@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class ApiRequest(db.Model):
     __tablename__ = 'api_request'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.String(255), db.ForeignKey('user.uid'))
     requested_at = db.Column(db.DateTime, default=datetime.now)
     api_name = db.Column(db.String(255))
@@ -35,7 +35,7 @@ class User(db.Model):
 class Condition(db.Model):
     __tablename__ = 'condition'
     
-    id = db.Column(db.String(255), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.String(255), db.ForeignKey('user.uid'))
     target = db.Column(db.String(255))
     genre = db.Column(db.String(255))
@@ -52,29 +52,30 @@ class Condition(db.Model):
 class Recommendation(db.Model):
     __tablename__ = 'recommendations'
 
-    id = db.Column(db.String(255), primary_key=True)
-    condition_id = db.Column(db.String(255), db.ForeignKey('condition.id'))
-    store_id = db.Column(db.String(255), db.ForeignKey('store.id'))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    condition_id = db.Column(db.Integer, db.ForeignKey('condition.id'))
+    store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     recommended_at = db.Column(db.DateTime, default=datetime.now)
-    product_id = db.Column(db.String(255), db.ForeignKey('product.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
 class Store(db.Model):
     __tablename__ = 'store'
     
-    id = db.Column(db.String(255), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255))
     address = db.Column(db.String(255))
     tel = db.Column(db.String(50))
     open_time = db.Column(db.String(255))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    place_id = db.Column(db.String(255), unique=True)
     
     recommendations = db.relationship('Recommendation', backref='store', lazy=True)
 
 class Product(db.Model):
     __tablename__ = 'product'
 
-    id = db.Column(db.String(255), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255))
     price = db.Column(db.Integer)
     picture = db.Column(db.String(255), nullable=True)
@@ -83,7 +84,7 @@ class Product(db.Model):
 class Business(db.Model):
     __tablename__ = 'business'
 
-    id = db.Column(db.String(255), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     stripe_auth = db.Column(db.String(255))
     payment_reg_at = db.Column(db.DateTime)
     user_id = db.Column(db.String(255), db.ForeignKey('user.uid'))
@@ -91,9 +92,9 @@ class Business(db.Model):
 class Like(db.Model):
     __tablename__ = 'likes'
 
-    id = db.Column(db.String(255), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.String(255), db.ForeignKey('user.uid'))
-    recommendation_id = db.Column(db.String(255), db.ForeignKey('recommendations.id'))
+    recommendation_id = db.Column(db.Integer, db.ForeignKey('recommendations.id'))
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     deleted_at = db.Column(db.DateTime, nullable=True)

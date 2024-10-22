@@ -13,6 +13,8 @@ import Result from '@/app/client/components/result';
 import Loading from '@/app/client/components/loading';
 import MenuBar from '@/app/client/components/menubar';
 
+import { auth } from '@/firebase';
+
 type Answer = '' | string;
 
 interface Answers {
@@ -115,11 +117,23 @@ const RequiredFieldPage: React.FC = () => {
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     try {
+      // ユーザーがログインしている場合、IDトークンとuidを取得
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error("ユーザーが認証されていません");
+      }
+      console.log("Current user:", currentUser);
+  
+      const idToken = await currentUser.getIdToken(); // IDトークンを取得
+      const uid = currentUser.uid; // UIDを取得
+      console.log("ID Token:", idToken);
+      console.log("UID:", uid);
 
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           target: answers.target,
@@ -128,29 +142,30 @@ const RequiredFieldPage: React.FC = () => {
           quantity: answers.quantity,
           location: answers.location,
           location_type: answers.location_type,
+          uid: uid,
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
-    setSearchResults(data); // 結果を保存
-    setShowResult(true); // 結果を表示
-  } catch (error: any) {
-    if (error instanceof Error) {
-      setError(`検索中にエラーが発生しました: ${error.message}`);
-      console.error('APIリクエストエラー:', error.message, error.stack);
-    } else {
-      setError('検索中にエラーが発生しました。');
-      console.error('APIリクエストエラー:', error);
+      setSearchResults(data); // 結果を保存
+      setShowResult(true); // 結果を表示
+    } catch (error: any) {
+      if (error instanceof Error) {
+        setError(`検索中にエラーが発生しました: ${error.message}`);
+        console.error('APIリクエストエラー:', error.message, error.stack);
+      } else {
+        setError('検索中にエラーが発生しました。');
+        console.error('APIリクエストエラー:', error);
+      }
+    } finally {
+      setIsLoading(false); // ローディング終了
     }
-  } finally {
-    setIsLoading(false); // ローディング終了
-  }
-}, [answers]);
-
+  }, [answers]);
+  
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
