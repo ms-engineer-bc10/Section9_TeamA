@@ -64,6 +64,8 @@ const prefectures = [
   '沖縄県',
 ];
 
+const targets = ['家族', '友人', '恋人', '職場', '自分'];
+
 const mockData: RankingItem[] = [
   {
     id: 1,
@@ -139,6 +141,7 @@ const mockData: RankingItem[] = [
 
 const Ranking: React.FC = () => {
   const [selectedPrefecture, setSelectedPrefecture] = useState('全国');
+  const [selectedTarget, setSelectedTarget] = useState('家族');
 
   const getRankColor = (index: number) => {
     switch (index) {
@@ -199,18 +202,39 @@ const Ranking: React.FC = () => {
           <h2 className='text-2xl font-bold mb-4 text-center'>
             人気のお土産ランキング
           </h2>
-          <div className='mb-4'>
-            <select
-              value={selectedPrefecture}
-              onChange={(e) => setSelectedPrefecture(e.target.value)}
-              className='w-full p-2 border border-gray-300 rounded-md'
-            >
-              {prefectures.map((prefecture) => (
-                <option key={prefecture} value={prefecture}>
-                  {prefecture}
-                </option>
-              ))}
-            </select>
+          <div className='mb-4 space-y-4'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                都道府県
+              </label>
+              <select
+                value={selectedPrefecture}
+                onChange={(e) => setSelectedPrefecture(e.target.value)}
+                className='w-full p-2 border border-gray-300 rounded-md'
+              >
+                {prefectures.map((prefecture) => (
+                  <option key={prefecture} value={prefecture}>
+                    {prefecture}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
+                贈り先
+              </label>
+              <select
+                value={selectedTarget}
+                onChange={(e) => setSelectedTarget(e.target.value)}
+                className='w-full p-2 border border-gray-300 rounded-md'
+              >
+                {targets.map((target) => (
+                  <option key={target} value={target}>
+                    {target}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className='overflow-y-auto md:overflow-visible max-h-[calc(100vh-300px)] md:max-h-none'>
             <div className='md:grid md:grid-cols-2 md:gap-4 space-y-4 md:space-y-0'>

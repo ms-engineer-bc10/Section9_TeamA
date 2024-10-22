@@ -11,9 +11,16 @@ interface ConfirmProps {
     location_type?: string;
   };
   onSearch: () => void;
+  onJumpToQuestion: (index: number) => void;
+  questionKeys: string[];
 }
 
-const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
+const Confirm: React.FC<ConfirmProps> = ({
+  answers,
+  onSearch,
+  onJumpToQuestion,
+  questionKeys,
+}) => {
   const answerLabels: { [key: string]: string } = {
     location: '場所',
     target: '対象',
@@ -31,6 +38,13 @@ const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
     return location;
   };
 
+  const handleClick = (key: string) => {
+    const index = questionKeys.indexOf(key);
+    if (index !== -1) {
+      onJumpToQuestion(index);
+    }
+  };
+
   const filledAnswers = Object.entries(answers).filter(
     ([key, value]) => value !== '' && key !== 'location_type'
   );
@@ -42,13 +56,14 @@ const Confirm: React.FC<ConfirmProps> = ({ answers, onSearch }) => {
       </h1>
       <div className='grid grid-cols-2 gap-4 mb-6'>
         {filledAnswers.map(([key, value]) => (
-          <div
+          <button
             key={key}
-            className='py-2 px-4 text-lg rounded-md bg-gray-200 text-gray-700'
+            onClick={() => handleClick(key)}
+            className='py-2 px-4 text-lg rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors cursor-pointer'
           >
             <div className='font-semibold'>{answerLabels[key]}</div>
             <div>{key === 'location' ? displayLocation(value) : value}</div>
-          </div>
+          </button>
         ))}
       </div>
       {filledAnswers.length > 0 ? (
