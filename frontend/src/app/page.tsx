@@ -33,13 +33,22 @@ export default function LandingPage() {
             <h2 className="text-2xl font-bold mb-4">おみやげ、再発見！</h2>
             <h3 className="text-6xl font-bold text-yellow-500 mb-10">MIYAGURU</h3>
             
-            <div className="flex flex-col items-center">
-              <p className="text-lg">
-                ＊登録は無料＊
-              </p>
-              <button className={buttonStyle}>
-                はじめる
-              </button>
+            <div className="flex flex-col">
+              <div className="flex flex-col">
+                <p className="text-lg mb-4 self-start ml-6">＊登録は無料＊</p>
+                <div className="flex space-x-20">
+                  <Link href="/auth/register" className="ml-6" >
+                    <button className={buttonStyle}>
+                      はじめる
+                    </button>
+                  </Link>
+                  <Link href="/auth/login">
+                    <button className={businessButtonStyle}>
+                      ログイン
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -48,66 +57,78 @@ export default function LandingPage() {
         <div className="mb-12">
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             <div className="flex-1">
-              <Image
-                src="/images/horai551.jpg"
-                alt="蓬莱の豚まん551"
-                width={300}
-                height={200}
-                layout="responsive"
-                className="rounded-lg"
-              />
+              <div className="transform transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/images/horai551.jpg"
+                  alt="蓬莱の豚まん551"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
             <div className="flex-1">
-              <Image
-                src="/images/rokkatei_butter_sand.jpg"
-                alt="六花亭レーズンサンド"
-                width={300}
-                height={200}
-                layout="responsive"
-                className="rounded-lg"
-              />
+              <div className="transform transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/images/rokkatei_butter_sand.jpg"
+                  alt="六花亭レーズンサンド"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
             <div className="flex-1">
-              <Image
-                src="/images/otabe.jpg"
-                alt="おたべ"
-                width={300}
-                height={200}
-                layout="responsive"
-                className="rounded-lg"
-              />
+              <div className="transform transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/images/otabe.jpg"
+                  alt="おたべ"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex-1">
-              <Image
-                src="/images/purple_sweet_potato_tart.jpg"
-                alt="紫いもタルト"
-                width={300}
-                height={200}
-                layout="responsive"
-                className="rounded-lg"
-              />
+              <div className="transform transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/images/purple_sweet_potato_tart.jpg"
+                  alt="紫いもタルト"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
             <div className="flex-1">
-              <Image
-                src="/images/tokyo_banana.jpg"
-                alt="東京ばなな"
-                width={300}
-                height={200}
-                layout="responsive"
-                className="rounded-lg"
-              />
+              <div className="transform transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/images/tokyo_banana.jpg"
+                  alt="東京ばなな"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
             <div className="flex-1">
-              <Image
-                src="/images/dunda.jpg"
-                alt="ずんだもち"
-                width={300}
-                height={200}
-                layout="responsive"
-                className="rounded-lg"
-              />
+              <div className="transform transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/images/dunda.jpg"
+                  alt="ずんだもち"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  className="rounded-lg"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -137,11 +158,11 @@ export default function LandingPage() {
           </div>
 
           <div className="text-right">
-          <Link href="/business" passHref>
-            <button className={businessButtonStyle}>
-              BusinessPAGEはこちら
-            </button>
-          </Link>
+            <Link href="/business" passHref>
+              <button className={businessButtonStyle}>
+                BusinessPAGEはこちら
+              </button>
+            </Link>
           </div>
         </div>
       </div>
