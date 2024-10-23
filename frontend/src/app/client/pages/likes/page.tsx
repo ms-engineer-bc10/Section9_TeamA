@@ -5,6 +5,9 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MenuBar from '@/app/client/components/menubar';
 
+import { useRouter } from 'next/navigation';
+import { auth } from '@/firebase';
+
 interface LikedPhoto {
   id: string;
   imageUrl: string;

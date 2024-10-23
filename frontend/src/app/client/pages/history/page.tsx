@@ -5,6 +5,9 @@ import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
 import MenuBar from '@/app/client/components/menubar';
 
+import { useRouter } from 'next/navigation';
+import { auth } from '@/firebase';
+
 interface HistoryItem {
   id: string;
   date: string;
@@ -50,6 +53,7 @@ const History: React.FC = () => {
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
+  //ここにdocker立ち上げのためのコード記載
   const onDelete = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:5000/api/history/${id}`, {
