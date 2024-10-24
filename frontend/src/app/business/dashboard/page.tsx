@@ -44,7 +44,7 @@ export default function BusinessDashboard() {
                   <div>
                     <span className="text-lg leading-6 font-medium text-gray-900">２．購入されているエリア</span>
                     <div className="flex flex-wrap gap-4 justify-end mt-2">
-                      <Link href="/business/purchase-area/monthly-status">
+                      <Link href="/business/construction">
                         <button className={buttonStyle}>月次状況</button>
                       </Link>
                       <Link href="/business/construction">
