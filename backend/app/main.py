@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, request, Response, jsonify, stream_with_context
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from app.models import db
@@ -10,6 +10,9 @@ from app.routes.history_routes import history_routes
 
 # グラフ解析用に追加
 from app.routes.chart_analysis import chart_analysis
+
+# AIアドバイス機能用に追加
+from app.routes.ai_advice import ai_advice_bp
 
 import firebase_admin
 from firebase_admin import credentials
@@ -43,6 +46,7 @@ def create_app():
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(history_routes, url_prefix='/api/history')
     app.register_blueprint(chart_analysis, url_prefix='/api/business')# グラフ解析用のルートを追加
+    app.register_blueprint(ai_advice_bp, url_prefix='/api')  # AIアドバイス機能用のルートを追加
     
     @app.route('/')
     def hello_world():

@@ -6,7 +6,8 @@ export async function POST(request: Request) {
   try {
     const { prompt } = await request.json();
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/analyze-chart`, {
+    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/analyze-chart`, {
+    const response = await fetch(`http://localhost:3000/api/business/analyze-chart`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
