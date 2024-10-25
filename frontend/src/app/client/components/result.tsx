@@ -112,7 +112,7 @@ const Result: React.FC<ResultProps> = ({
   }
 
   return (
-    <div className='w-full max-w-lg mx-auto'>
+    <div className='w-full max-w-lg mx-auto mb-28'>
       <AnimatePresence mode='wait'>
         {currentResult && (
           <motion.div
