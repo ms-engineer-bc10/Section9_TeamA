@@ -85,9 +85,11 @@ const History: React.FC = () => {
           {currentItems.map((item) => (
             <div key={item.id} className='border rounded-lg p-2'>
               <div className='grid grid-cols-7 gap-1 items-center'>
-                <div className='row-span-3 flex items-center justify-start pl-2'>
+                <div className='row-span-3 flex items-center pl-1'>
                   <div className='w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center'>
-                    <span className='text-sm font-bold'>{item.date}</span>
+                    <span className='text-sm font-bold w-full -m1-1'>
+                      {item.date}
+                    </span>
                   </div>
                 </div>
                 <div className='col-span-4 grid grid-cols-2 gap-1'>

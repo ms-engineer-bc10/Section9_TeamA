@@ -113,7 +113,7 @@ const Location: React.FC<LocationProps> = ({
 
   return (
     <div className='w-full max-w-lg bg-white p-6'>
-      <h1 className='text-xl font-semibold mb-4 text-center'>
+      <h1 className='text-xl font-semibold mb-9 text-center'>
         OMIYAGEを買いたい場所は？
       </h1>
       <div className='grid grid-cols-2 gap-4 mb-4'>

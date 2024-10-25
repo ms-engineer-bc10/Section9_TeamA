@@ -29,7 +29,7 @@ const Slide: React.FC<SlideProps> = ({
   });
 
   return (
-    <div className='relative bg-white shadow-md rounded-lg p-6 overflow-hidden'>
+    <div className='relative bg-white shadow-md rounded-lg p-6 overflow-hidden min-h-[400px]'>
       <animated.div style={props} className='flex'>
         {React.Children.map(children, (child, index) => (
           <div key={index} className='w-full flex-shrink-0'>

@@ -93,7 +93,7 @@ const Result: React.FC<ResultProps> = ({
 
   if (isLoading) {
     return (
-      <div className='w-full max-w-lg mx-auto'>
+      <div className='w-full max-w-lg mx-auto mb-20'>
         <motion.div
           key='loading'
           initial={{ opacity: 0 }}
@@ -122,7 +122,7 @@ const Result: React.FC<ResultProps> = ({
             exit={{ opacity: 0 }}
             className='bg-white shadow-lg rounded-lg overflow-hidden'
           >
-            <div className='p-4'>
+            <div className='p-5 pt-0'>
               <h2 className='text-2xl font-bold text-center mb-6'>
                 あなたにピッタリなOMIYAGEはこれ！
               </h2>
@@ -164,8 +164,10 @@ const Result: React.FC<ResultProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-
-      <div className='mt-8 text-center'>
+      <p className='mt-4 text-left font-bold text-gray-600'>
+        検索回数: {searchCount} / {MAX_SEARCH_COUNT}
+      </p>
+      <div className='mt-4 text-center'>
         <button
           onClick={handleSearchClick}
           className='bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4'
@@ -183,12 +185,8 @@ const Result: React.FC<ResultProps> = ({
         </button>
       </div>
 
-      <p className='mt-4 text-left font-bold text-gray-600'>
-        検索回数: {searchCount} / {MAX_SEARCH_COUNT}
-      </p>
-
       {searchCount >= MAX_SEARCH_COUNT && (
-        <p className='mt-4 text-red-500 text-center'>
+        <p className='mt-4 mb-20 text-red-500 text-center'>
           検索条件を変更してください
         </p>
       )}

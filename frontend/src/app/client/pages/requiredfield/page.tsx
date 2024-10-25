@@ -194,7 +194,7 @@ const RequiredFieldPage: React.FC = () => {
   const isConfirmPage = currentQuestionIndex === questions.length;
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
+    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-14'>
       <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
         <p className='text-lg text-gray-700'>
           あなたにピッタリのOMIYAGEを見つけましょう！
