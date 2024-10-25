@@ -50,7 +50,7 @@ const Confirm: React.FC<ConfirmProps> = ({
   );
 
   return (
-    <div className='w-full max-w-lg bg-white shadow-md rounded-lg p-6'>
+    <div className='w-full max-w-lg bg-white p-6'>
       <h1 className='text-xl font-semibold mb-4 text-center'>
         あなたの条件は下記です
       </h1>
