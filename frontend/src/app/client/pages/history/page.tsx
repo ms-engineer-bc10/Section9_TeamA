@@ -35,6 +35,9 @@ const History: React.FC = () => {
       try {
         const response = await fetch('http://localhost:5000/api/history');
         const data = await response.json();
+        const sortedData = data.sort((a: HistoryItem, b: HistoryItem) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
         setHistoryItems(data);
       } catch (error) {
         console.error('履歴データの取得中にエラーが発生しました:', error);
@@ -82,7 +85,7 @@ const History: React.FC = () => {
           {currentItems.map((item) => (
             <div key={item.id} className='border rounded-lg p-2'>
               <div className='grid grid-cols-7 gap-1 items-center'>
-                <div className='row-span-3 flex items-center justify-center'>
+                <div className='row-span-3 flex items-center justify-start pl-2'>
                   <div className='w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center'>
                     <span className='text-sm font-bold'>{item.date}</span>
                   </div>
