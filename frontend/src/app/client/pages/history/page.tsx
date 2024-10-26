@@ -36,10 +36,11 @@ const History: React.FC = () => {
         const response = await fetch('http://localhost:5000/api/history');
         const data = await response.json();
         //const sortedData = data.sort((a: HistoryItem, b: HistoryItem) => {
-        setHistoryItems(data);
+        const reversedData = [...data].reverse();
+        setHistoryItems(reversedData);
         //  return new Date(b.date).getTime() - new Date(a.date).getTime();
         //});
-        setHistoryItems(data);
+        //setHistoryItems(data);
       } catch (error) {
         console.error('履歴データの取得中にエラーが発生しました:', error);
       }
@@ -68,6 +69,13 @@ const History: React.FC = () => {
         setHistoryItems((prevItems) =>
           prevItems.filter((item) => item.id !== id)
         );
+        // 現在のページのアイテムがすべて削除された場合、前のページに戻る
+        const newTotalPages = Math.ceil(
+          (historyItems.length - 1) / itemsPerPage
+        );
+        if (currentPage > newTotalPages && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
       } else {
         console.error('削除に失敗しました');
       }
