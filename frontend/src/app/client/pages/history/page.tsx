@@ -5,6 +5,9 @@ import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
 import MenuBar from '@/app/client/components/menubar';
 
+import { useRouter } from 'next/navigation';
+import { auth } from '@/firebase';
+
 interface HistoryItem {
   id: string;
   date: string;
@@ -32,6 +35,9 @@ const History: React.FC = () => {
       try {
         const response = await fetch('http://localhost:5000/api/history');
         const data = await response.json();
+        const sortedData = data.sort((a: HistoryItem, b: HistoryItem) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
         setHistoryItems(data);
       } catch (error) {
         console.error('履歴データの取得中にエラーが発生しました:', error);
@@ -50,6 +56,7 @@ const History: React.FC = () => {
   const handleNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
+  //ここにdocker立ち上げのためのコード記載
   const onDelete = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:5000/api/history/${id}`, {
@@ -78,9 +85,11 @@ const History: React.FC = () => {
           {currentItems.map((item) => (
             <div key={item.id} className='border rounded-lg p-2'>
               <div className='grid grid-cols-7 gap-1 items-center'>
-                <div className='row-span-3 flex items-center justify-center'>
+                <div className='row-span-3 flex items-center pl-1'>
                   <div className='w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center'>
-                    <span className='text-sm font-bold'>{item.date}</span>
+                    <span className='text-sm font-bold w-full -m1-1'>
+                      {item.date}
+                    </span>
                   </div>
                 </div>
                 <div className='col-span-4 grid grid-cols-2 gap-1'>
