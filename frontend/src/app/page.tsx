@@ -56,7 +56,10 @@ export default function LandingPage() {
         {/* 真ん中セクション */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-4">＜サービス案内＞</h2>
-          <h3 className="text-xl font-bold mb-2 text-yellow-500">MIYAGURU FOR YOU</h3>
+          <h3 className="text-xl font-bold mb-2">
+          <span className="text-yellow-500 text-2xl ">MIYAGURU</span>{" "}
+          <span className="text-[#5c41d9] text-base">FOR YOU</span>
+          </h3>
           <ul className="list-disc pl-5 mb-8">
             <li>旅行に行く前でも、行った先でも、簡単・シンプルにぴったりのおみやげが探せる。</li>
             <li>簡単な登録で、何回でも無料で使える。</li>
@@ -68,7 +71,10 @@ export default function LandingPage() {
           <p className="font-bold mb-10">まずは、使ってみてください！！</p>
 
           <div className="mb-8">
-            <h3 className="text-xl font-bold mb-2 text-blue-500">MIYAGURU FOR BUSINESS</h3>
+          <h3 className="text-xl font-bold mb-2">
+            <span className="text-yellow-500 text-2xl ">MIYAGURU</span>{" "}
+            <span className="text-[#5c41d9] text-base">FOR BUSINESS</span>
+          </h3>
             <ul className="list-disc pl-5">
               <li>商品開発、マーケティング分析に役立つ情報を提供！</li>
               <li>おみやげ市場の多角的解析</li>
