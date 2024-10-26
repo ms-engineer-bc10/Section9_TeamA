@@ -210,6 +210,7 @@ const RequiredFieldPage: React.FC = () => {
             searchResults={searchResults}
             onResetSearch={handleResetSearch}
             onEditSearch={handleEditSearch}
+            handleSearch={handleSearch}
           />
         ) : (
           <Slide

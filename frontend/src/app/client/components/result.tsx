@@ -15,6 +15,7 @@ interface ResultProps {
   searchResults: any;
   onResetSearch: () => void;
   onEditSearch: () => void;
+  handleSearch: () => Promise<void>;
 }
 
 interface SearchResult {
@@ -30,6 +31,7 @@ const Result: React.FC<ResultProps> = ({
   searchResults,
   onResetSearch,
   onEditSearch,
+  handleSearch,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
@@ -79,11 +81,20 @@ const Result: React.FC<ResultProps> = ({
     updateSearchResult();
   }, [updateSearchResult]);
 
-  const handleSearchClick = () => {
+  const handleSearchClick = async () => {
+    // async を追加
     if (searchCount < MAX_SEARCH_COUNT) {
-      setSearchCount((prevCount) => prevCount + 1);
-      setIsFavorite(false);
-      updateSearchResult();
+      setIsLoading(true); // ローディング状態を開始
+      try {
+        setSearchCount((prevCount) => prevCount + 1);
+        setIsFavorite(false);
+        await handleSearch(); // API を呼び出し
+        updateSearchResult();
+      } catch (error) {
+        console.error('検索中にエラーが発生しました:', error);
+      } finally {
+        setIsLoading(false); // ローディング状態を終了
+      }
     }
   };
 
