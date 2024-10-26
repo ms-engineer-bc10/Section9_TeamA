@@ -27,7 +27,7 @@ export default function LandingPage() {
           </div>
           
           <div className="flex-1 flex flex-col justify-center">
-            <p className="text-lg">
+            <p className="text-base">
               あなたにぴったりのおみやげが見つかるアプリ
             </p>
             <h2 className="text-2xl font-bold mb-4">おみやげ、再発見！</h2>
@@ -54,6 +54,37 @@ export default function LandingPage() {
         </div>
 
         {/* 真ん中セクション */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-4">＜サービス案内＞</h2>
+          <h3 className="text-xl font-bold mb-2 text-yellow-500">MIYAGURU FOR YOU</h3>
+          <ul className="list-disc pl-5 mb-8">
+            <li>旅行に行く前でも、行った先でも、簡単・シンプルにぴったりのおみやげが探せる。</li>
+            <li>簡単な登録で、何回でも無料で使える。</li>
+            <li>検索はシンプルな5ステップ。</li>
+            <li>同じ条件で、5種類のおみやげを確認できます。</li>
+            <li>おみやげ人気ランキングも見れる。</li>
+            <li>お気に入りのおみやげは、閲覧履歴で確認！</li>
+          </ul>
+          <p className="font-bold mb-10">まずは、使ってみてください！！</p>
+
+          <div className="mb-8">
+            <h3 className="text-xl font-bold mb-2 text-blue-500">MIYAGURU FOR BUSINESS</h3>
+            <ul className="list-disc pl-5">
+              <li>商品開発、マーケティング分析に役立つ情報を提供！</li>
+              <li>おみやげ市場の多角的解析</li>
+              <li>個人ではなかなか手に入らない情報を、リアルタイムで確認できます。</li>
+              <li>オプション：商品開発提案や販売戦略の立案、ブランディング支援も致します。</li>
+            </ul>
+          </div>
+          <div className="text-right mb-16">
+            <Link href="/business" passHref>
+              <button className={businessButtonStyle}>
+                BUSINESS PAGEはこちら
+              </button>
+            </Link>
+          </div>
+
+        {/* 最下部セクション */}
         <div className="mb-12">
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             <div className="flex-1">
@@ -132,38 +163,6 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-
-        {/* 最下部セクション */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-4">＜サービス案内＞</h2>
-          <h3 className="text-xl font-bold mb-2 text-yellow-500">MIYAGURU for You</h3>
-          <ul className="list-disc pl-5 mb-8">
-            <li>旅行に行く前でも、行った先でも、簡単・シンプルにぴったりのおみやげが探せる。</li>
-            <li>簡単な登録で、何回でも無料で使える。</li>
-            <li>検索はシンプルな5ステップ。</li>
-            <li>同じ条件で、5種類のおみやげを確認できます。</li>
-            <li>おみやげ人気ランキングも見れる。</li>
-            <li>お気に入りのおみやげは、閲覧履歴で確認！</li>
-          </ul>
-          <p className="font-bold mb-10">まずは、使ってみてください！！</p>
-
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-2 text-blue-500">MIYAGURU for Business</h3>
-            <ul className="list-disc pl-5">
-              <li>商品開発、マーケティング分析に役立つ情報を提供！</li>
-              <li>おみやげ市場の多角的解析</li>
-              <li>個人ではなかなか手に入らない情報を、リアルタイムで確認できます。</li>
-              <li>オプション：商品開発提案や販売戦略の立案、ブランディング支援も致します。</li>
-            </ul>
-          </div>
-
-          <div className="text-right">
-            <Link href="/business" passHref>
-              <button className={businessButtonStyle}>
-                BusinessPAGEはこちら
-              </button>
-            </Link>
-          </div>
         </div>
       </div>
     </div>

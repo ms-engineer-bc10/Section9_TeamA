@@ -6,8 +6,17 @@ export async function POST(request: Request) {
   try {
     const { prompt } = await request.json();
 
+
+
     // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/analyze-chart`, {
-    const response = await fetch(`http://localhost:3000/api/business/analyze-chart`, {
+    // const response = await fetch(`http://localhost:5000/api/business/analyze-chart`, {
+    // 環境変数の値を確認
+    console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL_BACKEND);
+    console.log('Request Payload:', { prompt });
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL_BACKEND}/api/business/analyze-chart`;
+    console.log('Requesting URL:', url);
+    const response = await fetch(url, {    
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

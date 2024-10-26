@@ -13,7 +13,8 @@ def save_condition(data):
         # 2. location_typeに基づいて処理を分ける
         location = data.get('location')
         location_type = data.get('location_type')
-
+        print(location_type)
+        print(location)
         if location_type == 'current':
             # 緯度経度情報が提供されている場合
             latitude, longitude = map(float, location.split(','))
