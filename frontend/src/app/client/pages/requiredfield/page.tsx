@@ -196,7 +196,7 @@ const RequiredFieldPage: React.FC = () => {
 
   return (
     <div className='flex flex-col items-center justify-start min-h-screen bg-gray-100'>
-      <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
+      <div className='w-full max-w-lg p-4 mb-8 mt-8 sm:mt-16 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
         <div className='text-lg text-gray-700 space-y-1'>
           <p>あなたにぴったりの</p>
           <p>おみやげを見つけましょう！</p>
