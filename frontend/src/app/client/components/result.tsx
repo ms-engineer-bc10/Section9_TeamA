@@ -178,7 +178,7 @@ const Result: React.FC<ResultProps> = ({
       <p className='mt-4 text-left font-bold text-gray-600'>
         検索回数: {searchCount} / {MAX_SEARCH_COUNT}
       </p>
-      <div className='mt-4 text-center'>
+      <div className='mt-4 flex flex-col sm:flex-row sm:justify-center gap-4'>
         <button
           onClick={handleSearchClick}
           className='bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4'
