@@ -150,6 +150,7 @@ const RequiredFieldPage: React.FC = () => {
           location_type: answers.location_type,
           uid: uid,
         }),
+        cache: 'no-store',
       });
 
       if (!response.ok) {
