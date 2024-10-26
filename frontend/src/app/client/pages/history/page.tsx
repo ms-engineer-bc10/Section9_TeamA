@@ -10,7 +10,7 @@ import { auth } from '@/firebase';
 
 interface HistoryItem {
   id: string;
-  date: string;
+  //  date: string;
   answers: {
     location: string;
     target: string;
@@ -28,16 +28,17 @@ interface HistoryItem {
 const History: React.FC = () => {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/history');
         const data = await response.json();
-        const sortedData = data.sort((a: HistoryItem, b: HistoryItem) => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        });
+        //const sortedData = data.sort((a: HistoryItem, b: HistoryItem) => {
+        setHistoryItems(data);
+        //  return new Date(b.date).getTime() - new Date(a.date).getTime();
+        //});
         setHistoryItems(data);
       } catch (error) {
         console.error('履歴データの取得中にエラーが発生しました:', error);
@@ -76,76 +77,81 @@ const History: React.FC = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
-      <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
-        <h1 className='text-lg font-bold text-gray-700'>検索履歴</h1>
-      </div>
-      <div className='w-full max-w-lg bg-white shadow-md rounded-lg p-4'>
-        <div className='space-y-3 max-h-[60vh] overflow-y-auto'>
-          {currentItems.map((item) => (
-            <div key={item.id} className='border rounded-lg p-2'>
-              <div className='grid grid-cols-7 gap-1 items-center'>
-                <div className='row-span-3 flex items-center pl-1'>
-                  <div className='w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center'>
-                    <span className='text-sm font-bold w-full -m1-1'>
-                      {item.date}
-                    </span>
-                  </div>
-                </div>
-                <div className='col-span-4 grid grid-cols-2 gap-1'>
-                  {Object.entries(item.answers).map(([key, value], index) => (
-                    <div
-                      key={key}
-                      className={`py-1 px-1 text-xs rounded-md bg-gray-200 text-gray-700 truncate font-semibold ${
-                        index === 4 ? 'col-span-1' : ''
-                      }`}
-                    >
-                      {value}
+    <div className='min-h-screen bg-gray-100 pb-16'>
+      <div className='max-w-4xl mx-auto p-4'>
+        <div className='mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md p-4'>
+          <h1 className='text-xl font-bold text-gray-700'>検索履歴</h1>
+        </div>
+        <div className='bg-white shadow-md rounded-lg p-4'>
+          <div className='space-y-6 max-h-[70vh] overflow-y-auto'>
+            {currentItems.map((item) => (
+              <div key={item.id} className='border rounded-lg p-4'>
+                <div className='flex items-start gap-2'>
+                  {/* 左側: 写真 */}
+                  <div className='w-40 h-40 flex-shrink-0'>
+                    <div className='relative w-full h-full'>
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.name}
+                        layout='fill'
+                        objectFit='cover'
+                        className='rounded-md'
+                      />
                     </div>
-                  ))}
-                  <button
-                    onClick={() => onDelete(item.id)}
-                    className='py-1 px-1 text-xs rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
-                  >
-                    <Trash2 size={14} className='mr-1' /> 削除
-                  </button>
-                </div>
-                <div className='col-span-2 row-span-3 border-2 border-gray-300 rounded-md overflow-hidden'>
-                  <div
-                    className='relative w-full h-full'
-                    style={{ aspectRatio: '1 / 1' }}
-                  >
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.name}
-                      layout='fill'
-                      objectFit='cover'
-                      className='rounded-md'
-                    />
+                  </div>
+
+                  {/* 右側: 情報 */}
+                  <div className='flex-grow grid gap-1.5 self-center min-w-0'>
+                    <div className='grid grid-cols-2 gap-1.5'>
+                      {Object.entries(item.answers).map(([key, value]) =>
+                        key === 'budget' ? (
+                          <div
+                            key={key}
+                            className='col-span-2 py-2 px-2.5 text-sm rounded-md bg-gray-200 text-gray-700 font-semibold'
+                          >
+                            {value}
+                          </div>
+                        ) : (
+                          <div
+                            key={key}
+                            className='py-2 px-2.5 text-sm rounded-md bg-gray-200 text-gray-700 font-semibold truncate'
+                          >
+                            {value}
+                          </div>
+                        )
+                      )}
+                      <button
+                        onClick={() => onDelete(item.id)}
+                        className='col-span-2 py-2 px-2.5 text-sm rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
+                      >
+                        <Trash2 size={16} className='mr-1' />
+                        削除
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <div className='flex justify-between mt-4'>
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className='py-2 px-4 text-xs rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50 font-semibold'
-          >
-            前へ
-          </button>
-          <span className='py-2 px-4 text-xs font-semibold'>
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className='py-2 px-4 text-xs rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50 font-semibold'
-          >
-            次へ
-          </button>
+            ))}
+          </div>
+          <div className='flex justify-between mt-4'>
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className='py-2 px-4 text-sm rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50 font-semibold'
+            >
+              前へ
+            </button>
+            <span className='py-2 px-4 text-sm font-semibold'>
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className='py-2 px-4 text-sm rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors disabled:opacity-50 font-semibold'
+            >
+              次へ
+            </button>
+          </div>
         </div>
       </div>
       <MenuBar />
