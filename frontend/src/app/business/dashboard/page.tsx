@@ -108,28 +108,10 @@ export default function BusinessDashboard() {
         throw new Error(`API error: ${response.status} - ${errorText}`);
       }
 
-      if (!response.body) {
-        console.error('Response body is null');
-        throw new Error('Response body is null');
-      }
+      // レスポンス全体を一度に取得して表示
+      const data = await response.text();
+      setAdvice(data);
 
-      // ストリーミングレスポンスの処理
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      console.log('Starting stream reading...');
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          console.log('Stream reading completed');
-          break;
-        }
-        
-        const text = decoder.decode(value);
-        console.log('Received chunk:', text.substring(0, 100) + '...'); // 最初の100文字だけ表示
-        setAdvice(prev => prev + text);
-      }
     } catch (error: unknown) {
       // エラーの詳細な情報を出力
       console.error('AI相談エラーの詳細:', {
@@ -249,9 +231,9 @@ export default function BusinessDashboard() {
         {/* フッターボタン */}
         <div className="mt-auto">
           <div className="flex justify-center">
-            <Link href="/business/service">
+            <Link href="/">
               <Button className={buttonStyle}>
-                会員トップページに戻る
+                トップページに戻る
               </Button>
             </Link>
           </div>
