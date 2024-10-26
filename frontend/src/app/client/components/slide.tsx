@@ -10,6 +10,7 @@ interface SlideProps {
   totalQuestions: number;
   error: string | null;
   isConfirmPage: boolean;
+  onJumpToQuestion?: (index: number) => void;
 }
 
 const Slide: React.FC<SlideProps> = ({
@@ -20,6 +21,7 @@ const Slide: React.FC<SlideProps> = ({
   totalQuestions,
   error,
   isConfirmPage,
+  onJumpToQuestion,
 }) => {
   const props = useSpring({
     transform: `translateX(-${currentQuestionIndex * 100}%)`,
@@ -27,11 +29,13 @@ const Slide: React.FC<SlideProps> = ({
   });
 
   return (
-    <div className='relative bg-white shadow-md rounded-lg p-6 overflow-hidden'>
+    <div className='relative bg-white shadow-md rounded-lg p-6 overflow-hidden min-h-[400px]'>
       <animated.div style={props} className='flex'>
         {React.Children.map(children, (child, index) => (
           <div key={index} className='w-full flex-shrink-0'>
-            {child}
+            {React.cloneElement(child as React.ReactElement, {
+              onJumpToQuestion: isConfirmPage ? onJumpToQuestion : undefined,
+            })}
           </div>
         ))}
       </animated.div>

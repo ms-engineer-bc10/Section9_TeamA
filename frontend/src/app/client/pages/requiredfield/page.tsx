@@ -71,6 +71,12 @@ const RequiredFieldPage: React.FC = () => {
   const questionKeys = ['location', 'target', 'genre', 'budget', 'quantity'];
   const questions = [Location, target, genre, budget, quantity];
 
+  // 質問へジャンプする機能を追加
+  const handleJumpToQuestion = useCallback((index: number) => {
+    setError(null);
+    setCurrentQuestionIndex(index);
+  }, []);
+
   const handleNext = useCallback(() => {
     const currentAnswer =
       answers[questionKeys[currentQuestionIndex] as keyof Answers];
@@ -120,20 +126,20 @@ const RequiredFieldPage: React.FC = () => {
       // ユーザーがログインしている場合、IDトークンとuidを取得
       const currentUser = auth.currentUser;
       if (!currentUser) {
-        throw new Error("ユーザーが認証されていません");
+        throw new Error('ユーザーが認証されていません');
       }
-      console.log("Current user:", currentUser);
-  
+      console.log('Current user:', currentUser);
+
       const idToken = await currentUser.getIdToken(); // IDトークンを取得
       const uid = currentUser.uid; // UIDを取得
-      console.log("ID Token:", idToken);
-      console.log("UID:", uid);
+      console.log('ID Token:', idToken);
+      console.log('UID:', uid);
 
       const response = await fetch('http://localhost:5000/api/user/recommend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           target: answers.target,
@@ -145,11 +151,11 @@ const RequiredFieldPage: React.FC = () => {
           uid: uid,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       setSearchResults(data); // 結果を保存
       setShowResult(true); // 結果を表示
@@ -165,7 +171,7 @@ const RequiredFieldPage: React.FC = () => {
       setIsLoading(false); // ローディング終了
     }
   }, [answers]);
-  
+
   const handleResetSearch = useCallback(() => {
     setShowResult(false);
     setCurrentQuestionIndex(0);
@@ -188,11 +194,12 @@ const RequiredFieldPage: React.FC = () => {
   const isConfirmPage = currentQuestionIndex === questions.length;
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-16'>
+    <div className='flex flex-col items-center justify-start min-h-screen bg-gray-100'>
       <div className='w-full max-w-lg p-4 mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
-        <p className='text-lg text-gray-700'>
-          あなたにピッタリのOMIYAGEを見つけましょう！
-        </p>
+        <div className='text-lg text-gray-700 space-y-1'>
+          <p>あなたにぴったりの</p>
+          <p>おみやげを見つけましょう！</p>
+        </div>
       </div>
       <div className='w-full max-w-lg'>
         {isLoading ? (
@@ -212,6 +219,7 @@ const RequiredFieldPage: React.FC = () => {
             totalQuestions={questions.length}
             error={error}
             isConfirmPage={isConfirmPage}
+            onJumpToQuestion={handleJumpToQuestion}
           >
             {questions.map((QuestionComponent, index) => (
               <QuestionComponent
@@ -227,7 +235,12 @@ const RequiredFieldPage: React.FC = () => {
                 onLocationChange={handleLocationChange}
               />
             ))}
-            <Confirm answers={answers} onSearch={handleSearch} />
+            <Confirm
+              answers={answers}
+              onSearch={handleSearch}
+              onJumpToQuestion={handleJumpToQuestion}
+              questionKeys={questionKeys}
+            />
           </Slide>
         )}
       </div>
