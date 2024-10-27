@@ -6,7 +6,8 @@ from app.models import db
 from flask_cors import CORS
 
 from app.routes.user_routes import user_routes
-from app.routes.history_routes import history_routes 
+from app.routes.history_routes import history_routes
+from app.routes.like_routes import like_routes
 
 # グラフ解析用に追加
 from app.routes.chart_analysis import chart_analysis
@@ -23,7 +24,7 @@ migrate = Migrate()
 # アプリケーションファクトリ関数を定義
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app)
     
     # データベース設定
     database_url = os.getenv('DATABASE_URL', 'sqlite:///default.db')
@@ -45,6 +46,7 @@ def create_app():
     app.register_blueprint(auth_routes, url_prefix='/api/auth')
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(history_routes, url_prefix='/api/history')
+    app.register_blueprint(like_routes, url_prefix='/api/like')
     app.register_blueprint(chart_analysis, url_prefix='/api/business')# グラフ解析用のルートを追加
     app.register_blueprint(ai_advice_bp, url_prefix='/api')  # AIアドバイス機能用のルートを追加
     
