@@ -29,7 +29,7 @@ const Slide: React.FC<SlideProps> = ({
   });
 
   return (
-    <div className='relative bg-white shadow-md rounded-lg p-6 overflow-hidden min-h-[400px]'>
+    <div className='relative bg-white shadow-md rounded-lg p-6 overflow-hidden h-[600px]'>
       <animated.div style={props} className='flex'>
         {React.Children.map(children, (child, index) => (
           <div key={index} className='w-full flex-shrink-0'>
@@ -39,7 +39,7 @@ const Slide: React.FC<SlideProps> = ({
           </div>
         ))}
       </animated.div>
-      <div className='flex justify-between items-center mt-4'>
+      <div className='absolute bottom-6 left-6 right-6 flex justify-between items-center'>
         <button
           onClick={onPrev}
           disabled={currentQuestionIndex === 0}
