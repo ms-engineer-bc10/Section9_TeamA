@@ -46,6 +46,7 @@ def get_latlng_from_prefecture(prefecture_name):
 
     if response.status_code == 200:
         result = response.json()
+        print(result)
         if result['status'] == 'OK' and result['results']:
             location = result['results'][0]["geometry"]["location"]
             latlng = f"{location['lat']},{location['lng']}"
