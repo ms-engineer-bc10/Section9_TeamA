@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MenuBar from '@/app/client/components/menubar';
-
-import { useRouter } from 'next/navigation';
 import { auth } from '@/firebase';
 
 interface LikedPhoto {
@@ -21,20 +19,36 @@ const LikesPage: React.FC = () => {
   const photosPerPage = 9;
 
   useEffect(() => {
-    // ダミーデータの生成 (100枚の写真を想定)
-    const mockData: LikedPhoto[] = Array.from({ length: 100 }, (_, i) => ({
-      id: `${i + 1}`,
-      imageUrl: `/api/placeholder/300/300?text=Photo ${i + 1}`,
-      likedAt: new Date(2023, 4, i + 1), // 2023年5月1日から順に日付を設定
-    }));
-    setLikedPhotos(mockData);
+    const fetchLikedPhotos = async (userId: string, token: string) => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/like/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setLikedPhotos(data);
+      } catch (error) {
+        console.error('Error fetching liked photos:', error);
+      }
+    };
+
+    // Firebase Authでログインしているユーザーを監視
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        fetchLikedPhotos(user.uid, token); // ユーザーIDとトークンを使用してデータを取得
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const sortedPhotos = [...likedPhotos].sort((a, b) => {
     if (sortOrder === 'newest') {
-      return b.likedAt.getTime() - a.likedAt.getTime(); // 新しい順（降順）
+      return new Date(b.likedAt).getTime() - new Date(a.likedAt).getTime();
     } else {
-      return a.likedAt.getTime() - b.likedAt.getTime(); // 古い順（昇順）
+      return new Date(a.likedAt).getTime() - new Date(b.likedAt).getTime();
     }
   });
 
@@ -63,11 +77,11 @@ const LikesPage: React.FC = () => {
         <div className='bg-white shadow-md rounded-lg p-6'>
           <h2 className='text-2xl font-bold mb-4 text-center'>
             いいねした写真
-          </h2>
+            </h2>
           <div className='mb-4 flex justify-end'>
             <select
               value={sortOrder}
-              onChange={(e) =>
+              onChange={(e) => 
                 handleSortChange(e.target.value as 'newest' | 'oldest')
               }
               className='border rounded p-2'
