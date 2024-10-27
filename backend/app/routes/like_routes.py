@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Like
 from sqlalchemy.exc import SQLAlchemyError
+import logging
+logging.basicConfig(level=logging.INFO)
 
 like_routes = Blueprint('like_routes', __name__)
 
-@like_routes.route('/', methods=['POST'])
+@like_routes.route('/', methods=['POST', 'OPTIONS'])
 def add_like():
     data = request.json
     user_id = data.get('user_id')
@@ -17,4 +19,5 @@ def add_like():
         return jsonify({"message": "Like added successfully"}), 201
     except SQLAlchemyError as e:
         db.session.rollback()
+        logging.error(f"Database error: {str(e)}")  # エラーメッセージのログ出力
         return jsonify({"error": str(e)}), 500
