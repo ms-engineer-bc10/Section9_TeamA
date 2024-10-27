@@ -13,7 +13,8 @@ def save_condition(data):
         # 2. location_typeに基づいて処理を分ける
         location = data.get('location')
         location_type = data.get('location_type')
-
+        print(location_type)
+        print(location)
         if location_type == 'current':
             # 緯度経度情報が提供されている場合
             latitude, longitude = map(float, location.split(','))
@@ -21,11 +22,19 @@ def save_condition(data):
         elif location_type == 'prefecture':
             # 都道府県名が提供されている場合
             prefecture_name = location
+            print(f"受け取った都道府県名: {prefecture_name}")  # ここにデバッグ用のprint文を追加
             latlng = get_latlng_from_prefecture(prefecture_name)  # 都道府県名から緯度経度を取得
+            print(f"取得した緯度経度: {latlng}")  # デバッグ用2
             if latlng:
-                latitude, longitude = map(float, latlng.split(','))
-            else:
-                return {'error': 'Invalid prefecture name'}, 400
+            #     latitude, longitude = map(float, latlng.split(','))
+            # else:
+            #     return {'error': 'Invalid prefecture name'}, 400
+               try:
+                   latitude, longitude = map(float, latlng.split(','))
+                   print(f"変換後の緯度経度: lat={latitude}, lng={longitude}")  # デバッグ用3
+               except Exception as e:
+                   print(f"緯度経度の変換でエラー: {str(e)}")  # デバッグ用4
+                   return {'error': 'Invalid coordinates format'}, 400
         else:
             return {'error': 'Invalid location_type'}, 400
 
