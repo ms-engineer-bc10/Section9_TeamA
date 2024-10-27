@@ -26,7 +26,7 @@ const Budget: React.FC<BudgetProps> = ({
   };
 
   return (
-    <div className='w-full max-w-lg bg-white p-6 h-full flex flex-col justify-center'>
+    <div className='w-full max-w-lg bg-white p-6 h-full flex flex-col justify-center translate-y-15'>
       <h1 className='text-xl font-semibold mb-4 text-center'>
         予算はいくらでしょうか？
       </h1>
