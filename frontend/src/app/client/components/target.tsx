@@ -19,7 +19,7 @@ const Target: React.FC<TargetProps> = ({
   };
 
   return (
-    <div className='w-full max-w-2xl bg-white p-6 h-full flex flex-col justify-center translate-y-15'>
+    <div className='w-full max-w-2xl bg-white p-6 h-full flex flex-col justify-center translate-y-16'>
       <h1 className='text-xl font-semibold mb-4 text-center'>
         誰に渡すOMIYAGEですか？
       </h1>
