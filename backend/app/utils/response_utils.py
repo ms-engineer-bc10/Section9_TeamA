@@ -5,7 +5,7 @@ from app.services.product_service import save_selected_product
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results):
+def generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results, recommendation_id):
     formatted_shopping_results = []
     for item in shopping_results:  
         product = {
@@ -36,6 +36,7 @@ def generate_recommendation_response(shopping_results, selected_product, ai_reco
     logger.info(f"AIのおすすめ理由: {ai_recommend}")
 
     return jsonify({
+        'おすすめ商品ID': recommendation_id,
         'おすすめ商品一覧': formatted_shopping_results,
         'AIが選ぶおすすめ商品': ai_selected_product_name,
         'AIおすすめポイント': ai_recommend if ai_recommend else "AIのおすすめポイントがありません",
