@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO)
 
 like_routes = Blueprint('like_routes', __name__)
 
-@like_routes.route('/', methods=['POST', 'OPTIONS'])
+@like_routes.route('/', methods=['POST'])
 def add_like():
     data = request.json
     user_id = data.get('user_id')
