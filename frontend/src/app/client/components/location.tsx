@@ -15,7 +15,7 @@ const Location: React.FC<LocationProps> = ({
 }) => {
   const [showPrefectureSelect, setShowPrefectureSelect] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
-  const options = ['現在地から提案', '場所を指定して提案'];
+  const options = ['現在地から\n提案', '場所を指定して\n提案'];
   const prefectures = [
     '北海道',
     '青森県',
@@ -73,10 +73,7 @@ const Location: React.FC<LocationProps> = ({
   }, [selectedOption]);
 
   const handleOptionClick = (option: string) => {
-    //console.log('handleoptionclick');
-    if (option === '現在地から提案') {
-      // console.log(option);
-
+    if (option === '現在地から\n提案') {
       setSelectedOption('現在地');
 
       if ('geolocation' in navigator) {
@@ -98,7 +95,7 @@ const Location: React.FC<LocationProps> = ({
     } else {
       setShowPrefectureSelect(true);
       if (selectedOption === '現在地') {
-        setSelectedOption(''); // リセット
+        setSelectedOption('');
       }
     }
   };
@@ -112,27 +109,35 @@ const Location: React.FC<LocationProps> = ({
   };
 
   return (
-    <div className='w-full max-w-lg bg-white p-6'>
+    <div className='w-full max-w-2xl bg-white p-6'>
       <h1 className='text-xl font-semibold mb-9 text-center'>
         OMIYAGEを買いたい場所は？
       </h1>
-      <div className='grid grid-cols-2 gap-4 mb-4'>
-        {options.map((option) => (
-          <button
-            key={option}
-            className={`py-2 px-4 text-lg rounded-md border transition-colors ${
-              (option === '現在地から提案' && selectedOption === '現在地') ||
-              (option === '場所を指定して提案' &&
-                selectedOption !== '現在地' &&
-                selectedOption !== '')
-                ? 'bg-[#2F41B0] text-white'
-                : 'bg-gray-200 hover:bg-[#5A73D7]'
-            }`}
-            onClick={() => handleOptionClick(option)}
-          >
-            {option}
-          </button>
-        ))}
+      <div className='flex gap-4 mb-4 px-2'>
+        <button
+          className={`w-36 py-2 px-2 text-lg rounded-md border transition-colors ${
+            selectedOption === '現在地'
+              ? 'bg-[#2F41B0] text-white'
+              : 'bg-gray-200 hover:bg-[#5A73D7]'
+          }`}
+          onClick={() => handleOptionClick('現在地から\n提案')}
+        >
+          現在地から
+          <br />
+          提案
+        </button>
+        <button
+          className={`flex-1 py-2 px-4 text-lg rounded-md border transition-colors ${
+            selectedOption !== '現在地' && selectedOption !== ''
+              ? 'bg-[#2F41B0] text-white'
+              : 'bg-gray-200 hover:bg-[#5A73D7]'
+          }`}
+          onClick={() => handleOptionClick('場所を指定して\n提案')}
+        >
+          場所を指定
+          <br />
+          して提案
+        </button>
       </div>
       {locationError && (
         <div className='text-red-500 mb-4'>{locationError}</div>
