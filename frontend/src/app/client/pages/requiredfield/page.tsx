@@ -196,13 +196,13 @@ const RequiredFieldPage: React.FC = () => {
 
   return (
     <div className='flex flex-col items-center justify-start min-h-screen bg-gray-100'>
-      <div className='w-full max-w-lg p-4 mb-8 mt-8 sm:mt-16 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
+      <div className='w-full max-w-md p-4 mb-8 mt-8 sm:mt-16 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md'>
         <div className='text-lg text-gray-700 space-y-1'>
           <p>あなたにぴったりの</p>
           <p>おみやげを見つけましょう！</p>
         </div>
       </div>
-      <div className='w-full max-w-lg'>
+      <div className='w-full max-w-md px-4'>
         {isLoading ? (
           <Loading />
         ) : showResult ? (
@@ -214,39 +214,45 @@ const RequiredFieldPage: React.FC = () => {
             handleSearch={handleSearch}
           />
         ) : (
-          <Slide
-            onPrev={handlePrev}
-            onNext={handleNext}
-            currentQuestionIndex={currentQuestionIndex}
-            totalQuestions={questions.length}
-            error={error}
-            isConfirmPage={isConfirmPage}
-            onJumpToQuestion={handleJumpToQuestion}
-          >
-            {questions.map((QuestionComponent, index) => (
-              <QuestionComponent
-                key={index}
-                onNext={handleOptionSelect}
-                selectedOption={answers[questionKeys[index] as keyof Answers]}
-                setSelectedOption={(option: string) =>
-                  setAnswers((prev) => ({
-                    ...prev,
-                    [questionKeys[index]]: option,
-                  }))
-                }
-                onLocationChange={handleLocationChange}
-              />
-            ))}
-            <Confirm
-              answers={answers}
-              onSearch={handleSearch}
+          <div className='h-[600px]'>
+            {' '}
+            {/* 固定高さを設定 */}
+            <Slide
+              onPrev={handlePrev}
+              onNext={handleNext}
+              currentQuestionIndex={currentQuestionIndex}
+              totalQuestions={questions.length}
+              error={error}
+              isConfirmPage={isConfirmPage}
               onJumpToQuestion={handleJumpToQuestion}
-              questionKeys={questionKeys}
-            />
-          </Slide>
+            >
+              {questions.map((QuestionComponent, index) => (
+                <QuestionComponent
+                  key={index}
+                  onNext={handleOptionSelect}
+                  selectedOption={answers[questionKeys[index] as keyof Answers]}
+                  setSelectedOption={(option: string) =>
+                    setAnswers((prev) => ({
+                      ...prev,
+                      [questionKeys[index]]: option,
+                    }))
+                  }
+                  onLocationChange={handleLocationChange}
+                />
+              ))}
+              <Confirm
+                answers={answers}
+                onSearch={handleSearch}
+                onJumpToQuestion={handleJumpToQuestion}
+                questionKeys={questionKeys}
+              />
+            </Slide>
+          </div>
         )}
       </div>
-      <MenuBar />
+      <div className='w-full max-w-md mt-8'>
+        <MenuBar />
+      </div>
     </div>
   );
 };
