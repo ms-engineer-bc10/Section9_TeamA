@@ -21,7 +21,7 @@ user_routes = Blueprint('user_routes', __name__)
 def get_recommendations():
     try:
         data = request.json
-        print(data)
+
         # 条件の保存処理を呼び出し、condition_idを取得
         save_result, status = save_condition(data)
         if status != 201:

@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price: 'price_1Q9I8hF4pWfF667qe633ksbR', // この価格IDが正しいことを確認してください
+          price: 'price_1Q5pngF4pWfF667qymPFzDBI', // この価格IDが正しいことを確認してください
           quantity: 1,
         },
       ],
