@@ -109,7 +109,7 @@ const Location: React.FC<LocationProps> = ({
   };
 
   return (
-    <div className='w-full max-w-2xl bg-white p-6'>
+    <div className='w-full max-w-2xl bg-white p-6 h-full flex flex-col justify-center'>
       <h1 className='text-xl font-semibold mb-9 text-center'>
         OMIYAGEを買いたい場所は？
       </h1>
