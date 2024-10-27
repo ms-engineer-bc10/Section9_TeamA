@@ -16,6 +16,7 @@ interface ResultProps {
   searchResults: any;
   onResetSearch: () => void;
   onEditSearch: () => void;
+  handleSearch: () => Promise<void>;
 }
 
 interface SearchResult {
@@ -32,6 +33,7 @@ const Result: React.FC<ResultProps> = ({
   searchResults,
   onResetSearch,
   onEditSearch,
+  handleSearch,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
@@ -82,11 +84,20 @@ const Result: React.FC<ResultProps> = ({
     updateSearchResult();
   }, [updateSearchResult]);
 
-  const handleSearchClick = () => {
+  const handleSearchClick = async () => {
+    // async を追加
     if (searchCount < MAX_SEARCH_COUNT) {
-      setSearchCount((prevCount) => prevCount + 1);
-      setIsFavorite(false);
-      updateSearchResult();
+      setIsLoading(true); // ローディング状態を開始
+      try {
+        setSearchCount((prevCount) => prevCount + 1);
+        setIsFavorite(false);
+        await handleSearch(); // API を呼び出し
+        updateSearchResult();
+      } catch (error) {
+        console.error('検索中にエラーが発生しました:', error);
+      } finally {
+        setIsLoading(false); // ローディング状態を終了
+      }
     }
   };
 
@@ -204,21 +215,24 @@ const Result: React.FC<ResultProps> = ({
       <p className="mt-4 text-left font-bold text-gray-600">
         検索回数: {searchCount} / {MAX_SEARCH_COUNT}
       </p>
-      <div className="mt-4 text-center">
+      
+      <div className='mt-4 flex flex-col sm:flex-row sm:justify-center gap-4'>
         <button
           onClick={handleSearchClick}
           className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 mr-4"
           aria-label="他のOMIYAGEを探す"
           disabled={searchCount >= MAX_SEARCH_COUNT}
         >
-          他のOMIYAGEも探してみよう
+          <span className='inline whitespace-nowrap'>他のOMIYAGEも</span>
+          <span className='block'>探してみよう</span>
         </button>
         <button
           onClick={onEditSearch}
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full transition duration-300"
           aria-label="検索条件を変更する"
         >
-          条件を変更する
+          <span className='inline whitespace-nowrap'>条件を</span>
+          <span className='block'>変更する</span>
         </button>
       </div>
 
