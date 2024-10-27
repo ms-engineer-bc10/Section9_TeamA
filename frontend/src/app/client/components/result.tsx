@@ -185,14 +185,16 @@ const Result: React.FC<ResultProps> = ({
           aria-label='他のOMIYAGEを探す'
           disabled={searchCount >= MAX_SEARCH_COUNT}
         >
-          他のOMIYAGEも探してみよう
+          <span className='inline whitespace-nowrap'>他のOMIYAGEも</span>
+          <span className='block'>探してみよう</span>
         </button>
         <button
           onClick={onEditSearch}
           className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full transition duration-300'
           aria-label='検索条件を変更する'
         >
-          条件を変更する
+          <span className='inline whitespace-nowrap'>条件を</span>
+          <span className='block'>変更する</span>
         </button>
       </div>
 
