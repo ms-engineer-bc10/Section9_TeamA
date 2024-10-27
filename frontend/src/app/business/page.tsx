@@ -50,21 +50,30 @@ export default function BusinessPage() {
             <p className="text-xl text-gray-700 mb-3">ビジネス向けサービスへようこそ</p>
             <p className="text-xl text-gray-700 mb-6">~ 有料会員ページ ~</p>
             <div className="flex flex-col items-center space-y-6 mb-8">
-              <div className="w-[267px] h-[133px] relative">
+              <div className="max-w-[286px] max-h-[253px] relative">
                 <Image
-                  src="/images/buble.jpg"
+                  src="/images/toB_topPage_polararea.jpg"
                   alt="ビジネス分析イメージ1"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-lg shadow-md"
+                  width={286}
+                  height={253}
+                  className="rounded-lg shadow-md w-full h-auto"
                 />
               </div>
             </div>
             <div className="space-y-4 mb-8">
               <p className="text-lg text-gray-800">
                 今どんな商品が、どのように売れているのか、<br />
-                リアルタイムの市場状況を提供します。
+                商品開発、販売戦略立案に必要な情報を提供します。
               </p>
+              {/* コンテナを追加して中央揃えと最大幅を設定 */}
+              <div className="max-w-[358px] mx-auto">
+                <ul className="text-lg text-gray-800 text-left list-none pl-0">
+                  <li className="mb-2">＜サービス内容＞</li> {/* 追加：サービス内容の見出し */} 
+                  <li>・市場動向を定量的リアルタイムに表示！</li>
+                  <li>・全国の人気おみやげの傾向を解析！</li>
+                  <li>・AIによる個別相談もできる！</li>
+                </ul>
+              </div>
               <p className="text-lg text-gray-800">
                 オプション：商品開発、プロモーション支援など
               </p>
@@ -72,8 +81,8 @@ export default function BusinessPage() {
           </div>
         </div>
         
-        <div className="mt-auto pt-6">
-          <p className="text-sm text-gray-600 mb-4 text-center">
+        <div className="mt-auto pt-1">
+          <p className="text-sm text-gray-600 mb-2 text-center">
             ご使用の際は登録が必要です。<br />
             まずは、お試しから
           </p>

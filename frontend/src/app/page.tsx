@@ -80,6 +80,7 @@ export default function LandingPage() {
               <li>おみやげ市場の多角的解析</li>
               <li>個人ではなかなか手に入らない情報を、リアルタイムで確認できます。</li>
               <li>オプション：商品開発提案や販売戦略の立案、ブランディング支援も致します。</li>
+              <li>2週間のお試しください。</li>
             </ul>
           </div>
           <div className="text-right mb-16">
