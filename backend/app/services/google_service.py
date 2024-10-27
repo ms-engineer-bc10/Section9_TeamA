@@ -17,7 +17,7 @@ def search_google_places(location, recommendations_data, previous_product_id=Non
 
 # todo: 以下の白い恋人は{selected_product_name}を短縮・明確にした後に変更する必要あり
     base_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
-    query = f"おみやげ near {location}"
+    query = f"白い恋人 near {location}"
 
     params = {
         "query": query,

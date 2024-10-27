@@ -20,10 +20,10 @@ const containerStyle = {
   height: '300px',
 };
 
-// 一旦大阪を基準に地図表示。userが選択したlocationを中心にできるよう要修正
+// 一旦東京駅を基準に地図表示。userが選択したlocationを中心にできるよう要修正
 const center = {
-  lat: 34.686344,
-  lng: 135.520037,
+  lat: 35.681236,
+  lng: 139.767125,
 };
 
 const MapComponent: React.FC<MapComponentProps> = ({ places }) => {
