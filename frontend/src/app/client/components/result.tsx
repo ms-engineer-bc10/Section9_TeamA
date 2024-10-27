@@ -3,6 +3,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FavoriteIconAnim } from "@/app/client/components/ui/heart";
 import MapComponent from "./map";
+import { auth } from "@/firebase";
 
 interface ResultProps {
   answers: {
@@ -38,11 +39,13 @@ const Result: React.FC<ResultProps> = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const [places, setPlaces] = useState([]);
 
+  console.log(searchResults);
   const updateSearchResult = useCallback(() => {
     if (searchResults && searchResults.おすすめ商品一覧.length > 0) {
       const aiSelectedProduct = searchResults.おすすめ商品一覧.find(
         (item: any) => item.商品名 === searchResults["AIが選ぶおすすめ商品"]
       );
+      console.log(aiSelectedProduct);
 
       if (aiSelectedProduct) {
         setCurrentResult({
@@ -50,7 +53,7 @@ const Result: React.FC<ResultProps> = ({
           name: aiSelectedProduct.商品名,
           llmComment:
             searchResults.AIおすすめポイント || aiSelectedProduct.説明,
-          recommendation_id: aiSelectedProduct.id,
+          recommendation_id: searchResults.おすすめ商品ID,
         });
       } else {
         const result = searchResults.おすすめ商品一覧[0];
@@ -88,6 +91,15 @@ const Result: React.FC<ResultProps> = ({
   };
 
   const handleFavoriteClick = async () => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error("ユーザーが認証されていません");
+    }
+    console.log("Current user:", currentUser);
+
+    console.log("currentResult", currentResult);
+    const idToken = await currentUser.getIdToken(); // IDトークンを取得
+    const uid = currentUser.uid; // UIDを取得
     if (!isFavorite && currentResult) {
       try {
         const response = await fetch("http://localhost:5000/api/like/", {
@@ -96,7 +108,7 @@ const Result: React.FC<ResultProps> = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            user_id: "1", // ダミーのユーザーID
+            user_id: uid,
             recommendation_id: currentResult.recommendation_id,
           }),
         });
