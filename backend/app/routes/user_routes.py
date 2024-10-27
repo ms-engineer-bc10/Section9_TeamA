@@ -108,11 +108,13 @@ def get_recommendations():
         store_id = saved_store.id  # 保存された店舗のIDを取得
 
         # recommendationテーブルを介してconditionとproduct/storeを紐づける
-        save_recommendation(condition_id, product_id, store_id)
+        recommendation = save_recommendation(condition_id, product_id, store_id)
 
+        print(f"recommendation: {recommendation}", flush=True)#10/20
         # ユーザーに複数の店舗情報を返す、DBに保存
-        response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results)
+        response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results, recommendation.id)
 
+        print(f"response: {response}", flush=True)#10/20
         return response
 
     except Exception as e:
