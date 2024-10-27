@@ -138,7 +138,6 @@ export default function BusinessDashboard() {
         <div className="flex-grow">
           <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">ダッシュボード</h2>
           
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">利用可能なサービス</h3>
             </div>
@@ -151,7 +150,7 @@ export default function BusinessDashboard() {
                 <div className="flex flex-col space-y-6">
                   {/* 価格帯分析セクション */}
                   <div>
-                    <span className="text-lg leading-6 font-medium text-gray-900">１．今売れている価格帯</span>
+                    <span className="text-lg leading-6 font-bold text-gray-900">１．今売れている価格帯</span>
                     <div className="flex flex-wrap gap-4 justify-end mt-2">
                       <Link href="/business/price-range/monthly-status">
                         <Button className={buttonStyle}>月次状況</Button>
@@ -165,9 +164,9 @@ export default function BusinessDashboard() {
                     </div>
                   </div>
 
-                  {/* エリア分析セクション */}
+                  {/* 年代別分析セクション */}
                   <div>
-                    <span className="text-lg leading-6 font-medium text-gray-900">２．購入されているエリア</span>
+                    <span className="text-lg leading-6 font-bold text-gray-900">２．年代別購入価格帯</span>
                     <div className="flex flex-wrap gap-4 justify-end mt-2">
                       <Link href="/business/construction">
                         <Button className={buttonStyle}>月次状況</Button>
@@ -180,7 +179,7 @@ export default function BusinessDashboard() {
                       </Link>
                     </div>
                   </div>
-                  
+                  <div className="border-t border-gray-200 my-4"></div>
                   {/* AIアドバイスセクション */}
                   <div className="mt-8">
                     <h4 className="text-lg leading-6 font-bold text-gray-900 mb-4">３．個別AIアドバイス</h4>
@@ -220,25 +219,43 @@ export default function BusinessDashboard() {
                           </CardContent>
                         </Card>
                       )}
+                        {/* 例文表示エリア */}
+                        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                          <p className="text-sm text-gray-600 italic">
+                            （例文）秋にちなんだ素材を使って、フィナンシェをおみやげとして開発したい。どのような点に気を付けて商品を開発したらよいですか？20代～60代の女性向け商品にしたい。具体的なアドバイスをお願いします。
+                          </p>
+                        </div>
+                        <div className="border-t border-gray-200 my-4"></div>
+                        {/* 個別相談セクション */}
+                        <div className="mt-8">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-lg leading-6 font-bold text-gray-900">４．対面で個別相談する</h4>
+                            <Link href="/business/construction">
+                              <Button 
+                                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 text-lg"
+                              >
+                                個別相談
+                              </Button>
+                              </Link>  
+                          </div>
+                        </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* フッターボタン */}
-        <div className="mt-auto">
-          <div className="flex justify-center">
-            <Link href="/">
-              <Button className={buttonStyle}>
-                トップページに戻る
-              </Button>
-            </Link>
+          </div>   
+            {/* フッターボタン */}
+            <div className="mt-auto">
+              <div className="flex justify-center">
+                <Link href="/">
+                  <Button className={buttonStyle}>
+                    トップページに戻る
+                  </Button>
+                </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
