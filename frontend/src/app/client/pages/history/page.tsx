@@ -86,19 +86,17 @@ const History: React.FC = () => {
   return (
     <div className='min-h-screen bg-gray-100 pb-16'>
       <div className='max-w-4xl mx-auto p-4'>
-        {/* ヘッダー部分 */}
         <div className='mb-8 border-4 border-[#2F41B0] rounded-md text-center bg-white shadow-md p-4'>
           <h1 className='text-xl font-bold text-gray-700'>検索履歴</h1>
         </div>
 
-        {/* メインコンテンツ */}
         <div className='bg-white shadow-md rounded-lg p-4'>
           <div className='space-y-6 max-h-[70vh] overflow-y-auto'>
             {currentItems.map((item) => (
               <div key={item.id} className='border rounded-lg p-4'>
-                <div className='flex items-start gap-2'>
-                  {/* 商品画像 */}
-                  <div className='w-40 h-40 flex-shrink-0'>
+                <div className='flex items-start gap-2 md:gap-4'>
+                  {/* 画像部分 - PCでさらに大きく表示 */}
+                  <div className='w-40 h-40 md:w-80 md:h-80 flex-shrink-0'>
                     <div className='relative w-full h-full'>
                       <Image
                         src={item.product.image}
@@ -110,8 +108,8 @@ const History: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* 商品情報 */}
-                  <div className='flex-grow grid gap-1.5 self-center min-w-0'>
+                  {/* 商品情報 - 幅を狭めて画像を強調 */}
+                  <div className='flex-grow md:flex-grow-0 md:w-[calc(100%-21rem)] grid gap-1.5 self-center min-w-0'>
                     <div className='grid grid-cols-2 gap-1.5'>
                       {Object.entries(item.answers).map(([key, value]) =>
                         key === 'budget' ? (
@@ -130,7 +128,6 @@ const History: React.FC = () => {
                           </div>
                         )
                       )}
-                      {/* 削除ボタン */}
                       <button
                         onClick={() => onDelete(item.id)}
                         className='col-span-2 py-2 px-2.5 text-sm rounded-md bg-red-500 text-white font-semibold flex items-center justify-center hover:bg-red-600 transition-colors'
@@ -145,7 +142,6 @@ const History: React.FC = () => {
             ))}
           </div>
 
-          {/* ページネーションコントロール */}
           <div className='flex justify-between mt-4'>
             <button
               onClick={handlePrevPage}
