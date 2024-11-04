@@ -59,14 +59,12 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         ],
         max_tokens=300
     )
-
+        
     if product_selection_response and 'choices' in product_selection_response:
         selected_product_info = product_selection_response['choices'][0]['message']['content']
         selected_product = None
-
-        # 選ばれた商品を検索
-        for item in filtered_products:
-            if f"商品ID: {item['id']}" in selected_product_info:
+        for item in shopping_results:
+            if item['name'] in selected_product_info:
                 selected_product_id = item['id']
                 selected_product = item
                 break
@@ -74,7 +72,29 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
         if not selected_product:
             selected_product = filtered_products[0]
 
-        # AIからの推薦ポイント取得
+        # 名前を短縮
+        product_name_simplification_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "あなたは商品の名前を短くシンプルな単語にするアシスタントです。"
+                },
+                {
+                    "role": "user",
+                    "content": f"商品ID: {selected_product_id}, 商品名: {selected_product.get('name', '不明')}"
+                }
+            ],
+            max_tokens=20
+        )
+
+        if not product_name_simplification_response or 'choices' not in product_name_simplification_response:
+            print("Error: Name simplification response is invalid or missing 'choices'.")
+            return None, None
+
+        simplified_name = product_name_simplification_response['choices'][0]['message']['content'].strip()
+        selected_product['name'] = simplified_name
+
         product_comment_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
