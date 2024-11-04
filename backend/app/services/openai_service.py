@@ -63,14 +63,17 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
     if product_selection_response and 'choices' in product_selection_response:
         selected_product_info = product_selection_response['choices'][0]['message']['content']
         selected_product = None
-        for item in shopping_results:
-            if item['name'] in selected_product_info:
-                selected_product_id = item['id']
-                selected_product = item
-                break
 
-        if not selected_product:
-            selected_product = filtered_products[0]
+    for item in filtered_products:
+        if f"商品ID: {item['id']}" in selected_product_info:
+            selected_product_id = item['id']
+            selected_product = item
+            break
+
+    # 商品が見つからない場合のデフォルト設定
+    if not selected_product:
+        selected_product = filtered_products[0]
+        selected_product_id = selected_product['id']
 
         # 名前を短縮
         product_name_simplification_response = openai.ChatCompletion.create(
