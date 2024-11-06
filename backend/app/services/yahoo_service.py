@@ -20,7 +20,7 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
     query = f"おみやげ {location}"
     params = {
         'appid': 'API_KEY',
-        'sort': '+price',
+        'sort': '-review_count',
         'results': '20',
         'query': query,
         'image_size': "300"
