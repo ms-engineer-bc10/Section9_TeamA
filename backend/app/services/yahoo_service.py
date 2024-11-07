@@ -27,9 +27,9 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
     }
 
     if budget_from is not None:
-        params['budget_from'] = budget_from
+        params['price_from'] = budget_from
     if budget_to is not None:
-        params['budget_to'] = budget_to
+        params['price_to'] = budget_to
 
     response = requests.get(url, headers=headers, params=params)
     print(f"Yahoo Shopping API Response Status: {response.status_code}")

@@ -49,7 +49,7 @@ def get_recommendations():
 
         print(f"Fetching Yahoo Shopping results for location: {location} and budget: {budget_from} to {budget_to}")
         
-        shopping_results = search_yahoo_shopping(location, budget_from, budget_to)
+        shopping_results = search_yahoo_shopping(location, budget_from=budget_from, budget_to=budget_to)
         if not shopping_results:
             return jsonify({"error": "No shopping results found"}), 500
         
