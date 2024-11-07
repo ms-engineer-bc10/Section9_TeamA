@@ -9,7 +9,8 @@ def get_prefecture_from_latlng(latlng):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
         'latlng': latlng,
-        'key': GOOGLE_API_KEY
+        'key': GOOGLE_API_KEY,
+        'language': 'ja'
     }
     
     try:
