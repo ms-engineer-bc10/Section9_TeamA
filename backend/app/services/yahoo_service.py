@@ -23,7 +23,7 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
         'sort': '-review_count',
         'results': '20',
         'query': query,
-        'image_size': "300"
+        'image_size': image_size
     }
 
     if budget_from is not None:
@@ -32,7 +32,6 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
         params['budget_to'] = budget_to
 
     response = requests.get(url, headers=headers, params=params)
-
     print(f"Yahoo Shopping API Response Status: {response.status_code}")
 
     if response.status_code == 200:
