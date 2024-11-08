@@ -6,7 +6,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 def get_openai_recommendation(get_recommendations, previous_product_id=None):
     target = get_recommendations.get('target')
     genre = get_recommendations.get('genre')
-    budget = get_recommendations.get('budget')
     quantity = get_recommendations.get('quantity')
     location = get_recommendations.get('location')
     shopping_results = get_recommendations.get('shopping_results', [])
@@ -24,7 +23,6 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
     products_list = [{
         '商品ID': item.get('id', '不明'),
         '商品名': item.get('name', '不明'),
-        '価格': item.get('budget', '不明'),
         '説明': item.get('description', '説明なし')
     } for item in filtered_products]
 
@@ -35,7 +33,7 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
             {
                 "role": "system",
                 "content": (
-                    "あなたはおみやげ選びのアシスタントです。ユーザーの条件（受取人、カテゴリ、価格帯、数量、場所）に基づき、最適なおみやげを1つ提案してください。"
+                    "あなたはおみやげ選びのアシスタントです。ユーザーの条件（受取人、カテゴリ、数量、場所）に基づき、最適なおみやげを1つ提案してください。"
                         "\n受取人によって以下の特徴を考慮してください:"
                         "\n- 家族：家庭で楽しめる共有できるもの"
                         "\n- 友人：話題性のある手軽なもの"
@@ -51,7 +49,6 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
                 "content": (
                     f"受取人: {target}"
                     f"カテゴリ: {genre}"
-                    f"価格帯: {budget}"
                     f"入数: {quantity} "
                     f"場所: {location}, 商品リスト: {products_list}"
                 )
@@ -110,7 +107,6 @@ def get_openai_recommendation(get_recommendations, previous_product_id=None):
                     "content": (
                         f"商品ID: {selected_product.get('id', '不明')}, "
                         f"商品名: {selected_product.get('name', '不明')}, "
-                        f"価格: {selected_product.get('budget', '不明')}, "
                         f"説明: {selected_product.get('description', '説明なし')}"
                     )
                 }
