@@ -54,10 +54,6 @@ def get_recommendations():
             return jsonify({"error": "No shopping results found"}), 500
         
         print(f"Yahoo Shopping results: {shopping_results}", flush=True)#10/20
-        
-
-        for idx, item in enumerate(shopping_results):
-            item['id'] = idx
 
         ai_input_data = {
             'target': data.get('target'),
