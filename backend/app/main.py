@@ -49,10 +49,6 @@ def create_app():
     app.register_blueprint(like_routes, url_prefix='/api/like')
     app.register_blueprint(chart_analysis, url_prefix='/api/business')# グラフ解析用のルートを追加
     app.register_blueprint(ai_advice_bp, url_prefix='/api')  # AIアドバイス機能用のルートを追加
-    
-    @app.route('/')
-    def hello_world():
-        return 'Hello, World!'
 
     return app
 

@@ -20,45 +20,36 @@ user_routes = Blueprint('user_routes', __name__)
 @user_routes.route('/recommend', methods=['POST'])
 def get_recommendations():
     try:
+        # ユーザーの条件を保存
         data = request.json
         print(data)
-        # 条件の保存処理を呼び出し、condition_idを取得
+
         save_result, status = save_condition(data)
         if status != 201:
-            print(f"Error saving condition: {save_result}", flush=True)#10/20
-            
             return jsonify(save_result), status
 
-        condition_id = save_result.get('condition_id')  # 保存した条件のIDを取得
-        print(f"Condition saved with ID: {condition_id}", flush=True)#10/20
+        condition_id = save_result.get('condition_id')
         
-        # 1. 予算を解析
+        # 予算を解析
         budget = data.get('budget')
         budget_from, budget_to = parse_budget(budget)
         print(f"Parsed budget: {budget_from} to {budget_to}")
         
 
-        # 2. locationの処理
+        # 位置情報の処理
         location = data.get('location')
         if "," in location:
             print(f"Location is latlng format: {location}")
             
             location = get_prefecture_from_latlng(location)
             print(f"Converted latlng to prefecture: {location}")
-            
-
-        print(f"Fetching Yahoo Shopping results for location: {location} and budget: {budget_from} to {budget_to}")
         
-        shopping_results = search_yahoo_shopping(location, budget_from, budget_to)
+        # YahooショッピングAPIを使用して商品検索
+        shopping_results = search_yahoo_shopping(location, budget_from=budget_from, budget_to=budget_to)
         if not shopping_results:
             return jsonify({"error": "No shopping results found"}), 500
-        
-        print(f"Yahoo Shopping results: {shopping_results}", flush=True)#10/20
-        
 
-        for idx, item in enumerate(shopping_results):
-            item['id'] = idx
-
+        # OpenAIを使ったおすすめおみやげ生成
         ai_input_data = {
             'target': data.get('target'),
             'genre': data.get('genre'),
@@ -74,7 +65,6 @@ def get_recommendations():
         if not ai_recommend or not selected_product:
             return jsonify({"error": "AI recommendation failed"}), 500
 
-        # 商品を保存し、product_idを取得
         product_id, status = save_selected_product(
             name=selected_product.get('name', '不明'),
             price=selected_product.get('price', 0),
@@ -83,23 +73,13 @@ def get_recommendations():
         )
         if status != 201:
             return jsonify({'error': 'Product could not be saved'}), 500
-
-        recommendations_data = {
-            'target': data.get('target'),
-            'genre': data.get('genre'),
-            'budget': budget,
-            'quantity': data.get('quantity'),
-            'location': location,
-            'shopping_results': shopping_results
-        }
-
-        print(f"Fetching nearby places for location: {location}")
         
-        places_results = search_google_places(location, recommendations_data, radius=1000)
+        # Google Places APIを使って店舗検索
+        places_results = search_google_places(location, selected_product.get('name', '不明'), radius=1000)
         if not places_results:
             return jsonify({"error": "No places found"}), 500
 
-        # 1つのstore情報をDBに保存する（最初の店舗を保存）
+        # 1つのstore情報をDBに保存（最初の店舗を保存）
         first_place = places_results[0]  # 1つ目の店舗情報を取得
         saved_store = save_store(first_place)  # その店舗をDBに保存
         if isinstance(saved_store, dict) and 'error' in saved_store:
@@ -107,14 +87,12 @@ def get_recommendations():
 
         store_id = saved_store.id  # 保存された店舗のIDを取得
 
-        # recommendationテーブルを介してconditionとproduct/storeを紐づける
+        # 条件・商品・店舗情報の紐付け
         recommendation = save_recommendation(condition_id, product_id, store_id)
 
-        print(f"recommendation: {recommendation}", flush=True)#10/20
-        # ユーザーに複数の店舗情報を返す、DBに保存
+        # 最終レスポンスの生成と返却
         response = generate_recommendation_response(shopping_results, selected_product, ai_recommend, places_results, recommendation.id)
 
-        print(f"response: {response}", flush=True)#10/20
         return response
 
     except Exception as e:

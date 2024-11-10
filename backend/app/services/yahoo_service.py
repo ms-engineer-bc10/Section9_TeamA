@@ -20,19 +20,18 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
     query = f"おみやげ {location}"
     params = {
         'appid': 'API_KEY',
-        'sort': '+price',
-        'results': '30',
+        'sort': '-review_count',
+        'results': '20',
         'query': query,
-        'image_size': "300"
+        'image_size': image_size
     }
 
     if budget_from is not None:
-        params['budget_from'] = budget_from
+        params['price_from'] = budget_from
     if budget_to is not None:
-        params['budget_to'] = budget_to
+        params['price_to'] = budget_to
 
     response = requests.get(url, headers=headers, params=params)
-
     print(f"Yahoo Shopping API Response Status: {response.status_code}")
 
     if response.status_code == 200:
@@ -53,7 +52,6 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
             }
             filtered_results.append(filtered_item)
 
-        print(f"フィルタリング結果: {filtered_results}", flush=True)
         return filtered_results
     else:
         print(f"Error in Yahoo API request: {response.status_code}, {response.text}")
