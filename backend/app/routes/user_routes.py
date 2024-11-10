@@ -91,7 +91,7 @@ def get_recommendations():
 
         print(f"Fetching nearby places for location: {location}")
         
-        places_results = search_google_places(location, recommendations_data, radius=1000)
+        places_results = search_google_places(location, selected_product.get('name', '不明'), radius=1000)
         if not places_results:
             return jsonify({"error": "No places found"}), 500
 
