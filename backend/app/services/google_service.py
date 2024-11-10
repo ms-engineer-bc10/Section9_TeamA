@@ -42,7 +42,5 @@ def search_google_places(location, selected_product_name, radius=2000):
             "place_id": place.get("place_id"),
             "location": place.get("geometry", {}).get("location", {})
         })
-    
-    print(f"店舗情報: {places}", flush=True)
 
     return places

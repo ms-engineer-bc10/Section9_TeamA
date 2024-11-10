@@ -52,7 +52,6 @@ def search_yahoo_shopping(location, budget_from=None, budget_to=None, image_size
             }
             filtered_results.append(filtered_item)
 
-        print(f"フィルタリング結果: {filtered_results}", flush=True)
         return filtered_results
     else:
         print(f"Error in Yahoo API request: {response.status_code}, {response.text}")

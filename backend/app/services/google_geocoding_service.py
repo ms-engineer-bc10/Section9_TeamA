@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
+# 緯度経度から都道府県名を取得
 def get_prefecture_from_latlng(latlng):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
@@ -31,6 +32,7 @@ def get_prefecture_from_latlng(latlng):
         print(f"Geocoding API Error: {response.status_code}, {response.text}")
         return None
 
+# 都道府県名から緯度経度を取得
 def get_latlng_from_prefecture(prefecture_name):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
@@ -47,7 +49,6 @@ def get_latlng_from_prefecture(prefecture_name):
 
     if response.status_code == 200:
         result = response.json()
-        print(result)
         if result['status'] == 'OK' and result['results']:
             location = result['results'][0]["geometry"]["location"]
             latlng = f"{location['lat']},{location['lng']}"
